@@ -16,7 +16,10 @@
       <h3 class="title overflow-hidden whitespace-nowrap">
         <MarqueeText :text="playable.title" />
       </h3>
-      <a :href="artistOrPodcastUri" class="artist overflow-hidden whitespace-nowrap block text-[0.9rem]">
+      <a
+        :href="artistOrPodcastUri"
+        class="artist overflow-hidden whitespace-nowrap block text-[0.9rem]"
+      >
         <MarqueeText :text="artistOrPodcastName" />
       </a>
     </div>
@@ -24,55 +27,55 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ref } from 'vue'
-import { computed, ref } from 'vue'
-import { getPlayableProp, requireInjection, use } from '@/utils/helpers'
-import { isSong } from '@/utils/typeGuards'
-import { CurrentStreamableKey } from '@/config/symbols'
-import { useDraggable } from '@/composables/useDragAndDrop'
-import { useRouter } from '@/composables/useRouter'
-import { useBranding } from '@/composables/useBranding'
-import { cache } from '@/services/cache'
+import type { Ref } from "vue";
+import { computed, ref } from "vue";
+import { getPlayableProp, requireInjection, use } from "@/utils/helpers";
+import { isSong } from "@/utils/typeGuards";
+import { CurrentStreamableKey } from "@/config/symbols";
+import { useDraggable } from "@/composables/useDragAndDrop";
+import { useRouter } from "@/composables/useRouter";
+import { useBranding } from "@/composables/useBranding";
+import { cache } from "@/services/cache";
 
-import MarqueeText from '@/components/ui/MarqueeText.vue'
+import MarqueeText from "@/components/ui/MarqueeText.vue";
 
-const { startDragging } = useDraggable('playables')
-const { go, url } = useRouter()
-const { cover: defaultCover } = useBranding()
+const { startDragging } = useDraggable("playables");
+const { go, url } = useRouter();
+const { cover: defaultCover } = useBranding();
 
-const playable = requireInjection<Ref<Playable | undefined>>(CurrentStreamableKey, ref())
+const playable = requireInjection<Ref<Playable | undefined>>(CurrentStreamableKey, ref());
 
 const cover = computed(() =>
-  playable.value ? getPlayableProp(playable.value, 'album_cover', 'episode_image') : defaultCover,
-)
+  playable.value ? getPlayableProp(playable.value, "album_cover", "episode_image") : defaultCover,
+);
 
 const artistOrPodcastUri = computed(() => {
   if (!playable.value) {
-    return ''
+    return "";
   }
 
   return isSong(playable.value)
-    ? url('artists.show', { id: playable.value?.artist_id })
-    : url('podcasts.show', { id: playable.value?.podcast_id })
-})
+    ? url("artists.show", { id: playable.value?.artist_id })
+    : url("podcasts.show", { id: playable.value?.podcast_id });
+});
 
 const artistOrPodcastName = computed(() =>
-  playable.value ? getPlayableProp(playable.value, 'artist_name', 'podcast_title') : '',
-)
+  playable.value ? getPlayableProp(playable.value, "artist_name", "podcast_title") : "",
+);
 
-const coverBackgroundImage = computed(() => `url(${cover.value ?? defaultCover})`)
-const draggable = computed(() => Boolean(playable.value))
+const coverBackgroundImage = computed(() => `url(${cover.value ?? defaultCover})`);
+const draggable = computed(() => Boolean(playable.value));
 
-const onDragStart = (event: DragEvent) => use(playable.value, p => startDragging(event, [p]))
+const onDragStart = (event: DragEvent) => use(playable.value, (p) => startDragging(event, [p]));
 
 const scrollToCurrentInQueue = () => {
   if (!playable.value) {
-    return
+    return;
   }
 
-  cache.set('scroll-to-current-in-queue', true)
-  go(url('queue'))
-}
+  cache.set("scroll-to-current-in-queue", true);
+  go(url("queue"));
+};
 </script>
 
 <style lang="postcss" scoped>

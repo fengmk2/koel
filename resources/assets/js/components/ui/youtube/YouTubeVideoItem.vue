@@ -6,7 +6,12 @@
     role="button"
     @click.prevent="play"
   >
-    <img :alt="video.snippet.title" :src="video.snippet.thumbnails.default.url" class="self-start" width="90" />
+    <img
+      :alt="video.snippet.title"
+      :src="video.snippet.thumbnails.default.url"
+      class="self-start"
+      width="90"
+    />
     <aside class="space-y-1">
       <h3 class="text-lg">{{ unescape(video.snippet.title) }}</h3>
       <p class="text-[0.9rem]">{{ video.snippet.description }}</p>
@@ -15,22 +20,22 @@
 </template>
 
 <script lang="ts" setup>
-import { unescape } from 'lodash'
-import { toRefs } from 'vue'
-import { youTubeService } from '@/services/youTubeService'
-import { useRouter } from '@/composables/useRouter'
+import { unescape } from "lodash";
+import { toRefs } from "vue";
+import { youTubeService } from "@/services/youTubeService";
+import { useRouter } from "@/composables/useRouter";
 
-const props = defineProps<{ video: YouTubeVideo }>()
-const { video } = toRefs(props)
+const props = defineProps<{ video: YouTubeVideo }>();
+const { video } = toRefs(props);
 
-const { go, url } = useRouter()
+const { go, url } = useRouter();
 
-const href = `https://youtu.be/${video.value.id.videoId}`
+const href = `https://youtu.be/${video.value.id.videoId}`;
 
 const play = () => {
-  youTubeService.play(video.value)
-  go(url('youtube'))
-}
+  youTubeService.play(video.value);
+  go(url("youtube"));
+};
 </script>
 
 <style lang="postcss" scoped>

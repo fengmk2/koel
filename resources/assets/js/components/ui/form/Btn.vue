@@ -17,17 +17,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-withDefaults(defineProps<{ tag?: 'button' | 'a' }>(), {
-  tag: 'button',
-})
+withDefaults(defineProps<{ tag?: "button" | "a" }>(), {
+  tag: "button",
+});
 
-const button = ref<HTMLButtonElement>()
+const button = ref<HTMLButtonElement>();
 
 defineExpose({
   button,
-})
+});
 </script>
 
 <style lang="postcss" scoped>

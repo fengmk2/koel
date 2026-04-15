@@ -24,10 +24,10 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { toRefs } from "vue";
 
-const props = defineProps<{ url: string }>()
-const { url } = toRefs(props)
+const props = defineProps<{ url: string }>();
+const { url } = toRefs(props);
 </script>
 
 <style lang="postcss" scoped>

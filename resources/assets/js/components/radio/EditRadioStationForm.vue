@@ -7,11 +7,23 @@
     <main class="space-y-5">
       <FormRow>
         <template #label>Name</template>
-        <TextInput v-model="data.name" v-koel-focus name="name" placeholder="My Favorite Radio Station" required />
+        <TextInput
+          v-model="data.name"
+          v-koel-focus
+          name="name"
+          placeholder="My Favorite Radio Station"
+          required
+        />
       </FormRow>
       <FormRow>
         <template #label>URL</template>
-        <TextInput v-model="data.url" type="url" name="url" placeholder="https://radio.example.com/stream" required />
+        <TextInput
+          v-model="data.url"
+          type="url"
+          name="url"
+          placeholder="https://radio.example.com/stream"
+          required
+        />
       </FormRow>
       <FormRow>
         <template #label>Description</template>
@@ -39,50 +51,50 @@
 </template>
 
 <script setup lang="ts">
-import { cloneDeep, pick } from 'lodash'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import type { RadioStationData } from '@/stores/radioStationStore'
-import { radioStationStore } from '@/stores/radioStationStore'
-import { useForm } from '@/composables/useForm'
+import { cloneDeep, pick } from "lodash";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import type { RadioStationData } from "@/stores/radioStationStore";
+import { radioStationStore } from "@/stores/radioStationStore";
+import { useForm } from "@/composables/useForm";
 
-import TextInput from '@/components/ui/form/TextInput.vue'
-import Btn from '@/components/ui/form/Btn.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
-import TextArea from '@/components/ui/form/TextArea.vue'
-import CheckBox from '@/components/ui/form/CheckBox.vue'
-import ArtworkField from '@/components/ui/form/ArtworkField.vue'
+import TextInput from "@/components/ui/form/TextInput.vue";
+import Btn from "@/components/ui/form/Btn.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
+import TextArea from "@/components/ui/form/TextArea.vue";
+import CheckBox from "@/components/ui/form/CheckBox.vue";
+import ArtworkField from "@/components/ui/form/ArtworkField.vue";
 
-const props = defineProps<{ station: RadioStation }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ station: RadioStation }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { station } = props
+const { station } = props;
 
-const close = () => emit('close')
+const close = () => emit("close");
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
 const { data, isPristine, handleSubmit } = useForm<RadioStationData>({
-  initialValues: { ...pick(station, 'name', 'url', 'description', 'is_public', 'logo') },
-  onSubmit: async data => {
-    const formData = cloneDeep(data)
+  initialValues: { ...pick(station, "name", "url", "description", "is_public", "logo") },
+  onSubmit: async (data) => {
+    const formData = cloneDeep(data);
 
     if (formData.logo === station.logo) {
-      delete formData.logo
+      delete formData.logo;
     }
 
-    await radioStationStore.update(station, formData)
+    await radioStationStore.update(station, formData);
   },
   onSuccess: () => {
-    close()
-    toastSuccess('Station updated.')
+    close();
+    toastSuccess("Station updated.");
   },
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>

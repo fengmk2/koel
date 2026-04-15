@@ -1,114 +1,114 @@
-import { describe, expect, it, vi } from 'vite-plus/test'
-import { defineComponent, ref } from 'vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import { useSwipeDirection } from './useSwipeDirection'
+import { describe, expect, it, vi } from "vite-plus/test";
+import { defineComponent, ref } from "vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import { useSwipeDirection } from "./useSwipeDirection";
 
-describe('useSwipeDirection', () => {
-  const h = createHarness()
+describe("useSwipeDirection", () => {
+  const h = createHarness();
 
   const createWrapper = (
-    callback: (dir: 'up' | 'down') => void,
+    callback: (dir: "up" | "down") => void,
     options?: { threshold?: number; wheelThreshold?: number },
   ) => {
     return defineComponent({
       setup() {
-        const el = ref<HTMLElement>()
+        const el = ref<HTMLElement>();
 
-        useSwipeDirection(() => el.value, callback, options)
+        useSwipeDirection(() => el.value, callback, options);
 
-        return { el }
+        return { el };
       },
       template: '<div ref="el" data-testid="target" style="height: 200px" />',
-    })
-  }
+    });
+  };
 
-  it('detects swipe up via touch events', async () => {
-    const callback = vi.fn()
-    const { getByTestId } = h.render(createWrapper(callback))
-    const target = getByTestId('target')
+  it("detects swipe up via touch events", async () => {
+    const callback = vi.fn();
+    const { getByTestId } = h.render(createWrapper(callback));
+    const target = getByTestId("target");
 
     target.dispatchEvent(
-      new TouchEvent('touchstart', {
+      new TouchEvent("touchstart", {
         touches: [{ clientY: 200 } as Touch],
       }),
-    )
+    );
 
     target.dispatchEvent(
-      new TouchEvent('touchend', {
+      new TouchEvent("touchend", {
         changedTouches: [{ clientY: 100 } as Touch],
       }),
-    )
+    );
 
-    expect(callback).toHaveBeenCalledWith('up')
-  })
+    expect(callback).toHaveBeenCalledWith("up");
+  });
 
-  it('detects swipe down via touch events', async () => {
-    const callback = vi.fn()
-    const { getByTestId } = h.render(createWrapper(callback))
-    const target = getByTestId('target')
+  it("detects swipe down via touch events", async () => {
+    const callback = vi.fn();
+    const { getByTestId } = h.render(createWrapper(callback));
+    const target = getByTestId("target");
 
     target.dispatchEvent(
-      new TouchEvent('touchstart', {
+      new TouchEvent("touchstart", {
         touches: [{ clientY: 100 } as Touch],
       }),
-    )
+    );
 
     target.dispatchEvent(
-      new TouchEvent('touchend', {
+      new TouchEvent("touchend", {
         changedTouches: [{ clientY: 200 } as Touch],
       }),
-    )
+    );
 
-    expect(callback).toHaveBeenCalledWith('down')
-  })
+    expect(callback).toHaveBeenCalledWith("down");
+  });
 
-  it('ignores swipe below threshold', async () => {
-    const callback = vi.fn()
-    const { getByTestId } = h.render(createWrapper(callback))
-    const target = getByTestId('target')
+  it("ignores swipe below threshold", async () => {
+    const callback = vi.fn();
+    const { getByTestId } = h.render(createWrapper(callback));
+    const target = getByTestId("target");
 
     target.dispatchEvent(
-      new TouchEvent('touchstart', {
+      new TouchEvent("touchstart", {
         touches: [{ clientY: 100 } as Touch],
       }),
-    )
+    );
 
     target.dispatchEvent(
-      new TouchEvent('touchend', {
+      new TouchEvent("touchend", {
         changedTouches: [{ clientY: 110 } as Touch],
       }),
-    )
+    );
 
-    expect(callback).not.toHaveBeenCalled()
-  })
+    expect(callback).not.toHaveBeenCalled();
+  });
 
-  it('detects scroll down via wheel event', async () => {
-    const callback = vi.fn()
-    const { getByTestId } = h.render(createWrapper(callback))
-    const target = getByTestId('target')
+  it("detects scroll down via wheel event", async () => {
+    const callback = vi.fn();
+    const { getByTestId } = h.render(createWrapper(callback));
+    const target = getByTestId("target");
 
-    target.dispatchEvent(new WheelEvent('wheel', { deltaY: 50 }))
+    target.dispatchEvent(new WheelEvent("wheel", { deltaY: 50 }));
 
-    expect(callback).toHaveBeenCalledWith('down')
-  })
+    expect(callback).toHaveBeenCalledWith("down");
+  });
 
-  it('detects scroll up via wheel event', async () => {
-    const callback = vi.fn()
-    const { getByTestId } = h.render(createWrapper(callback))
-    const target = getByTestId('target')
+  it("detects scroll up via wheel event", async () => {
+    const callback = vi.fn();
+    const { getByTestId } = h.render(createWrapper(callback));
+    const target = getByTestId("target");
 
-    target.dispatchEvent(new WheelEvent('wheel', { deltaY: -50 }))
+    target.dispatchEvent(new WheelEvent("wheel", { deltaY: -50 }));
 
-    expect(callback).toHaveBeenCalledWith('up')
-  })
+    expect(callback).toHaveBeenCalledWith("up");
+  });
 
-  it('ignores wheel below threshold', async () => {
-    const callback = vi.fn()
-    const { getByTestId } = h.render(createWrapper(callback))
-    const target = getByTestId('target')
+  it("ignores wheel below threshold", async () => {
+    const callback = vi.fn();
+    const { getByTestId } = h.render(createWrapper(callback));
+    const target = getByTestId("target");
 
-    target.dispatchEvent(new WheelEvent('wheel', { deltaY: 2 }))
+    target.dispatchEvent(new WheelEvent("wheel", { deltaY: 2 }));
 
-    expect(callback).not.toHaveBeenCalled()
-  })
-})
+    expect(callback).not.toHaveBeenCalled();
+  });
+});

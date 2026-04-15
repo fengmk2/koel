@@ -39,7 +39,7 @@
           <Icon :icon="faUpload" />
         </template>
 
-        {{ canDropFolders ? 'Drop files or folders to upload' : 'Drop files to upload' }}
+        {{ canDropFolders ? "Drop files or folders to upload" : "Drop files to upload" }}
 
         <span class="secondary block">
           <a class="block relative !text-k-fg-70 hover:!text-k-fg" role="button">
@@ -67,62 +67,64 @@
 </template>
 
 <script lang="ts" setup>
-import { faRotateRight, faTrashCan, faUpload, faWarning } from '@fortawesome/free-solid-svg-icons'
-import { computed, defineAsyncComponent, ref, toRef, onMounted } from 'vue'
+import { faRotateRight, faTrashCan, faUpload, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { computed, defineAsyncComponent, ref, toRef, onMounted } from "vue";
 
-import { isDirectoryReadingSupported as canDropFolders } from '@/utils/supports'
-import { acceptedExtensions } from '@/utils/mediaHelper'
-import { uploadService } from '@/services/uploadService'
-import { useUpload } from '@/composables/useUpload'
+import { isDirectoryReadingSupported as canDropFolders } from "@/utils/supports";
+import { acceptedExtensions } from "@/utils/mediaHelper";
+import { uploadService } from "@/services/uploadService";
+import { useUpload } from "@/composables/useUpload";
 
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenEmptyState from '@/components/ui/ScreenEmptyState.vue'
-import BtnGroup from '@/components/ui/form/BtnGroup.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenEmptyState from "@/components/ui/ScreenEmptyState.vue";
+import BtnGroup from "@/components/ui/form/BtnGroup.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
 
-import DuplicateUploadList from '@/components/ui/DuplicateUploadList.vue'
+import DuplicateUploadList from "@/components/ui/DuplicateUploadList.vue";
 
-const Btn = defineAsyncComponent(() => import('@/components/ui/form/Btn.vue'))
-const UploadItem = defineAsyncComponent(() => import('@/components/ui/upload/UploadItem.vue'))
+const Btn = defineAsyncComponent(() => import("@/components/ui/form/Btn.vue"));
+const UploadItem = defineAsyncComponent(() => import("@/components/ui/upload/UploadItem.vue"));
 
-const acceptAttribute = acceptedExtensions.map(ext => `.${ext}`).join(',')
+const acceptAttribute = acceptedExtensions.map((ext) => `.${ext}`).join(",");
 
-const { allowsUpload, mediaPathSetUp, queueFilesForUpload, handleDropEvent } = useUpload()
+const { allowsUpload, mediaPathSetUp, queueFilesForUpload, handleDropEvent } = useUpload();
 
-const duplicatedSongs = toRef(uploadService.state, 'duplicatedSongs')
+const duplicatedSongs = toRef(uploadService.state, "duplicatedSongs");
 
-const files = toRef(uploadService.state, 'files')
-const droppable = ref(false)
+const files = toRef(uploadService.state, "files");
+const droppable = ref(false);
 
-const hasUploadFailures = computed(() => files.value.filter(({ status }) => status === 'Errored').length > 0)
+const hasUploadFailures = computed(
+  () => files.value.filter(({ status }) => status === "Errored").length > 0,
+);
 
-const onDragEnter = () => (droppable.value = allowsUpload.value)
+const onDragEnter = () => (droppable.value = allowsUpload.value);
 
 const onDragLeave = (e: MouseEvent) => {
   if ((e.currentTarget as Node)?.contains?.(e.relatedTarget as Node)) {
-    return
+    return;
   }
 
-  droppable.value = false
-}
+  droppable.value = false;
+};
 
 const onFileInputChange = (event: Event) => {
-  const selectedFileList = (event.target as HTMLInputElement).files
+  const selectedFileList = (event.target as HTMLInputElement).files;
 
   if (selectedFileList?.length) {
-    queueFilesForUpload(Array.from(selectedFileList))
+    queueFilesForUpload(Array.from(selectedFileList));
   }
-}
+};
 
 const onDrop = async (event: DragEvent) => {
-  droppable.value = false
-  await handleDropEvent(event)
-}
+  droppable.value = false;
+  await handleDropEvent(event);
+};
 
-const retryAll = () => uploadService.retryAll()
-const removeFailedEntries = () => uploadService.removeFailed()
+const retryAll = () => uploadService.retryAll();
+const removeFailedEntries = () => uploadService.removeFailed();
 
-onMounted(() => uploadService.fetchDuplicates())
+onMounted(() => uploadService.fetchDuplicates());
 </script>
 
 <style lang="postcss" scoped>

@@ -11,27 +11,30 @@
     >
       <Icon v-if="playing" :icon="faPause" data-testid="icon-pause" size="lg" />
       <Icon v-else :icon="faPlay" class="ml-0.5" data-testid="icon-play" size="lg" />
-      <span class="sr-only">{{ playing ? 'Pause' : 'Play/Resume' }}</span>
+      <span class="sr-only">{{ playing ? "Pause" : "Play/Resume" }}</span>
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
-import { computed, toRefs } from 'vue'
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { computed, toRefs } from "vue";
 
-const props = withDefaults(defineProps<{ playable?: Playable; preview?: boolean; progress?: number }>(), {
-  preview: false,
-  progress: 0,
-})
+const props = withDefaults(
+  defineProps<{ playable?: Playable; preview?: boolean; progress?: number }>(),
+  {
+    preview: false,
+    progress: 0,
+  },
+);
 
-const emit = defineEmits<{ (e: 'clicked'): void }>()
+const emit = defineEmits<{ (e: "clicked"): void }>();
 
-const { playable, preview, progress } = toRefs(props)
+const { playable, preview, progress } = toRefs(props);
 
-const progressPercentage = computed(() => `${progress.value}%`)
+const progressPercentage = computed(() => `${progress.value}%`);
 
-const playing = computed(() => playable.value?.playback_state === 'Playing')
+const playing = computed(() => playable.value?.playback_state === "Playing");
 </script>
 
 <style lang="postcss" scoped>

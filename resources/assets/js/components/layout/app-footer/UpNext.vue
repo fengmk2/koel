@@ -1,5 +1,8 @@
 <template>
-  <article v-if="playable" class="fixed z-[99] right-[5vw] top-[4.5rem] flex bg-k-bg border border-px border-k-fg-10">
+  <article
+    v-if="playable"
+    class="fixed z-[99] right-[5vw] top-[4.5rem] flex bg-k-bg border border-px border-k-fg-10"
+  >
     <span :style="{ backgroundImage: `url(${defaultCover})` }">
       <img :src alt="Cover image" class="w-[96px] aspect-square object-cover" loading="lazy" />
     </span>
@@ -14,15 +17,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
-import { getPlayableProp } from '@/utils/helpers'
-import { useBranding } from '@/composables/useBranding'
+import { computed, toRefs } from "vue";
+import { getPlayableProp } from "@/utils/helpers";
+import { useBranding } from "@/composables/useBranding";
 
-const props = defineProps<{ playable: Playable }>()
-const { playable } = toRefs(props)
+const props = defineProps<{ playable: Playable }>();
+const { playable } = toRefs(props);
 
-const { cover: defaultCover } = useBranding()
+const { cover: defaultCover } = useBranding();
 
-const src = computed(() => getPlayableProp(playable.value, 'album_cover', 'episode_image'))
-const author = computed(() => getPlayableProp(playable.value, 'artist_name', 'podcast_author'))
+const src = computed(() => getPlayableProp(playable.value, "album_cover", "episode_image"));
+const author = computed(() => getPlayableProp(playable.value, "artist_name", "podcast_author"));
 </script>

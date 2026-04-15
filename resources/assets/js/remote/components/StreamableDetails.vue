@@ -8,7 +8,9 @@
     <div class="w-full flex flex-col justify-around px-6">
       <div>
         <p class="text-[6vmin] font-bold mx-auto mb-4">{{ title }}</p>
-        <div v-if="description" class="text-[4vmin] leading-7 line-clamp-4 text-k-fg-50">{{ description }}</div>
+        <div v-if="description" class="text-[4vmin] leading-7 line-clamp-4 text-k-fg-50">
+          {{ description }}
+        </div>
         <p class="text-[5vmin] mb-2 text-k-fg-50">{{ artist }}</p>
         <p class="text-[4vmin] text-k-fg-50">{{ album }}</p>
       </div>
@@ -17,34 +19,42 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue'
-import { getPlayableProp } from '@/utils/helpers'
-import { isRadioStation } from '@/utils/typeGuards'
-import { useBranding } from '@/composables/useBranding'
+import { computed, toRefs } from "vue";
+import { getPlayableProp } from "@/utils/helpers";
+import { isRadioStation } from "@/utils/typeGuards";
+import { useBranding } from "@/composables/useBranding";
 
-const props = defineProps<{ streamable: Streamable }>()
-const { streamable } = toRefs(props)
+const props = defineProps<{ streamable: Streamable }>();
+const { streamable } = toRefs(props);
 
-const { cover: defaultCover } = useBranding()
+const { cover: defaultCover } = useBranding();
 
 const coverArt = computed(() => {
   const src = isRadioStation(streamable.value)
     ? streamable.value.logo
-    : getPlayableProp(streamable.value, 'album_cover', 'episode_image')
+    : getPlayableProp(streamable.value, "album_cover", "episode_image");
 
-  return src || defaultCover
-})
+  return src || defaultCover;
+});
 
-const title = computed(() => (isRadioStation(streamable.value) ? streamable.value.name : streamable.value.title))
-const description = computed(() => (isRadioStation(streamable.value) ? streamable.value.description : null))
+const title = computed(() =>
+  isRadioStation(streamable.value) ? streamable.value.name : streamable.value.title,
+);
+const description = computed(() =>
+  isRadioStation(streamable.value) ? streamable.value.description : null,
+);
 
 const artist = computed(() =>
-  isRadioStation(streamable.value) ? '' : getPlayableProp(streamable.value, 'artist_name', 'podcast_author'),
-)
+  isRadioStation(streamable.value)
+    ? ""
+    : getPlayableProp(streamable.value, "artist_name", "podcast_author"),
+);
 
 const album = computed(() =>
-  isRadioStation(streamable.value) ? '' : getPlayableProp(streamable.value, 'album_name', 'podcast_title'),
-)
+  isRadioStation(streamable.value)
+    ? ""
+    : getPlayableProp(streamable.value, "album_name", "podcast_title"),
+);
 </script>
 
 <style lang="postcss" scoped>

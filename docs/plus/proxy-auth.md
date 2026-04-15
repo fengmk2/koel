@@ -18,9 +18,9 @@ Make sure your proxy server is secure and properly configured.
 
 To enable proxy authentication, set `PROXY_AUTH_ENABLED` in `.env` to `true` and provide the necessary configuration:
 
-* `PROXY_AUTH_USER_HEADER`: The header name that contains the unique identifier for the user, e.g., `remote-user`.
-* `PROXY_AUTH_PREFERRED_NAME_HEADER`: The header name that contains the user's preferred, humanly-readable name, e.g., `remote-preferred-name`.
-* `PROXY_AUTH_ALLOW_LIST`: A comma-separated list of allowed proxy IPs or Classless Inter-Domain Routing (CIDRs), e.g., `10.10.1.0/24` or `2001:0db8:/32`. If this value is empty, NO requests will be allowed (which essentially means proxy authentication is disabled).
+- `PROXY_AUTH_USER_HEADER`: The header name that contains the unique identifier for the user, e.g., `remote-user`.
+- `PROXY_AUTH_PREFERRED_NAME_HEADER`: The header name that contains the user's preferred, humanly-readable name, e.g., `remote-preferred-name`.
+- `PROXY_AUTH_ALLOW_LIST`: A comma-separated list of allowed proxy IPs or Classless Inter-Domain Routing (CIDRs), e.g., `10.10.1.0/24` or `2001:0db8:/32`. If this value is empty, NO requests will be allowed (which essentially means proxy authentication is disabled).
 
 Now when a request comes in, Koel will look for specific headers to determine the user's identity.
 If the headers are found, Koel will attempt to log the user in automatically using the unique identifier.

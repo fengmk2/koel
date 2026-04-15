@@ -20,11 +20,14 @@ import {
   faExclamationCircle,
   faExclamationTriangle,
   faInfoCircle,
-} from '@fortawesome/free-solid-svg-icons'
+} from "@fortawesome/free-solid-svg-icons";
 
-const props = withDefaults(defineProps<{ type?: 'default' | 'info' | 'danger' | 'success' | 'warning' }>(), {
-  type: 'default',
-})
+const props = withDefaults(
+  defineProps<{ type?: "default" | "info" | "danger" | "success" | "warning" }>(),
+  {
+    type: "default",
+  },
+);
 </script>
 
 <style lang="postcss" scoped>

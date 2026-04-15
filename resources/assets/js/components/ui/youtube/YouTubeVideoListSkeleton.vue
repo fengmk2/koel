@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import YouTubeVideoItemSkeleton from '@/components/ui/youtube/YouTubeVideoItemSkeleton.vue'
+import YouTubeVideoItemSkeleton from "@/components/ui/youtube/YouTubeVideoItemSkeleton.vue";
 </script>

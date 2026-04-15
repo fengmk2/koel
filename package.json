@@ -1,17 +1,31 @@
 {
   "name": "koel",
-  "author": "Phan An <me@phanan.net>",
-  "homepage": "https://koel.dev",
-  "license": "MIT",
   "description": "A personal music streaming server that works",
   "keywords": [
-    "music",
     "audio",
+    "music",
     "stream"
   ],
+  "homepage": "https://koel.dev",
+  "license": "MIT",
+  "author": "Phan An <me@phanan.net>",
   "repository": {
     "type": "git",
     "url": "https://github.com/koel/koel"
+  },
+  "type": "module",
+  "scripts": {
+    "check": "vp check resources/assets",
+    "check:fix": "vp check --fix resources/assets",
+    "test": "vp test",
+    "test:unit": "vp test",
+    "build:sw": "vp build --config vite.config.sw.js",
+    "build": "vp build && pnpm run build:sw",
+    "dev": "node -e \"console.warn('Command \\\"pnpm dev\\\" has been removed. Use \\\"composer dev\\\" instead.')\"",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "prepare": "vp config"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -91,20 +105,7 @@
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
-  "scripts": {
-    "check": "vp check resources/assets",
-    "check:fix": "vp check --fix resources/assets",
-    "test": "vp test",
-    "test:unit": "vp test",
-    "build:sw": "vp build --config vite.config.sw.js",
-    "build": "vp build && pnpm run build:sw",
-    "dev": "node -e \"console.warn('Command \\\"pnpm dev\\\" has been removed. Use \\\"composer dev\\\" instead.')\"",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
-    "prepare": "vp config"
-  },
-  "type": "module",
+  "packageManager": "pnpm@10.32.1",
   "pnpm": {
     "overrides": {
       "form-data@<2.5.4": ">=2.5.4",
@@ -112,6 +113,5 @@
       "vite": "npm:@voidzero-dev/vite-plus-core@0.1.18-alpha.0",
       "vitest": "npm:@voidzero-dev/vite-plus-test@0.1.18-alpha.0"
     }
-  },
-  "packageManager": "pnpm@10.32.1"
+  }
 }

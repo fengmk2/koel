@@ -5,12 +5,12 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { toRefs } from "vue";
 
-import PlayableCard from '@/components/screens/home/PlayableCard.vue'
+import PlayableCard from "@/components/screens/home/PlayableCard.vue";
 
-const props = defineProps<{ playables: Playable[] }>()
-const { playables } = toRefs(props)
+const props = defineProps<{ playables: Playable[] }>();
+const { playables } = toRefs(props);
 </script>
 
 <style lang="postcss" scoped>

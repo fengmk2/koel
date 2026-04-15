@@ -12,14 +12,20 @@
         Last.fm integration is enabled.
         {{ appName }} will attempt to retrieve album and artist information from Last.fm.
       </p>
-      <p v-if="connected">It appears that you have connected your Last.fm account as well – Perfect!</p>
+      <p v-if="connected">
+        It appears that you have connected your Last.fm account as well – Perfect!
+      </p>
       <p v-else>You can also connect your Last.fm account here.</p>
       <p>
         Connecting {{ appName }} and your Last.fm account enables such exciting features as
-        <a href="https://www.last.fm/about/trackmymusic" rel="noopener" target="_blank">scrobbling</a>.
+        <a href="https://www.last.fm/about/trackmymusic" rel="noopener" target="_blank"
+          >scrobbling</a
+        >.
       </p>
       <div class="buttons mt-4 space-x-2">
-        <Btn class="!bg-[var(--lastfm-color)]" @click.prevent="connect">{{ connected ? 'Reconnect' : 'Connect' }}</Btn>
+        <Btn class="!bg-[var(--lastfm-color)]" @click.prevent="connect">{{
+          connected ? "Reconnect" : "Connect"
+        }}</Btn>
         <Btn v-if="connected" class="disconnect" gray @click.prevent="disconnect">Disconnect</Btn>
       </div>
     </div>
@@ -29,34 +35,38 @@
         Last.fm integration is not enabled.
         <span v-if="currentUserCan.manageSettings()" data-testid="lastfm-admin-instruction">
           Check
-          <a href="https://docs.koel.dev/service-integrations#last-fm" target="_blank">Documentation</a>
+          <a href="https://docs.koel.dev/service-integrations#last-fm" target="_blank"
+            >Documentation</a
+          >
           for integration instructions.
         </span>
-        <span v-else data-testid="lastfm-user-instruction"> Try politely asking an administrator to enable it. </span>
+        <span v-else data-testid="lastfm-user-instruction">
+          Try politely asking an administrator to enable it.
+        </span>
       </p>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { faLastfm } from '@fortawesome/free-brands-svg-icons'
-import { computed, defineAsyncComponent } from 'vue'
-import { authService } from '@/services/authService'
-import { http } from '@/services/http'
-import { useAuthorization } from '@/composables/useAuthorization'
-import { useThirdPartyServices } from '@/composables/useThirdPartyServices'
-import { forceReloadWindow } from '@/utils/helpers'
-import { usePolicies } from '@/composables/usePolicies'
-import { useBranding } from '@/composables/useBranding'
+import { faLastfm } from "@fortawesome/free-brands-svg-icons";
+import { computed, defineAsyncComponent } from "vue";
+import { authService } from "@/services/authService";
+import { http } from "@/services/http";
+import { useAuthorization } from "@/composables/useAuthorization";
+import { useThirdPartyServices } from "@/composables/useThirdPartyServices";
+import { forceReloadWindow } from "@/utils/helpers";
+import { usePolicies } from "@/composables/usePolicies";
+import { useBranding } from "@/composables/useBranding";
 
-const Btn = defineAsyncComponent(() => import('@/components/ui/form/Btn.vue'))
+const Btn = defineAsyncComponent(() => import("@/components/ui/form/Btn.vue"));
 
-const { currentUser } = useAuthorization()
-const { currentUserCan } = usePolicies()
-const { useLastfm } = useThirdPartyServices()
-const { name: appName } = useBranding()
+const { currentUser } = useAuthorization();
+const { currentUserCan } = usePolicies();
+const { useLastfm } = useThirdPartyServices();
+const { name: appName } = useBranding();
 
-const connected = computed(() => Boolean(currentUser.value.preferences.lastfm_session_key))
+const connected = computed(() => Boolean(currentUser.value.preferences.lastfm_session_key));
 
 /**
  * Connect the current user to Last.fm.
@@ -66,14 +76,14 @@ const connected = computed(() => Boolean(currentUser.value.preferences.lastfm_se
 const connect = () =>
   window.open(
     `${window.BASE_URL}lastfm/connect?api_token=${authService.getApiToken()}`,
-    '_blank',
-    'toolbar=no,titlebar=no,location=no,width=1024,height=640',
-  )
+    "_blank",
+    "toolbar=no,titlebar=no,location=no,width=1024,height=640",
+  );
 
 const disconnect = async () => {
-  await http.delete('lastfm/disconnect')
-  forceReloadWindow()
-}
+  await http.delete("lastfm/disconnect");
+  forceReloadWindow();
+};
 </script>
 
 <style lang="postcss" scoped>

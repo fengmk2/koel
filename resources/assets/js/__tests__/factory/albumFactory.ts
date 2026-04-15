@@ -1,8 +1,8 @@
-import { faker } from '@faker-js/faker'
+import { faker } from "@faker-js/faker";
 
 export default (): Album => {
   return {
-    type: 'albums',
+    type: "albums",
     artist_id: faker.string.ulid(),
     artist_name: faker.person.fullName(),
     id: faker.string.ulid(),
@@ -12,12 +12,12 @@ export default (): Album => {
     year: faker.date.past().getFullYear(),
     is_external: false,
     favorite: faker.datatype.boolean(),
-  }
-}
+  };
+};
 
-export const states: Record<string, Omit<Partial<Album>, 'type'>> = {
+export const states: Record<string, Omit<Partial<Album>, "type">> = {
   unknown: {
-    name: 'Unknown Album',
-    artist_name: 'Unknown Artist',
+    name: "Unknown Album",
+    artist_name: "Unknown Artist",
   },
-}
+};

@@ -1,14 +1,14 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { fireEvent, screen } from '@testing-library/vue'
-import { settingStore } from '@/stores/settingStore'
-import Component from './BrandingSettingGroup.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { fireEvent, screen } from "@testing-library/vue";
+import { settingStore } from "@/stores/settingStore";
+import Component from "./BrandingSettingGroup.vue";
 
-describe('brandingSettingGroup.vue', () => {
-  const h = createHarness()
+describe("brandingSettingGroup.vue", () => {
+  const h = createHarness();
 
   const renderComponent = (currentBranding?: Branding) => {
-    currentBranding = currentBranding ?? window.BRANDING
+    currentBranding = currentBranding ?? window.BRANDING;
 
     const rendered = h.render(Component, {
       props: {
@@ -16,31 +16,31 @@ describe('brandingSettingGroup.vue', () => {
       },
       global: {
         stubs: {
-          BrandingImageField: h.stub('branding-image-field', true),
+          BrandingImageField: h.stub("branding-image-field", true),
         },
       },
-    })
+    });
 
     return {
       ...rendered,
       currentBranding,
-    }
-  }
+    };
+  };
 
-  it('works', async () => {
-    renderComponent()
-    const updateMock = h.mock(settingStore, 'updateBranding')
+  it("works", async () => {
+    renderComponent();
+    const updateMock = h.mock(settingStore, "updateBranding");
 
-    await h.type(screen.getByRole('textbox', { name: 'name' }), 'New App Name')
-    await fireEvent.update(screen.queryAllByTestId('branding-image-field')[0], 'data:new-logo')
-    await fireEvent.update(screen.queryAllByTestId('branding-image-field')[1], 'data:new-cover')
+    await h.type(screen.getByRole("textbox", { name: "name" }), "New App Name");
+    await fireEvent.update(screen.queryAllByTestId("branding-image-field")[0], "data:new-logo");
+    await fireEvent.update(screen.queryAllByTestId("branding-image-field")[1], "data:new-cover");
 
-    await h.user.click(screen.getByRole('button', { name: 'Save' }))
+    await h.user.click(screen.getByRole("button", { name: "Save" }));
 
     expect(updateMock).toHaveBeenCalledWith({
-      cover: 'data:new-cover',
-      logo: 'data:new-logo',
-      name: 'New App Name',
-    })
-  })
-})
+      cover: "data:new-cover",
+      logo: "data:new-logo",
+      name: "New App Name",
+    });
+  });
+});

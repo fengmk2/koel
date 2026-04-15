@@ -35,11 +35,20 @@
             <div class="grid grid-cols-2 gap-4">
               <FormRow>
                 <template #label>Name *</template>
-                <TextInput v-model="data.name" v-koel-focus name="name" placeholder="Playlist name" required />
+                <TextInput
+                  v-model="data.name"
+                  v-koel-focus
+                  name="name"
+                  placeholder="Playlist name"
+                  required
+                />
               </FormRow>
               <FormRow>
                 <template #label>Folder</template>
-                <FolderSelect v-model:folder-id="data.folder_id" v-model:folder-name="data.folder_name" />
+                <FolderSelect
+                  v-model:folder-id="data.folder_id"
+                  v-model:folder-name="data.folder_name"
+                />
               </FormRow>
               <FormRow class="col-span-2">
                 <template #label>Description</template>
@@ -63,7 +72,14 @@
                 :is-first-group="index === 0"
                 @input="onGroupChanged"
               />
-              <Btn class="btn-add-group" small success title="Add a new group" uppercase @click.prevent="addGroup">
+              <Btn
+                class="btn-add-group"
+                small
+                success
+                title="Add a new group"
+                uppercase
+                @click.prevent="addGroup"
+              >
                 <Icon :icon="faPlus" />
                 Group
               </Btn>
@@ -81,67 +97,71 @@
 </template>
 
 <script lang="ts" setup>
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { cloneDeep, isEqual, pick } from 'lodash'
-import type { UpdatePlaylistData } from '@/stores/playlistStore'
-import { playlistStore } from '@/stores/playlistStore'
-import { eventBus } from '@/utils/eventBus'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useSmartPlaylistForm } from '@/composables/useSmartPlaylistForm'
-import { useForm } from '@/composables/useForm'
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { cloneDeep, isEqual, pick } from "lodash";
+import type { UpdatePlaylistData } from "@/stores/playlistStore";
+import { playlistStore } from "@/stores/playlistStore";
+import { eventBus } from "@/utils/eventBus";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useSmartPlaylistForm } from "@/composables/useSmartPlaylistForm";
+import { useForm } from "@/composables/useForm";
 
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
-import FolderSelect from '@/components/ui/form/FolderSelect.vue'
-import TextArea from '@/components/ui/form/TextArea.vue'
-import TabButton from '@/components/ui/tabs/TabButton.vue'
-import Tabs from '@/components/ui/tabs/Tabs.vue'
-import TabPanelContainer from '@/components/ui/tabs/TabPanelContainer.vue'
-import TabList from '@/components/ui/tabs/TabList.vue'
-import TabPanel from '@/components/ui/tabs/TabPanel.vue'
-import ArtworkField from '@/components/ui/form/ArtworkField.vue'
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
+import FolderSelect from "@/components/ui/form/FolderSelect.vue";
+import TextArea from "@/components/ui/form/TextArea.vue";
+import TabButton from "@/components/ui/tabs/TabButton.vue";
+import Tabs from "@/components/ui/tabs/Tabs.vue";
+import TabPanelContainer from "@/components/ui/tabs/TabPanelContainer.vue";
+import TabList from "@/components/ui/tabs/TabList.vue";
+import TabPanel from "@/components/ui/tabs/TabPanel.vue";
+import ArtworkField from "@/components/ui/form/ArtworkField.vue";
 
-const props = defineProps<{ playlist: Playlist }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ playlist: Playlist }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { playlist } = props
+const { playlist } = props;
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
 const { Btn, RuleGroup, activateTab, isTabActive, collectedRuleGroups, addGroup, onGroupChanged } =
-  useSmartPlaylistForm(cloneDeep(playlist.rules))
+  useSmartPlaylistForm(cloneDeep(playlist.rules));
 
-const close = () => emit('close')
+const close = () => emit("close");
 
 const { data, isPristine, handleSubmit } = useForm<UpdatePlaylistData>({
-  initialValues: { ...pick(playlist, 'name', 'folder_id', 'description', 'cover'), folder_name: null },
-  isPristine: (original, current) => isEqual(original, current) && isEqual(collectedRuleGroups.value, playlist.rules),
-  onSubmit: async data => {
+  initialValues: {
+    ...pick(playlist, "name", "folder_id", "description", "cover"),
+    folder_name: null,
+  },
+  isPristine: (original, current) =>
+    isEqual(original, current) && isEqual(collectedRuleGroups.value, playlist.rules),
+  onSubmit: async (data) => {
     const formData = {
       ...cloneDeep(data),
       rules: collectedRuleGroups.value,
-    }
+    };
 
     if (formData.cover === playlist.cover) {
-      delete formData.cover
+      delete formData.cover;
     }
 
-    await playlistStore.update(playlist, formData)
+    await playlistStore.update(playlist, formData);
   },
   onSuccess: () => {
-    toastSuccess(`Playlist "${playlist.name}" updated.`)
-    eventBus.emit('PLAYLIST_UPDATED', playlist)
-    close()
+    toastSuccess(`Playlist "${playlist.name}" updated.`);
+    eventBus.emit("PLAYLIST_UPDATED", playlist);
+    close();
   },
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>
 
 <style lang="postcss" scoped>

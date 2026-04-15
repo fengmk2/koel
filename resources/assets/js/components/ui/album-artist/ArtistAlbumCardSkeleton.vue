@@ -1,5 +1,8 @@
 <template>
-  <article :class="layout" class="skeleton flex flex-col gap-3 p-5 rounded-lg max-w-[256px] border border-k-fg-10">
+  <article
+    :class="layout"
+    class="skeleton flex flex-col gap-3 p-5 rounded-lg max-w-[256px] border border-k-fg-10"
+  >
     <aside class="aspect-square rounded-lg pulse" />
 
     <footer class="flex flex-col flex-1 gap-3">
@@ -11,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-withDefaults(defineProps<{ layout?: CardLayout }>(), { layout: 'full' })
+withDefaults(defineProps<{ layout?: CardLayout }>(), { layout: "full" });
 </script>
 
 <style lang="postcss" scoped>

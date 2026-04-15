@@ -1,74 +1,74 @@
-import { screen, waitFor } from '@testing-library/vue'
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { podcastStore } from '@/stores/podcastStore'
-import Component from './PodcastListScreen.vue'
+import { screen, waitFor } from "@testing-library/vue";
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { podcastStore } from "@/stores/podcastStore";
+import Component from "./PodcastListScreen.vue";
 
-describe('podcastListScreen.vue', () => {
-  const h = createHarness()
+describe("podcastListScreen.vue", () => {
+  const h = createHarness();
 
   const renderComponent = async () => {
     const rendered = h.render(Component, {
       global: {
         stubs: {
-          PodcastItem: h.stub('podcast-item'),
+          PodcastItem: h.stub("podcast-item"),
         },
       },
-    })
+    });
 
-    h.visit('/podcasts')
-    await h.tick()
+    h.visit("/podcasts");
+    await h.tick();
 
-    return rendered
-  }
+    return rendered;
+  };
 
-  it('renders', async () => {
-    const fetchMock = h.mock(podcastStore, 'fetchAll')
-    podcastStore.state.podcasts = h.factory('podcast', 9)
+  it("renders", async () => {
+    const fetchMock = h.mock(podcastStore, "fetchAll");
+    podcastStore.state.podcasts = h.factory("podcast", 9);
 
-    await renderComponent()
+    await renderComponent();
 
-    expect(screen.getAllByTestId('podcast-item')).toHaveLength(9)
-    expect(fetchMock).toHaveBeenCalled()
-  })
+    expect(screen.getAllByTestId("podcast-item")).toHaveLength(9);
+    expect(fetchMock).toHaveBeenCalled();
+  });
 
-  it('shows a message when there are no podcasts', async () => {
-    h.mock(podcastStore, 'fetchAll')
-    podcastStore.state.podcasts = []
-    await renderComponent()
+  it("shows a message when there are no podcasts", async () => {
+    h.mock(podcastStore, "fetchAll");
+    podcastStore.state.podcasts = [];
+    await renderComponent();
 
-    await waitFor(() => screen.getByTestId('screen-empty-state'))
-  })
+    await waitFor(() => screen.getByTestId("screen-empty-state"));
+  });
 
-  it('shows all or only favorites upon toggling the button', async () => {
+  it("shows all or only favorites upon toggling the button", async () => {
     podcastStore.state.podcasts = [
-      ...h.factory('podcast', 3, { favorite: true }),
-      ...h.factory('podcast', 6, { favorite: false }),
-    ]
+      ...h.factory("podcast", 3, { favorite: true }),
+      ...h.factory("podcast", 6, { favorite: false }),
+    ];
 
-    h.mock(podcastStore, 'fetchAll')
+    h.mock(podcastStore, "fetchAll");
 
-    await renderComponent()
-    expect(screen.getAllByTestId('podcast-item')).toHaveLength(9)
+    await renderComponent();
+    expect(screen.getAllByTestId("podcast-item")).toHaveLength(9);
 
-    await h.user.click(screen.getByRole('button', { name: 'Show favorites only' }))
-    await waitFor(() => expect(screen.getAllByTestId('podcast-item')).toHaveLength(3))
+    await h.user.click(screen.getByRole("button", { name: "Show favorites only" }));
+    await waitFor(() => expect(screen.getAllByTestId("podcast-item")).toHaveLength(3));
 
-    await h.user.click(screen.getByRole('button', { name: 'Show all' }))
-    await waitFor(() => expect(screen.getAllByTestId('podcast-item')).toHaveLength(9))
-  })
+    await h.user.click(screen.getByRole("button", { name: "Show all" }));
+    await waitFor(() => expect(screen.getAllByTestId("podcast-item")).toHaveLength(9));
+  });
 
-  it('shows contextual empty state when no favorite podcasts', async () => {
-    podcastStore.state.podcasts = h.factory('podcast', 3, { favorite: false })
-    h.mock(podcastStore, 'fetchAll')
+  it("shows contextual empty state when no favorite podcasts", async () => {
+    podcastStore.state.podcasts = h.factory("podcast", 3, { favorite: false });
+    h.mock(podcastStore, "fetchAll");
 
-    await renderComponent()
+    await renderComponent();
 
-    await h.user.click(screen.getByRole('button', { name: 'Show favorites only' }))
+    await h.user.click(screen.getByRole("button", { name: "Show favorites only" }));
 
     await waitFor(() => {
-      const emptyState = screen.getByTestId('screen-empty-state')
-      expect(emptyState.textContent).toContain('No favorite podcasts')
-    })
-  })
-})
+      const emptyState = screen.getByTestId("screen-empty-state");
+      expect(emptyState.textContent).toContain("No favorite podcasts");
+    });
+  });
+});

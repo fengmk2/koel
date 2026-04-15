@@ -9,7 +9,9 @@
       <aside class="w-44 min-w-44 p-4 flex items-center justify-center">
         <img :src="event.image" alt="" class="w-full aspect-[3/2] object-cover rounded-md" />
       </aside>
-      <dl class="flex-1 flex flex-col justify-center border-l border-white/20 border-dashed p-4 overflow-hidden">
+      <dl
+        class="flex-1 flex flex-col justify-center border-l border-white/20 border-dashed p-4 overflow-hidden"
+      >
         <dt class="sr-only">Name</dt>
         <dd class="text-xl text-k-fg mb-2 truncate">
           {{ event.name }}
@@ -35,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { faTicket } from '@fortawesome/free-solid-svg-icons'
+import { faTicket } from "@fortawesome/free-solid-svg-icons";
 
-defineProps<{ event: LiveEvent }>()
+defineProps<{ event: LiveEvent }>();
 </script>

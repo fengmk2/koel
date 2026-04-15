@@ -14,19 +14,19 @@
 </template>
 
 <script lang="ts" setup>
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
-import { defineAsyncComponent } from '@/utils/helpers'
-import { useNewVersionNotification } from '@/composables/useNewVersionNotification'
-import { useBranding } from '@/composables/useBranding'
-import { useModal } from '@/composables/useModal'
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { defineAsyncComponent } from "@/utils/helpers";
+import { useNewVersionNotification } from "@/composables/useNewVersionNotification";
+import { useBranding } from "@/composables/useBranding";
+import { useModal } from "@/composables/useModal";
 
-import SideSheetButton from '@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue'
+import SideSheetButton from "@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue";
 
-const AboutKoelModal = defineAsyncComponent(() => import('@/components/meta/AboutKoelModal.vue'))
-const { openModal } = useModal()
+const AboutKoelModal = defineAsyncComponent(() => import("@/components/meta/AboutKoelModal.vue"));
+const { openModal } = useModal();
 
-const { shouldNotifyNewVersion } = useNewVersionNotification()
-const { name: appName } = useBranding()
+const { shouldNotifyNewVersion } = useNewVersionNotification();
+const { name: appName } = useBranding();
 
-const openAboutKoelModal = () => openModal<'ABOUT_KOEL'>(AboutKoelModal)
+const openAboutKoelModal = () => openModal<"ABOUT_KOEL">(AboutKoelModal);
 </script>

@@ -83,10 +83,8 @@
             }
           ]
         },
-        "images": [
-        ],
-        "classifications": [
-        ],
+        "images": [],
+        "classifications": [],
         "upcomingEvents": {
           "ticketmaster": 1,
           "_total": 1,

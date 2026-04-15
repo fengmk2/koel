@@ -1,12 +1,12 @@
-import { faker } from '@faker-js/faker'
-import { genres } from '@/config/genres'
+import { faker } from "@faker-js/faker";
+import { genres } from "@/config/genres";
 
 const generate = (partOfCompilation = false): Song => {
-  const artistId = faker.string.ulid()
-  const artistName = faker.person.fullName()
+  const artistId = faker.string.ulid();
+  const artistName = faker.person.fullName();
 
   return {
-    type: 'songs',
+    type: "songs",
     owner_id: faker.string.uuid(),
     artist_id: artistId,
     album_id: faker.string.ulid(),
@@ -27,13 +27,13 @@ const generate = (partOfCompilation = false): Song => {
     favorite: faker.datatype.boolean(),
     is_public: faker.datatype.boolean(),
     created_at: faker.date.past().toISOString(),
-    playback_state: 'Stopped',
+    playback_state: "Stopped",
     is_external: false,
-  }
-}
+  };
+};
 
-export default (): Song => generate()
+export default (): Song => generate();
 
 export const states: Record<string, Partial<Song>> = {
   partOfCompilation: generate(true),
-}
+};

@@ -29,28 +29,28 @@
 </template>
 
 <script setup lang="ts">
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
-import { computed, onMounted } from 'vue'
-import { useImageFileInput } from '@/composables/useImageFileInput'
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { computed, onMounted } from "vue";
+import { useImageFileInput } from "@/composables/useImageFileInput";
 
-import FileInput from '@/components/ui/form/FileInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import FileInput from "@/components/ui/form/FileInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const props = defineProps<{ default: string; name: string }>()
+const props = defineProps<{ default: string; name: string }>();
 
-const model = defineModel<string>()
-let initialValue: typeof model.value
+const model = defineModel<string>();
+let initialValue: typeof model.value;
 
-const hasCustomValue = computed(() => model.value && model.value !== props.default)
+const hasCustomValue = computed(() => model.value && model.value !== props.default);
 
 const removeCustomValue = () => {
   // First reset the model to the initial value (current settings), then to the default fallback.
-  model.value = model.value === initialValue ? props.default : initialValue
-}
+  model.value = model.value === initialValue ? props.default : initialValue;
+};
 
 const { onImageInputChange } = useImageFileInput({
-  onImageDataUrl: dataUrl => (model.value = dataUrl),
-})
+  onImageDataUrl: (dataUrl) => (model.value = dataUrl),
+});
 
-onMounted(() => (initialValue = model.value))
+onMounted(() => (initialValue = model.value));
 </script>

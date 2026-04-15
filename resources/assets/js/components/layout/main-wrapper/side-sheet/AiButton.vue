@@ -17,7 +17,14 @@
         stroke-linejoin="round"
       >
         <defs>
-          <linearGradient id="ai-btn-gradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="24">
+          <linearGradient
+            id="ai-btn-gradient"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="24"
+            y2="24"
+          >
             <stop offset="0%" stop-color="#22d3ee" />
             <stop offset="100%" stop-color="#c084fc" />
           </linearGradient>
@@ -36,14 +43,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from '@/composables/useRouter'
+import { useRouter } from "@/composables/useRouter";
 
-const { go, url } = useRouter()
+const { go, url } = useRouter();
 </script>
 
 <style lang="postcss" scoped>
 @property --angle {
-  syntax: '<angle>';
+  syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }

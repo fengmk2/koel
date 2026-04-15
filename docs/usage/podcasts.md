@@ -26,12 +26,12 @@ After successful subscription, you will be able to browse the podcast's episodes
 Koel treats podcast episodes not much differently from songs. You can stream them, mark them as favorites, add them to playlists, search for them etc. using the same
 [interface elements](./web-interface.md). However, there are some main differences:
 
-* Koel maintains the last played position for each episode, so you can resume listening where you left off.
-* Smart playlists don't work with podcasts and will not contain podcast episodes.
-* You can't edit the metadata of podcasts and episodes like you can with songs.
-* Podcast episodes don't have "genres" (though they may have categories), so you can't browse them by genre.
-* [Playlist collaboration](../plus/collaboration) <PlusBadge /> doesn't work with podcasts.
-* When streaming an episode, Koel will first try with its original source and only download it to your server if a CORS error occurs in the attempt. This means that you can stream podcasts without worrying about your server's storage space, but your streaming experience will depend on the podcast's hosting service.
+- Koel maintains the last played position for each episode, so you can resume listening where you left off.
+- Smart playlists don't work with podcasts and will not contain podcast episodes.
+- You can't edit the metadata of podcasts and episodes like you can with songs.
+- Podcast episodes don't have "genres" (though they may have categories), so you can't browse them by genre.
+- [Playlist collaboration](../plus/collaboration) <PlusBadge /> doesn't work with podcasts.
+- When streaming an episode, Koel will first try with its original source and only download it to your server if a CORS error occurs in the attempt. This means that you can stream podcasts without worrying about your server's storage space, but your streaming experience will depend on the podcast's hosting service.
 
 ## Updating Podcasts
 
@@ -42,4 +42,3 @@ You can also update a podcast's episodes manually from the web interface by clic
 import plusIcon from '../assets/icons/plus.svg'
 import refreshIcon from '../assets/icons/refresh.svg'
 </script>
-

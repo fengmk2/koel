@@ -1,13 +1,13 @@
-import { describe, expect, it, vi } from 'vite-plus/test'
+import { describe, expect, it, vi } from "vite-plus/test";
 
-const successMock = vi.fn()
-const infoMock = vi.fn()
-const warningMock = vi.fn()
-const errorMock = vi.fn()
-const confirmMock = vi.fn()
+const successMock = vi.fn();
+const infoMock = vi.fn();
+const warningMock = vi.fn();
+const errorMock = vi.fn();
+const confirmMock = vi.fn();
 
-vi.mock('@/utils/helpers', async importOriginal => ({
-  ...(await importOriginal<typeof import('@/utils/helpers')>()),
+vi.mock("@/utils/helpers", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/utils/helpers")>()),
   requireInjection: () => ({
     value: {
       success: successMock,
@@ -17,18 +17,18 @@ vi.mock('@/utils/helpers', async importOriginal => ({
       confirm: confirmMock,
     },
   }),
-}))
+}));
 
-import { useDialogBox } from './useDialogBox'
+import { useDialogBox } from "./useDialogBox";
 
-describe('useDialogBox', () => {
-  it('exposes dialog methods', () => {
-    const { showSuccessDialog, showConfirmDialog } = useDialogBox()
+describe("useDialogBox", () => {
+  it("exposes dialog methods", () => {
+    const { showSuccessDialog, showConfirmDialog } = useDialogBox();
 
-    showSuccessDialog('Success!')
-    expect(successMock).toHaveBeenCalledWith('Success!')
+    showSuccessDialog("Success!");
+    expect(successMock).toHaveBeenCalledWith("Success!");
 
-    showConfirmDialog('Are you sure?')
-    expect(confirmMock).toHaveBeenCalledWith('Are you sure?')
-  })
-})
+    showConfirmDialog("Are you sure?");
+    expect(confirmMock).toHaveBeenCalledWith("Are you sure?");
+  });
+});

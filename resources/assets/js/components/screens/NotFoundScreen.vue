@@ -15,9 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-import { faKiwiBird, faMap } from '@fortawesome/free-solid-svg-icons'
+import { faKiwiBird, faMap } from "@fortawesome/free-solid-svg-icons";
 
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenEmptyState from '@/components/ui/ScreenEmptyState.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenEmptyState from "@/components/ui/ScreenEmptyState.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
 </script>

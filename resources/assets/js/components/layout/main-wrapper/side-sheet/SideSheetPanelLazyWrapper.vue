@@ -5,12 +5,12 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { toRefs } from "vue";
 
 const props = withDefaults(defineProps<{ active?: boolean; shouldMount?: boolean }>(), {
   active: false,
   shouldMount: false,
-})
+});
 
-const { active, shouldMount } = toRefs(props)
+const { active, shouldMount } = toRefs(props);
 </script>

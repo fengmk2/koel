@@ -5,34 +5,34 @@
 </template>
 
 <script setup lang="ts">
-import { useBranding } from '@/composables/useBranding'
+import { useBranding } from "@/composables/useBranding";
 
-const props = defineProps<{ embeddable: Embeddable }>()
-const { embeddable } = props
+const props = defineProps<{ embeddable: Embeddable }>();
+const { embeddable } = props;
 
-const { cover: defaultCover } = useBranding()
+const { cover: defaultCover } = useBranding();
 
-let src: string | null = null
+let src: string | null = null;
 
 switch (embeddable.type) {
-  case 'albums':
-    src = (embeddable as Album).cover
-    break
-  case 'artists':
-    src = (embeddable as Artist).image
-    break
-  case 'playlists':
-    src = (embeddable as Playlist).cover
-    break
-  case 'songs':
-    src = (embeddable as Song).album_cover
-    break
-  case 'episodes':
-    src = (embeddable as Episode).episode_image
-    break
+  case "albums":
+    src = (embeddable as Album).cover;
+    break;
+  case "artists":
+    src = (embeddable as Artist).image;
+    break;
+  case "playlists":
+    src = (embeddable as Playlist).cover;
+    break;
+  case "songs":
+    src = (embeddable as Song).album_cover;
+    break;
+  case "episodes":
+    src = (embeddable as Episode).episode_image;
+    break;
 }
 
-src = src || defaultCover
+src = src || defaultCover;
 </script>
 
 <style scoped lang="postcss"></style>

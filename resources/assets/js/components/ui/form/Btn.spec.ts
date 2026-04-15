@@ -1,19 +1,19 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './Btn.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./Btn.vue";
 
-describe('btn.vue', () => {
-  const h = createHarness()
+describe("btn.vue", () => {
+  const h = createHarness();
 
-  it('renders', () => {
+  it("renders", () => {
     expect(
       h
         .render(Component, {
           slots: {
-            default: 'Click Me Nao',
+            default: "Click Me Nao",
           },
         })
         .html(),
-    ).toMatchSnapshot()
-  })
-})
+    ).toMatchSnapshot();
+  });
+});

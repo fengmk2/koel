@@ -5,8 +5,10 @@
     >
       <span class="flex items-center gap-3">
         <Icon :icon="faCopy" />
-        <strong>Duplicate file{{ songs.length === 1 ? '' : 's' }}</strong>
-        <span class="text-xs bg-k-highlight text-k-highlight-fg px-2 py-0.5 rounded-full uppercase font-bold">
+        <strong>Duplicate file{{ songs.length === 1 ? "" : "s" }}</strong>
+        <span
+          class="text-xs bg-k-highlight text-k-highlight-fg px-2 py-0.5 rounded-full uppercase font-bold"
+        >
           {{ songs.length }}
         </span>
       </span>
@@ -24,24 +26,24 @@
 </template>
 
 <script setup lang="ts">
-import { faCopy } from '@fortawesome/free-solid-svg-icons'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { uploadService } from '@/services/uploadService'
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { uploadService } from "@/services/uploadService";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import DuplicateUploadItem from '@/components/ui/upload/DuplicateUploadItem.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import DuplicateUploadItem from "@/components/ui/upload/DuplicateUploadItem.vue";
 
-import type { DuplicateUpload } from '@/services/uploadService'
+import type { DuplicateUpload } from "@/services/uploadService";
 
-defineProps<{ songs: DuplicateUpload[] }>()
+defineProps<{ songs: DuplicateUpload[] }>();
 
-const { showConfirmDialog } = useDialogBox()
+const { showConfirmDialog } = useDialogBox();
 
-const keepAll = () => uploadService.keepAllDuplicates()
+const keepAll = () => uploadService.keepAllDuplicates();
 
 const confirmDiscardAll = async () => {
-  if (await showConfirmDialog('Discard all duplicate uploads?')) {
-    uploadService.discardAllDuplicates()
+  if (await showConfirmDialog("Discard all duplicate uploads?")) {
+    uploadService.discardAllDuplicates();
   }
-}
+};
 </script>
