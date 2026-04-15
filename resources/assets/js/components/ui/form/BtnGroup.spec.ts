@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './BtnGroup.vue'
-import Btn from './Btn.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./BtnGroup.vue";
+import Btn from "./Btn.vue";
 
-describe('btnGroup.vue', () => {
-  const h = createHarness()
+describe("btnGroup.vue", () => {
+  const h = createHarness();
 
   const renderButtonToSlot = (text: string) => {
     return h
@@ -13,18 +13,18 @@ describe('btnGroup.vue', () => {
           default: text,
         },
       })
-      .html()
-  }
+      .html();
+  };
 
-  it('renders', () => {
+  it("renders", () => {
     expect(
       h
         .render(Component, {
           slots: {
-            default: ['Green', 'Orange', 'Blue'].map(text => renderButtonToSlot(text)),
+            default: ["Green", "Orange", "Blue"].map((text) => renderButtonToSlot(text)),
           },
         })
         .html(),
-    ).toMatchSnapshot()
-  })
-})
+    ).toMatchSnapshot();
+  });
+});

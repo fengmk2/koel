@@ -23,154 +23,154 @@
 </template>
 
 <script lang="ts" setup>
-import { useMediaQuery } from '@vueuse/core'
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { useMediaQuery } from "@vueuse/core";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 
 const props = withDefaults(defineProps<{ text?: string; speed?: number; hoverOnly?: boolean }>(), {
   text: undefined,
   speed: 30,
   hoverOnly: false,
-})
+});
 
-const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
-const containerRef = ref<HTMLElement>()
-const textRef = ref<HTMLElement>()
-const overflow = ref(0)
-const animating = ref(false)
-const offset = ref(0)
-const direction = ref<1 | -1>(-1)
+const containerRef = ref<HTMLElement>();
+const textRef = ref<HTMLElement>();
+const overflow = ref(0);
+const animating = ref(false);
+const offset = ref(0);
+const direction = ref<1 | -1>(-1);
 
-let frameId = 0
-let pauseTimeout = 0
+let frameId = 0;
+let pauseTimeout = 0;
 
 const animationStyle = computed(() => {
   if (!animating.value) {
-    return {}
+    return {};
   }
 
-  return { transform: `translateX(${offset.value}px)` }
-})
+  return { transform: `translateX(${offset.value}px)` };
+});
 
 const measure = () => {
   if (!containerRef.value || !textRef.value) {
-    return
+    return;
   }
 
-  const containerWidth = containerRef.value.offsetWidth
-  const textWidth = textRef.value.scrollWidth
+  const containerWidth = containerRef.value.offsetWidth;
+  const textWidth = textRef.value.scrollWidth;
 
-  overflow.value = textWidth - containerWidth
-}
+  overflow.value = textWidth - containerWidth;
+};
 
 const stop = () => {
-  animating.value = false
-  offset.value = 0
-  direction.value = -1
-  cancelAnimationFrame(frameId)
-  clearTimeout(pauseTimeout)
-}
+  animating.value = false;
+  offset.value = 0;
+  direction.value = -1;
+  cancelAnimationFrame(frameId);
+  clearTimeout(pauseTimeout);
+};
 
 const pause = (ms: number) =>
-  new Promise<void>(resolve => {
-    pauseTimeout = window.setTimeout(resolve, ms)
-  })
+  new Promise<void>((resolve) => {
+    pauseTimeout = window.setTimeout(resolve, ms);
+  });
 
 const animate = async () => {
   if (prefersReducedMotion.value) {
-    return
+    return;
   }
 
-  measure()
+  measure();
 
   if (overflow.value <= 0) {
-    stop()
-    return
+    stop();
+    return;
   }
 
-  animating.value = true
-  offset.value = 0
-  direction.value = -1
+  animating.value = true;
+  offset.value = 0;
+  direction.value = -1;
 
-  await pause(1500)
+  await pause(1500);
 
-  let lastTime = 0
+  let lastTime = 0;
 
   const step = (time: number) => {
     if (!animating.value) {
-      return
+      return;
     }
 
     if (lastTime) {
-      const delta = ((time - lastTime) / 1000) * props.speed
+      const delta = ((time - lastTime) / 1000) * props.speed;
 
-      offset.value += delta * direction.value
+      offset.value += delta * direction.value;
 
       if (offset.value <= -overflow.value) {
-        offset.value = -overflow.value
-        direction.value = 1
-        lastTime = 0
+        offset.value = -overflow.value;
+        direction.value = 1;
+        lastTime = 0;
         pauseTimeout = window.setTimeout(() => {
-          lastTime = 0
-          frameId = requestAnimationFrame(step)
-        }, 1500)
-        return
+          lastTime = 0;
+          frameId = requestAnimationFrame(step);
+        }, 1500);
+        return;
       }
 
       if (offset.value >= 0) {
-        offset.value = 0
-        direction.value = -1
-        lastTime = 0
+        offset.value = 0;
+        direction.value = -1;
+        lastTime = 0;
         pauseTimeout = window.setTimeout(() => {
-          lastTime = 0
-          frameId = requestAnimationFrame(step)
-        }, 1500)
-        return
+          lastTime = 0;
+          frameId = requestAnimationFrame(step);
+        }, 1500);
+        return;
       }
     }
 
-    lastTime = time
-    frameId = requestAnimationFrame(step)
-  }
+    lastTime = time;
+    frameId = requestAnimationFrame(step);
+  };
 
-  frameId = requestAnimationFrame(step)
-}
+  frameId = requestAnimationFrame(step);
+};
 
 const onMouseEnter = () => {
   if (props.hoverOnly) {
-    stop()
-    animate()
+    stop();
+    animate();
   }
-}
+};
 
 const onMouseLeave = () => {
   if (props.hoverOnly) {
-    stop()
+    stop();
   }
-}
+};
 
 watch(
   () => props.text,
   () => {
-    stop()
+    stop();
 
     if (!props.hoverOnly) {
-      animate()
+      animate();
     }
   },
-  { flush: 'post' },
-)
+  { flush: "post" },
+);
 
 watch(
   containerRef,
   () => {
     if (containerRef.value && !props.hoverOnly) {
-      stop()
-      animate()
+      stop();
+      animate();
     }
   },
-  { flush: 'post' },
-)
+  { flush: "post" },
+);
 
-onBeforeUnmount(stop)
+onBeforeUnmount(stop);
 </script>

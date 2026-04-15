@@ -1,25 +1,25 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { eventBus } from '@/utils/eventBus'
-import { youTubeService } from './youTubeService'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { eventBus } from "@/utils/eventBus";
+import { youTubeService } from "./youTubeService";
 
-describe('youTubeService', () => {
-  const h = createHarness()
+describe("youTubeService", () => {
+  const h = createHarness();
 
-  it('plays a video', () => {
-    const video = h.factory('you-tube-video', {
+  it("plays a video", () => {
+    const video = h.factory("you-tube-video", {
       id: {
-        videoId: 'foo',
+        videoId: "foo",
       },
       snippet: {
-        title: 'Bar',
+        title: "Bar",
       },
-    })
+    });
 
-    const emitMock = h.mock(eventBus, 'emit')
+    const emitMock = h.mock(eventBus, "emit");
 
-    youTubeService.play(video)
+    youTubeService.play(video);
 
-    expect(emitMock).toHaveBeenCalledWith('PLAY_YOUTUBE_VIDEO', { id: 'foo', title: 'Bar' })
-  })
-})
+    expect(emitMock).toHaveBeenCalledWith("PLAY_YOUTUBE_VIDEO", { id: "foo", title: "Bar" });
+  });
+});

@@ -1,43 +1,45 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { embedService } from '@/stores/embedService'
-import { screen, waitFor } from '@testing-library/vue'
-import Component from './CreateEmbedForm.vue'
-import { themeStore } from '@/stores/themeStore'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { embedService } from "@/stores/embedService";
+import { screen, waitFor } from "@testing-library/vue";
+import Component from "./CreateEmbedForm.vue";
+import { themeStore } from "@/stores/themeStore";
 
-describe('createEmbedForm.vue', () => {
-  const h = createHarness()
+describe("createEmbedForm.vue", () => {
+  const h = createHarness();
 
   const renderComponent = async (embeddable?: Embeddable, embed?: Embed) => {
-    embeddable = embeddable ?? h.factory('playlist')
+    embeddable = embeddable ?? h.factory("playlist");
 
     embed =
       embed ??
-      h.factory('embed', {
+      h.factory("embed", {
         embeddable_id: embeddable.id,
-        embeddable_type: embeddable.type.slice(0, -1) as Embed['embeddable_type'],
-      })
+        embeddable_type: embeddable.type.slice(0, -1) as Embed["embeddable_type"],
+      });
 
-    const resolveEmbedMock = h.mock(embedService, 'resolveForEmbeddable').mockResolvedValue(embed)
-    const encryptOptionsMock = h.mock(embedService, 'encryptOptions').mockResolvedValueOnce('encrypted-1')
+    const resolveEmbedMock = h.mock(embedService, "resolveForEmbeddable").mockResolvedValue(embed);
+    const encryptOptionsMock = h
+      .mock(embedService, "encryptOptions")
+      .mockResolvedValueOnce("encrypted-1");
 
     const rendered = h.render(Component, {
       props: {
         embeddable,
       },
-    })
+    });
 
     await waitFor(() => {
-      expect(resolveEmbedMock).toHaveBeenCalledWith(embeddable)
+      expect(resolveEmbedMock).toHaveBeenCalledWith(embeddable);
 
       expect(encryptOptionsMock).toHaveBeenCalledWith({
-        layout: ['episodes', 'songs'].includes(embeddable.type) ? 'compact' : 'full',
-        theme: 'classic',
+        layout: ["episodes", "songs"].includes(embeddable.type) ? "compact" : "full",
+        theme: "classic",
         preview: false,
-      })
-    })
+      });
+    });
 
-    await h.tick()
+    await h.tick();
 
     return {
       ...rendered,
@@ -45,74 +47,80 @@ describe('createEmbedForm.vue', () => {
       embeddable,
       resolveEmbedMock,
       encryptOptionsMock,
-    }
-  }
+    };
+  };
 
-  it('renders form with widget and options', async () => {
-    await renderComponent()
+  it("renders form with widget and options", async () => {
+    await renderComponent();
 
-    screen.getByRole('combobox', { name: 'Layout' })
-    expect(screen.queryByRole('combobox', { name: 'Theme' })).toBeNull()
-  })
+    screen.getByRole("combobox", { name: "Layout" });
+    expect(screen.queryByRole("combobox", { name: "Theme" })).toBeNull();
+  });
 
-  it('updates the preview and the code based on the configuration', async () => {
-    const { embed, encryptOptionsMock } = await renderComponent()
+  it("updates the preview and the code based on the configuration", async () => {
+    const { embed, encryptOptionsMock } = await renderComponent();
 
-    await h.user.click(screen.getByRole('checkbox', { name: 'Show code' }))
-    const embedCode: HTMLDivElement = screen.getByTestId('embed-code')
+    await h.user.click(screen.getByRole("checkbox", { name: "Show code" }));
+    const embedCode: HTMLDivElement = screen.getByTestId("embed-code");
 
-    const iframe: HTMLIFrameElement = screen.getByTestId('embed-preview-iframe')
-    expect(iframe.getAttribute('src')).toBe(`http://test/#/embed/${embed.id}/encrypted-1`)
-    expect(embedCode.textContent).toContain(`<iframe src="http://test/#/embed/${embed.id}/encrypted-1`)
+    const iframe: HTMLIFrameElement = screen.getByTestId("embed-preview-iframe");
+    expect(iframe.getAttribute("src")).toBe(`http://test/#/embed/${embed.id}/encrypted-1`);
+    expect(embedCode.textContent).toContain(
+      `<iframe src="http://test/#/embed/${embed.id}/encrypted-1`,
+    );
 
-    encryptOptionsMock.mockResolvedValueOnce('encrypted-2')
-    await h.user.selectOptions(screen.getByRole('combobox', { name: 'Layout' }), 'compact')
+    encryptOptionsMock.mockResolvedValueOnce("encrypted-2");
+    await h.user.selectOptions(screen.getByRole("combobox", { name: "Layout" }), "compact");
 
-    expect(iframe.getAttribute('src')).toBe(`http://test/#/embed/${embed.id}/encrypted-2`)
-    expect(iframe.contentWindow!.location.reload).toHaveBeenCalled()
-    expect(embedCode.textContent).toContain(`<iframe src="http://test/#/embed/${embed.id}/encrypted-2"`)
-  })
+    expect(iframe.getAttribute("src")).toBe(`http://test/#/embed/${embed.id}/encrypted-2`);
+    expect(iframe.contentWindow!.location.reload).toHaveBeenCalled();
+    expect(embedCode.textContent).toContain(
+      `<iframe src="http://test/#/embed/${embed.id}/encrypted-2"`,
+    );
+  });
 
-  it('has a Theme dropdown for Plus user', async () => {
+  it("has a Theme dropdown for Plus user", async () => {
     await h.withPlusEdition(async () => {
-      h.mock(themeStore, 'fetchCustomThemes')
-      const { embed, encryptOptionsMock } = await renderComponent()
+      h.mock(themeStore, "fetchCustomThemes");
+      const { embed, encryptOptionsMock } = await renderComponent();
 
-      await h.user.click(screen.getByRole('checkbox', { name: 'Show code' }))
-      const embedCode: HTMLDivElement = screen.getByTestId('embed-code')
+      await h.user.click(screen.getByRole("checkbox", { name: "Show code" }));
+      const embedCode: HTMLDivElement = screen.getByTestId("embed-code");
 
-      screen.getByRole('combobox', { name: 'Layout' })
+      screen.getByRole("combobox", { name: "Layout" });
 
-      encryptOptionsMock.mockResolvedValueOnce('encrypted-2')
+      encryptOptionsMock.mockResolvedValueOnce("encrypted-2");
 
       // The Theme dropdown is loaded asynchronously, so we need to wait for it to be loaded and rendered
       await waitFor(async () => {
-        await h.user.selectOptions(screen.getByRole('combobox', { name: 'Theme' }), 'laura')
-      })
+        await h.user.selectOptions(screen.getByRole("combobox", { name: "Theme" }), "laura");
+      });
 
-      const iframe: HTMLIFrameElement = screen.getByTestId('embed-preview-iframe')
-      expect(iframe.getAttribute('src')).toBe(`http://test/#/embed/${embed.id}/encrypted-2`)
-      expect(iframe.contentWindow!.location.reload).toHaveBeenCalled()
-      expect(embedCode.textContent).toContain(`<iframe src="http://test/#/embed/${embed.id}/encrypted-2"`)
-    })
-  })
+      const iframe: HTMLIFrameElement = screen.getByTestId("embed-preview-iframe");
+      expect(iframe.getAttribute("src")).toBe(`http://test/#/embed/${embed.id}/encrypted-2`);
+      expect(iframe.contentWindow!.location.reload).toHaveBeenCalled();
+      expect(embedCode.textContent).toContain(
+        `<iframe src="http://test/#/embed/${embed.id}/encrypted-2"`,
+      );
+    });
+  });
 
-  it('copies the code to the clipboard when button is clicked', async () => {
-    const { embed } = await renderComponent()
+  it("copies the code to the clipboard when button is clicked", async () => {
+    const { embed } = await renderComponent();
 
-    await h.user.click(screen.getByRole('button', { name: 'Copy Code' }))
+    await h.user.click(screen.getByRole("button", { name: "Copy Code" }));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       expect.stringContaining(`<iframe src="http://test/#/embed/${embed.id}/encrypted-1"`),
-    )
-  })
+    );
+  });
 
-  it('copies the code to the clipboard when code is clicked', async () => {
-    const { embed } = await renderComponent()
-    await h.user.click(screen.getByRole('checkbox', { name: 'Show code' }))
+  it("copies the code to the clipboard when code is clicked", async () => {
+    const { embed } = await renderComponent();
+    await h.user.click(screen.getByRole("checkbox", { name: "Show code" }));
 
-    await h.user.click(screen.getByTestId('embed-code'))
+    await h.user.click(screen.getByTestId("embed-code"));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       expect.stringContaining(`<iframe src="http://test/#/embed/${embed.id}/encrypted-1"`),
-    )
-  })
-})
+    );
+  });
+});

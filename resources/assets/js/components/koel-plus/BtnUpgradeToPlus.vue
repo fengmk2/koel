@@ -9,14 +9,16 @@
 </template>
 
 <script lang="ts" setup>
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { defineAsyncComponent } from '@/utils/helpers'
-import { useModal } from '@/composables/useModal'
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { defineAsyncComponent } from "@/utils/helpers";
+import { useModal } from "@/composables/useModal";
 
-import Btn from '@/components/ui/form/Btn.vue'
+import Btn from "@/components/ui/form/Btn.vue";
 
-const KoelPlusModal = defineAsyncComponent(() => import('@/components/koel-plus/KoelPlusModal.vue'))
-const { openModal } = useModal()
+const KoelPlusModal = defineAsyncComponent(
+  () => import("@/components/koel-plus/KoelPlusModal.vue"),
+);
+const { openModal } = useModal();
 
-const showPlusModal = () => openModal<'KOEL_PLUS'>(KoelPlusModal)
+const showPlusModal = () => openModal<"KOEL_PLUS">(KoelPlusModal);
 </script>

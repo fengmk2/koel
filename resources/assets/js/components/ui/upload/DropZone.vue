@@ -16,26 +16,26 @@
 </template>
 
 <script lang="ts" setup>
-import { faUpload } from '@fortawesome/free-solid-svg-icons'
-import { OnClickOutside } from '@vueuse/components'
-import { useUpload } from '@/composables/useUpload'
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import { OnClickOutside } from "@vueuse/components";
+import { useUpload } from "@/composables/useUpload";
 
-const emit = defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { allowsUpload, mediaPathSetUp, handleDropEvent } = useUpload()
+const { allowsUpload, mediaPathSetUp, handleDropEvent } = useUpload();
 
 const onDragOver = (event: DragEvent) => {
-  if (!event.dataTransfer?.types.includes('Files')) {
-    return false
+  if (!event.dataTransfer?.types.includes("Files")) {
+    return false;
   }
 
-  event.preventDefault()
-}
+  event.preventDefault();
+};
 
 const onDrop = async (event: DragEvent) => {
-  event.preventDefault()
-  await handleDropEvent(event)
-}
+  event.preventDefault();
+  await handleDropEvent(event);
+};
 
-const close = () => emit('close')
+const close = () => emit("close");
 </script>

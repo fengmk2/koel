@@ -1,32 +1,32 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './GridListView.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./GridListView.vue";
 
-describe('gridListView', () => {
-  const h = createHarness()
+describe("gridListView", () => {
+  const h = createHarness();
 
-  it('renders with thumbnails mode by default', () => {
+  it("renders with thumbnails mode by default", () => {
     const { container } = h.render(Component, {
-      slots: { default: '<div>Card</div>' },
-    })
+      slots: { default: "<div>Card</div>" },
+    });
 
-    expect(container.querySelector('.as-thumbnails')).toBeTruthy()
-  })
+    expect(container.querySelector(".as-thumbnails")).toBeTruthy();
+  });
 
-  it('renders with list mode', () => {
+  it("renders with list mode", () => {
     const { container } = h.render(Component, {
-      props: { viewMode: 'list' },
-      slots: { default: '<div>Row</div>' },
-    })
+      props: { viewMode: "list" },
+      slots: { default: "<div>Row</div>" },
+    });
 
-    expect(container.querySelector('.as-list')).toBeTruthy()
-  })
+    expect(container.querySelector(".as-list")).toBeTruthy();
+  });
 
-  it('renders slot content', () => {
+  it("renders slot content", () => {
     const { getByText } = h.render(Component, {
-      slots: { default: '<div>My Content</div>' },
-    })
+      slots: { default: "<div>My Content</div>" },
+    });
 
-    getByText('My Content')
-  })
-})
+    getByText("My Content");
+  });
+});

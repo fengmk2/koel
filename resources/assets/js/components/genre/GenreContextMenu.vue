@@ -7,38 +7,38 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
-import { useContextMenu } from '@/composables/useContextMenu'
-import { playback } from '@/services/playbackManager'
-import { playableStore } from '@/stores/playableStore'
-import { useRouter } from '@/composables/useRouter'
-import { queueStore } from '@/stores/queueStore'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { pluralize } from '@/utils/formatters'
+import { toRefs } from "vue";
+import { useContextMenu } from "@/composables/useContextMenu";
+import { playback } from "@/services/playbackManager";
+import { playableStore } from "@/stores/playableStore";
+import { useRouter } from "@/composables/useRouter";
+import { queueStore } from "@/stores/queueStore";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { pluralize } from "@/utils/formatters";
 
-const props = defineProps<{ genre: Genre }>()
-const { genre } = toRefs(props)
+const props = defineProps<{ genre: Genre }>();
+const { genre } = toRefs(props);
 
-const { MenuItem, trigger } = useContextMenu()
-const { toastSuccess } = useMessageToaster()
-const { go } = useRouter()
+const { MenuItem, trigger } = useContextMenu();
+const { toastSuccess } = useMessageToaster();
+const { go } = useRouter();
 
 const play = () =>
   trigger(async () => {
-    go('queue')
-    await playback().queueAndPlay(await playableStore.fetchSongsByGenre(genre.value))
-  })
+    go("queue");
+    await playback().queueAndPlay(await playableStore.fetchSongsByGenre(genre.value));
+  });
 
 const shuffle = () =>
   trigger(async () => {
-    go('queue')
-    await playback().queueAndPlay(await playableStore.fetchSongsByGenre(genre.value, true))
-  })
+    go("queue");
+    await playback().queueAndPlay(await playableStore.fetchSongsByGenre(genre.value, true));
+  });
 
 const queue = () =>
   trigger(async () => {
-    const songs = await playableStore.fetchSongsByGenre(genre.value)
-    queueStore.queue(songs)
-    toastSuccess(`${pluralize(songs, 'song')} added to queue.`)
-  })
+    const songs = await playableStore.fetchSongsByGenre(genre.value);
+    queueStore.queue(songs);
+    toastSuccess(`${pluralize(songs, "song")} added to queue.`);
+  });
 </script>

@@ -1,37 +1,37 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { screen } from '@testing-library/vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './ThemeCard.vue'
-import { themeStore } from '@/stores/themeStore'
+import { describe, expect, it } from "vite-plus/test";
+import { screen } from "@testing-library/vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./ThemeCard.vue";
+import { themeStore } from "@/stores/themeStore";
 
-describe('themeCard.vue', () => {
-  const h = createHarness()
+describe("themeCard.vue", () => {
+  const h = createHarness();
 
   const renderComponent = () => {
-    const theme = h.factory('theme', {
-      name: 'Sample',
-    })
+    const theme = h.factory("theme", {
+      name: "Sample",
+    });
 
     const rendered = h.render(Component, {
       props: {
         theme,
       },
-    })
+    });
 
     return {
       ...rendered,
       theme,
-    }
-  }
+    };
+  };
 
-  it('renders', () => expect(renderComponent().html()).toMatchSnapshot())
+  it("renders", () => expect(renderComponent().html()).toMatchSnapshot());
 
-  it('sets the theme when clicked', async () => {
-    const { theme } = renderComponent()
-    const setThemeMock = h.mock(themeStore, 'setTheme')
+  it("sets the theme when clicked", async () => {
+    const { theme } = renderComponent();
+    const setThemeMock = h.mock(themeStore, "setTheme");
 
-    await h.user.click(screen.getByRole('button', { name: 'Sample' }))
+    await h.user.click(screen.getByRole("button", { name: "Sample" }));
 
-    expect(setThemeMock).toHaveBeenCalledWith(theme)
-  })
-})
+    expect(setThemeMock).toHaveBeenCalledWith(theme);
+  });
+});

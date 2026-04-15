@@ -29,85 +29,85 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
-import { invitationService } from '@/services/invitationService'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { ref, watch } from "vue";
+import { invitationService } from "@/services/invitationService";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextArea from '@/components/ui/form/TextArea.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
-import RolePicker from '@/components/user/RolePicker.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextArea from "@/components/ui/form/TextArea.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
+import RolePicker from "@/components/user/RolePicker.vue";
 
-const emit = defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
-const emailsEl = ref<InstanceType<typeof TextArea>>()
+const emailsEl = ref<InstanceType<typeof TextArea>>();
 
-let emailEntries: string[] = []
+let emailEntries: string[] = [];
 
 const collectValidEmails = () => {
-  const validEmails: string[] = []
-  const input = document.createElement('input')
-  input.type = 'email'
+  const validEmails: string[] = [];
+  const input = document.createElement("input");
+  input.type = "email";
 
-  emailEntries.forEach(email => {
-    input.value = email
-    input.checkValidity() && validEmails.push(email)
-  })
+  emailEntries.forEach((email) => {
+    input.value = email;
+    input.checkValidity() && validEmails.push(email);
+  });
 
-  return validEmails
-}
+  return validEmails;
+};
 
-const close = () => emit('close')
+const close = () => emit("close");
 
 const { data, isPristine, handleSubmit } = useForm<{ raw_emails: string; role: Role }>({
   initialValues: {
-    raw_emails: '',
-    role: 'user',
+    raw_emails: "",
+    role: "user",
   },
   validator: () => {
-    const validEmails = collectValidEmails()
+    const validEmails = collectValidEmails();
 
     if (validEmails.length !== emailEntries.length) {
-      emailsEl.value!.el?.setCustomValidity('One or some of the emails you entered are invalid.')
-      emailsEl.value!.el?.reportValidity()
-      return false
+      emailsEl.value!.el?.setCustomValidity("One or some of the emails you entered are invalid.");
+      emailsEl.value!.el?.reportValidity();
+      return false;
     }
 
     if (validEmails.length === 0) {
-      emailsEl.value!.el?.setCustomValidity('Please enter at least one email address.')
-      emailsEl.value!.el?.reportValidity()
-      return false
+      emailsEl.value!.el?.setCustomValidity("Please enter at least one email address.");
+      emailsEl.value!.el?.reportValidity();
+      return false;
     }
 
-    return true
+    return true;
   },
   onSubmit: async ({ role }) => invitationService.invite(collectValidEmails(), role),
   onSuccess: () => {
-    toastSuccess('Invitation(s) sent.')
-    close()
+    toastSuccess("Invitation(s) sent.");
+    close();
   },
-})
+});
 
 watch(
   () => data.raw_emails,
-  val => {
+  (val) => {
     emailEntries = val
       .trim()
-      .split('\n')
-      .map(email => email.trim())
-      .filter(Boolean)
-    emailEntries = [...new Set(emailEntries)]
+      .split("\n")
+      .map((email) => email.trim())
+      .filter(Boolean);
+    emailEntries = [...new Set(emailEntries)];
   },
-)
+);
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>

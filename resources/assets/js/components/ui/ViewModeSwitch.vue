@@ -27,9 +27,9 @@
 </template>
 
 <script lang="ts" setup>
-import { LayoutGridIcon, LayoutListIcon } from 'lucide-vue-next'
+import { LayoutGridIcon, LayoutListIcon } from "lucide-vue-next";
 
-const value = defineModel<ViewMode>({ default: 'thumbnails' })
+const value = defineModel<ViewMode>({ default: "thumbnails" });
 </script>
 
 <style lang="postcss" scoped>

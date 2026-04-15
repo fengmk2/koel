@@ -19,28 +19,33 @@
 </template>
 
 <script lang="ts" setup>
-import { faCircleCheck, faCircleExclamation, faCircleInfo, faWarning } from '@fortawesome/free-solid-svg-icons'
-import { defineAsyncComponent, reactive, ref } from 'vue'
+import {
+  faCircleCheck,
+  faCircleExclamation,
+  faCircleInfo,
+  faWarning,
+} from "@fortawesome/free-solid-svg-icons";
+import { defineAsyncComponent, reactive, ref } from "vue";
 
-const SoundBars = defineAsyncComponent(() => import('@/components/ui/SoundBars.vue'))
+const SoundBars = defineAsyncComponent(() => import("@/components/ui/SoundBars.vue"));
 
-const el = ref<HTMLDialogElement>()
+const el = ref<HTMLDialogElement>();
 
 const state = reactive<OverlayState>({
   dismissible: false,
-  type: 'loading',
-  message: '',
-})
+  type: "loading",
+  message: "",
+});
 
 const show = (options: Partial<OverlayState> = {}) => {
-  Object.assign(state, options)
-  el.value?.open || el.value?.showModal()
-}
+  Object.assign(state, options);
+  el.value?.open || el.value?.showModal();
+};
 
-const hide = () => el.value?.close()
-const onCancel = () => state.dismissible && hide()
+const hide = () => el.value?.close();
+const onCancel = () => state.dismissible && hide();
 
-defineExpose({ show, hide })
+defineExpose({ show, hide });
 </script>
 
 <style lang="postcss" scoped>

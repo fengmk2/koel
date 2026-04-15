@@ -35,31 +35,35 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue'
-import { textToHsl } from '@/utils/formatters'
+import { computed, toRefs } from "vue";
+import { textToHsl } from "@/utils/formatters";
 
-import Thumbnail from '@/components/ui/album-artist/AlbumOrArtistThumbnail.vue'
-import WithGradientBorder from '@/components/ui/WithGradientBorder.vue'
+import Thumbnail from "@/components/ui/album-artist/AlbumOrArtistThumbnail.vue";
+import WithGradientBorder from "@/components/ui/WithGradientBorder.vue";
 
-const props = withDefaults(defineProps<{ layout?: CardLayout; entity: Artist | Album | Podcast | RadioStation }>(), {
-  layout: 'full',
-})
+const props = withDefaults(
+  defineProps<{ layout?: CardLayout; entity: Artist | Album | Podcast | RadioStation }>(),
+  {
+    layout: "full",
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'dblclick'): void
-  (e: 'dragstart', event: DragEvent): void
-  (e: 'contextmenu', event: MouseEvent): void
-}>()
+  (e: "dblclick"): void;
+  (e: "dragstart", event: DragEvent): void;
+  (e: "contextmenu", event: MouseEvent): void;
+}>();
 
-const hasThumbnail = (entity: Artist | Album | Podcast | RadioStation): entity is Artist | Album | Podcast =>
-  entity.type !== 'radio-stations'
+const hasThumbnail = (
+  entity: Artist | Album | Podcast | RadioStation,
+): entity is Artist | Album | Podcast => entity.type !== "radio-stations";
 
-const { layout } = toRefs(props)
-const gradientColor = computed(() => textToHsl(String(props.entity.id)))
+const { layout } = toRefs(props);
+const gradientColor = computed(() => textToHsl(String(props.entity.id)));
 
-const onDblClick = () => emit('dblclick')
-const onDragStart = (e: DragEvent) => emit('dragstart', e)
-const onContextMenu = (e: MouseEvent) => emit('contextmenu', e)
+const onDblClick = () => emit("dblclick");
+const onDragStart = (e: DragEvent) => emit("dragstart", e);
+const onContextMenu = (e: MouseEvent) => emit("contextmenu", e);
 </script>
 
 <style lang="postcss" scoped>

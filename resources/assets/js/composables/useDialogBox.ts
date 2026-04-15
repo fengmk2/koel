@@ -1,13 +1,13 @@
-import type { Ref } from 'vue'
-import { requireInjection } from '@/utils/helpers'
-import { DialogBoxKey } from '@/config/symbols'
+import type { Ref } from "vue";
+import { requireInjection } from "@/utils/helpers";
+import { DialogBoxKey } from "@/config/symbols";
 
-import type DialogBox from '@/components/ui/DialogBox.vue'
+import type DialogBox from "@/components/ui/DialogBox.vue";
 
-let dialogBox: Ref<InstanceType<typeof DialogBox>>
+let dialogBox: Ref<InstanceType<typeof DialogBox>>;
 
 export const useDialogBox = () => {
-  dialogBox = dialogBox || requireInjection(DialogBoxKey)
+  dialogBox = dialogBox || requireInjection(DialogBoxKey);
 
   return {
     showSuccessDialog: dialogBox.value.success.bind(dialogBox.value),
@@ -15,5 +15,5 @@ export const useDialogBox = () => {
     showWarningDialog: dialogBox.value.warning.bind(dialogBox.value),
     showErrorDialog: dialogBox.value.error.bind(dialogBox.value),
     showConfirmDialog: dialogBox.value.confirm.bind(dialogBox.value),
-  }
-}
+  };
+};

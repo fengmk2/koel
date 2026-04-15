@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import { faCloudArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { faCloudArrowDown } from "@fortawesome/free-solid-svg-icons";
 </script>

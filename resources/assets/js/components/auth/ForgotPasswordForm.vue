@@ -15,7 +15,9 @@
           required
           type="email"
         />
-        <Btn :disabled="loading" class="sm:rounded-l-none sm:rounded-r" type="submit">Reset Password</Btn>
+        <Btn :disabled="loading" class="sm:rounded-l-none sm:rounded-r" type="submit"
+          >Reset Password</Btn
+        >
         <Btn :disabled="loading" transparent @click="cancel">Cancel</Btn>
       </div>
     </FormRow>
@@ -23,35 +25,35 @@
 </template>
 
 <script lang="ts" setup>
-import { authService } from '@/services/authService'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { authService } from "@/services/authService";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const emit = defineEmits<{ (e: 'cancel'): void }>()
+const emit = defineEmits<{ (e: "cancel"): void }>();
 
-const { handleHttpError } = useErrorHandler()
-const { toastSuccess } = useMessageToaster()
+const { handleHttpError } = useErrorHandler();
+const { toastSuccess } = useMessageToaster();
 
 const { data, loading, handleSubmit } = useForm<{ email: string }>({
   initialValues: {
-    email: '',
+    email: "",
   },
   useOverlay: false,
   onSubmit: async ({ email }) => await authService.requestResetPasswordLink(email),
   onSuccess: () => {
-    data.email = ''
-    toastSuccess('Password reset link sent. Please check your mailbox.')
+    data.email = "";
+    toastSuccess("Password reset link sent. Please check your mailbox.");
   },
-  onError: error => handleHttpError(error, { 404: 'No user with this email address found.' }),
-})
+  onError: (error) => handleHttpError(error, { 404: "No user with this email address found." }),
+});
 
 const cancel = () => {
-  data.email = ''
-  emit('cancel')
-}
+  data.email = "";
+  emit("cancel");
+};
 </script>

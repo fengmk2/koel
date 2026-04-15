@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons'
+import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 </script>

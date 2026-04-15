@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
-import { toRefs } from 'vue'
+import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { toRefs } from "vue";
 
-const props = defineProps<{ title: string }>()
-const { title } = toRefs(props)
+const props = defineProps<{ title: string }>();
+const { title } = toRefs(props);
 </script>

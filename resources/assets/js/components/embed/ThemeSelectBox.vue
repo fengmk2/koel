@@ -8,18 +8,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { themeStore } from '@/stores/themeStore'
+import { onMounted, ref } from "vue";
+import { themeStore } from "@/stores/themeStore";
 
-import SelectBox from '@/components/ui/form/SelectBox.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import SelectBox from "@/components/ui/form/SelectBox.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const model = defineModel<Theme>()
+const model = defineModel<Theme>();
 
-const themes = ref<Theme[]>([])
+const themes = ref<Theme[]>([]);
 
 onMounted(async () => {
-  await themeStore.fetchCustomThemes()
-  themes.value = themeStore.all
-})
+  await themeStore.fetchCustomThemes();
+  themes.value = themeStore.all;
+});
 </script>

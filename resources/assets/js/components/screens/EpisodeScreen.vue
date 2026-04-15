@@ -18,7 +18,11 @@
         </h2>
 
         <template #thumbnail>
-          <img :src="episode.episode_image" class="aspect-square object-cover" alt="Episode thumbnail" />
+          <img
+            :src="episode.episode_image"
+            class="aspect-square object-cover"
+            alt="Episode thumbnail"
+          />
         </template>
 
         <template #controls>
@@ -63,107 +67,114 @@
 </template>
 
 <script setup lang="ts">
-import { faEllipsis, faExternalLink, faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
-import DOMPurify from 'dompurify'
-import { orderBy } from 'lodash'
-import { computed, ref, watch } from 'vue'
-import { playableStore as episodeStore } from '@/stores/playableStore'
-import { queueStore } from '@/stores/queueStore'
-import { podcastStore } from '@/stores/podcastStore'
-import { preferenceStore as preferences } from '@/stores/preferenceStore'
-import { defineAsyncComponent } from '@/utils/helpers'
-import { playback } from '@/services/playbackManager'
-import { useRouter } from '@/composables/useRouter'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { useContextMenu } from '@/composables/useContextMenu'
+import { faEllipsis, faExternalLink, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import DOMPurify from "dompurify";
+import { orderBy } from "lodash";
+import { computed, ref, watch } from "vue";
+import { playableStore as episodeStore } from "@/stores/playableStore";
+import { queueStore } from "@/stores/queueStore";
+import { podcastStore } from "@/stores/podcastStore";
+import { preferenceStore as preferences } from "@/stores/preferenceStore";
+import { defineAsyncComponent } from "@/utils/helpers";
+import { playback } from "@/services/playbackManager";
+import { useRouter } from "@/composables/useRouter";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { useContextMenu } from "@/composables/useContextMenu";
 
-import ScreenBase from '@/components/screens/ScreenBase.vue'
-import MarqueeText from '@/components/ui/MarqueeText.vue'
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import Btn from '@/components/ui/form/Btn.vue'
-import ScreenHeaderSkeleton from '@/components/ui/ScreenHeaderSkeleton.vue'
+import ScreenBase from "@/components/screens/ScreenBase.vue";
+import MarqueeText from "@/components/ui/MarqueeText.vue";
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import Btn from "@/components/ui/form/Btn.vue";
+import ScreenHeaderSkeleton from "@/components/ui/ScreenHeaderSkeleton.vue";
 
-const FavoriteButton = defineAsyncComponent(() => import('@/components/ui/FavoriteButton.vue'))
-const ContextMenu = defineAsyncComponent(() => import('@/components/playable/PlayableContextMenu.vue'))
+const FavoriteButton = defineAsyncComponent(() => import("@/components/ui/FavoriteButton.vue"));
+const ContextMenu = defineAsyncComponent(
+  () => import("@/components/playable/PlayableContextMenu.vue"),
+);
 
-const { onScreenActivated, getRouteParam, triggerNotFound, url } = useRouter()
-const { openContextMenu } = useContextMenu()
+const { onScreenActivated, getRouteParam, triggerNotFound, url } = useRouter();
+const { openContextMenu } = useContextMenu();
 
-const loading = ref(false)
-const episodeId = ref<Episode['id']>()
-const episode = ref<Episode>()
+const loading = ref(false);
+const episodeId = ref<Episode["id"]>();
+const episode = ref<Episode>();
 
 const playing = computed(() => {
-  return queueStore.current?.playback_state === 'Playing' && queueStore.current?.id === episodeId.value
-})
+  return (
+    queueStore.current?.playback_state === "Playing" && queueStore.current?.id === episodeId.value
+  );
+});
 
 const formattedDescription = computed(() => {
-  return DOMPurify.sanitize(episode?.value?.episode_description ?? '')
-})
+  return DOMPurify.sanitize(episode?.value?.episode_description ?? "");
+});
 
 const fetchDetails = async () => {
-  episode.value = (await episodeStore.resolve(episodeId.value!)) as Episode
-}
+  episode.value = (await episodeStore.resolve(episodeId.value!)) as Episode;
+};
 
 const playOrPause = async () => {
-  queueStore.queueIfNotQueued(episode.value!)
+  queueStore.queueIfNotQueued(episode.value!);
 
   if (playing.value) {
-    playback().pause()
-    return
+    playback().pause();
+    return;
   }
 
   if (queueStore.current?.id === episodeId.value) {
-    await playback().resume()
-    return
+    await playback().resume();
+    return;
   }
 
   // If the episode is not currently playing and the user clicks Play,
   // we want to play the episode from where they left off.
   // For that, we query the podcast to get the progress of the episode.
-  const podcast = await podcastStore.resolve(episode.value!.podcast_id)
+  const podcast = await podcastStore.resolve(episode.value!.podcast_id);
 
-  let startingPoint = Math.min(episode.value!.length, podcast.state.progresses[episode.value!.id] || 0)
+  let startingPoint = Math.min(
+    episode.value!.length,
+    podcast.state.progresses[episode.value!.id] || 0,
+  );
 
   if (startingPoint >= episode.value!.length) {
-    startingPoint = 0
+    startingPoint = 0;
   }
 
   if (preferences.continuous_playback) {
     queueStore.replaceQueueWith(
-      orderBy(await episodeStore.fetchEpisodesInPodcast(episode.value!.podcast_id), 'created_at'),
-    )
+      orderBy(await episodeStore.fetchEpisodesInPodcast(episode.value!.podcast_id), "created_at"),
+    );
   }
 
-  await playback().play(episode.value!, startingPoint)
-}
+  await playback().play(episode.value!, startingPoint);
+};
 
-watch(episodeId, async id => {
+watch(episodeId, async (id) => {
   if (!id || loading.value) {
-    return
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
-    await fetchDetails()
+    await fetchDetails();
   } catch (error: unknown) {
     useErrorHandler().handleHttpError(error, {
       404: () => triggerNotFound(),
-    })
+    });
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 
 const requestContextMenu = (event: MouseEvent) =>
-  openContextMenu<'PLAYABLES'>(ContextMenu, event, {
+  openContextMenu<"PLAYABLES">(ContextMenu, event, {
     playables: [episode.value!],
-  })
+  });
 
-const toggleFavorite = () => episodeStore.toggleFavorite(episode.value!)
+const toggleFavorite = () => episodeStore.toggleFavorite(episode.value!);
 
-onScreenActivated('Episode', () => (episodeId.value = getRouteParam('id')!))
+onScreenActivated("Episode", () => (episodeId.value = getRouteParam("id")!));
 </script>
 
 <style scoped lang="postcss">

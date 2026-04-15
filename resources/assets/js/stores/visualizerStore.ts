@@ -1,11 +1,11 @@
-import { visualizers } from '@/config/visualizers'
+import { visualizers } from "@/config/visualizers";
 
 export const visualizerStore = {
   get all() {
-    return visualizers
+    return visualizers;
   },
 
-  getVisualizerById(id: Visualizer['id']) {
-    return visualizers.find(visualizer => visualizer.id === id)
+  getVisualizerById(id: Visualizer["id"]) {
+    return visualizers.find((visualizer) => visualizer.id === id);
   },
-}
+};

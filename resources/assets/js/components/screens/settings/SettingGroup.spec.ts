@@ -1,19 +1,19 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './SettingGroup.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./SettingGroup.vue";
 
-describe('settingGroup.vue', () => {
-  const h = createHarness()
+describe("settingGroup.vue", () => {
+  const h = createHarness();
 
-  it('renders slots', () => {
+  it("renders slots", () => {
     const { html } = h.render(Component, {
       slots: {
-        title: 'Media Path',
-        default: 'Main content',
-        footer: 'Save button',
+        title: "Media Path",
+        default: "Main content",
+        footer: "Save button",
       },
-    })
+    });
 
-    expect(html()).toMatchSnapshot()
-  })
-})
+    expect(html()).toMatchSnapshot();
+  });
+});

@@ -35,12 +35,12 @@
 </template>
 
 <script lang="ts" setup>
-import SponsorLogo from './SponsorLogo.vue'
+import SponsorLogo from "./SponsorLogo.vue";
 
-import doLogo from '../../assets/img/sponsors/do.svg'
-import followerBoerseLogo from '../../assets/img/sponsors/follower-boerse.svg'
-import rayLogo from '../../assets/img/sponsors/ray.svg'
-import whatTheDiffLogo from '../../assets/img/sponsors/what-the-diff.svg'
+import doLogo from "../../assets/img/sponsors/do.svg";
+import followerBoerseLogo from "../../assets/img/sponsors/follower-boerse.svg";
+import rayLogo from "../../assets/img/sponsors/ray.svg";
+import whatTheDiffLogo from "../../assets/img/sponsors/what-the-diff.svg";
 </script>
 
 <style lang="postcss">
@@ -51,7 +51,7 @@ div.sponsors {
   h3 {
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: .75rem;
+    margin-bottom: 0.75rem;
   }
 
   ul {
@@ -59,7 +59,7 @@ div.sponsors {
   }
 
   ul li + li {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
 
   .your-logo {
@@ -69,7 +69,7 @@ div.sponsors {
     border-radius: 5px;
     border: 1px solid var(--vp-c-border);
     line-height: 2.75;
-    transition: .2s all;
+    transition: 0.2s all;
 
     &:hover {
       border-color: var(--vp-c-brand-1);

@@ -8,7 +8,13 @@
       <div class="grid grid-cols-2 gap-4">
         <FormRow>
           <template #label>Name *</template>
-          <TextInput v-model="data.name" v-koel-focus name="name" placeholder="Playlist name" required />
+          <TextInput
+            v-model="data.name"
+            v-koel-focus
+            name="name"
+            placeholder="Playlist name"
+            required
+          />
         </FormRow>
         <FormRow>
           <template #label>Folder</template>
@@ -30,52 +36,55 @@
 </template>
 
 <script lang="ts" setup>
-import { cloneDeep, pick } from 'lodash'
-import type { UpdatePlaylistData } from '@/stores/playlistStore'
-import { playlistStore } from '@/stores/playlistStore'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { cloneDeep, pick } from "lodash";
+import type { UpdatePlaylistData } from "@/stores/playlistStore";
+import { playlistStore } from "@/stores/playlistStore";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
-import FolderSelect from '@/components/ui/form/FolderSelect.vue'
-import TextArea from '@/components/ui/form/TextArea.vue'
-import ArtworkField from '@/components/ui/form/ArtworkField.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
+import FolderSelect from "@/components/ui/form/FolderSelect.vue";
+import TextArea from "@/components/ui/form/TextArea.vue";
+import ArtworkField from "@/components/ui/form/ArtworkField.vue";
 
-const props = defineProps<{ playlist: Playlist }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ playlist: Playlist }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { playlist } = props
+const { playlist } = props;
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
-const close = () => emit('close')
+const close = () => emit("close");
 
 const { data, isPristine, handleSubmit } = useForm<UpdatePlaylistData>({
-  initialValues: { ...pick(playlist, 'name', 'folder_id', 'description', 'cover'), folder_name: null },
-  onSubmit: async data => {
-    const formData = cloneDeep(data)
+  initialValues: {
+    ...pick(playlist, "name", "folder_id", "description", "cover"),
+    folder_name: null,
+  },
+  onSubmit: async (data) => {
+    const formData = cloneDeep(data);
 
     if (formData.cover === playlist.cover) {
-      delete formData.cover
+      delete formData.cover;
     }
 
-    await playlistStore.update(playlist, formData)
+    await playlistStore.update(playlist, formData);
   },
   onSuccess: () => {
-    toastSuccess('Playlist updated.')
-    close()
+    toastSuccess("Playlist updated.");
+    close();
   },
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>
 
 <style lang="postcss" scoped>

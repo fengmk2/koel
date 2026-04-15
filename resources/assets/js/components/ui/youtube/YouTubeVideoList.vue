@@ -20,86 +20,88 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, onBeforeUnmount, ref, toRefs, watch } from 'vue'
-import { youTubeService } from '@/services/youTubeService'
-import { useErrorHandler } from '@/composables/useErrorHandler'
+import { computed, defineAsyncComponent, onBeforeUnmount, ref, toRefs, watch } from "vue";
+import { youTubeService } from "@/services/youTubeService";
+import { useErrorHandler } from "@/composables/useErrorHandler";
 
-const props = defineProps<{ song: Song }>()
-const YouTubeVideo = defineAsyncComponent(() => import('@/components/ui/youtube/YouTubeVideoItem.vue'))
+const props = defineProps<{ song: Song }>();
+const YouTubeVideo = defineAsyncComponent(
+  () => import("@/components/ui/youtube/YouTubeVideoItem.vue"),
+);
 const YouTubeVideoListSkeleton = defineAsyncComponent(
-  () => import('@/components/ui/youtube/YouTubeVideoListSkeleton.vue'),
-)
+  () => import("@/components/ui/youtube/YouTubeVideoListSkeleton.vue"),
+);
 
-const { song } = toRefs(props)
+const { song } = toRefs(props);
 
-const loading = ref(false)
-const videos = ref<YouTubeVideo[]>([])
-const hasMore = ref(true)
-const sentinelRef = ref<HTMLElement | null>(null)
+const loading = ref(false);
+const videos = ref<YouTubeVideo[]>([]);
+const hasMore = ref(true);
+const sentinelRef = ref<HTMLElement | null>(null);
 
-let nextPageToken = ''
+let nextPageToken = "";
 
 const loadMore = async () => {
   if (loading.value) {
-    return
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
-    const result = await youTubeService.searchVideosBySong(song.value, nextPageToken)
-    nextPageToken = result.nextPageToken
-    hasMore.value = !!nextPageToken
-    videos.value.push(...(result.items || []))
+    const result = await youTubeService.searchVideosBySong(song.value, nextPageToken);
+    nextPageToken = result.nextPageToken;
+    hasMore.value = !!nextPageToken;
+    videos.value.push(...(result.items || []));
   } catch (error: unknown) {
-    useErrorHandler().handleHttpError(error)
+    useErrorHandler().handleHttpError(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
-const somethingWrong = computed(() => !loading.value && videos.value.length === 0)
+const somethingWrong = computed(() => !loading.value && videos.value.length === 0);
 
-let observer: IntersectionObserver | undefined
+let observer: IntersectionObserver | undefined;
 
 watch(
   sentinelRef,
   (el, _, onCleanup) => {
     if (!el) {
-      return
+      return;
     }
 
-    if (typeof IntersectionObserver === 'undefined') {
-      return
+    if (typeof IntersectionObserver === "undefined") {
+      return;
     }
 
     const obs = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0].isIntersecting) {
-          loadMore()
+          loadMore();
         }
       },
-      { rootMargin: '100px' },
-    )
+      { rootMargin: "100px" },
+    );
 
-    observer = obs
-    obs.observe(el)
+    observer = obs;
+    obs.observe(el);
 
-    onCleanup(() => obs.disconnect())
+    onCleanup(() => obs.disconnect());
   },
-  { flush: 'post' },
-)
+  { flush: "post" },
+);
 
 watch(
   song,
   () => {
-    videos.value = []
-    nextPageToken = ''
-    hasMore.value = true
-    loadMore()
+    videos.value = [];
+    nextPageToken = "";
+    hasMore.value = true;
+    loadMore();
   },
   { immediate: true },
-)
+);
 
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => observer?.disconnect());
 </script>

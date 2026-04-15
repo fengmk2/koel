@@ -17,57 +17,57 @@
 </template>
 
 <script lang="ts" setup>
-import { faYoutube } from '@fortawesome/free-brands-svg-icons'
-import { unescape } from 'lodash'
-import createYouTubePlayer from 'youtube-player'
-import { ref, watch } from 'vue'
-import type { YouTubePlayer } from 'youtube-player/dist/types'
-import { eventBus } from '@/utils/eventBus'
-import { requireInjection, use } from '@/utils/helpers'
-import { CurrentStreamableKey } from '@/config/symbols'
-import { playback } from '@/services/playbackManager'
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { unescape } from "lodash";
+import createYouTubePlayer from "youtube-player";
+import { ref, watch } from "vue";
+import type { YouTubePlayer } from "youtube-player/dist/types";
+import { eventBus } from "@/utils/eventBus";
+import { requireInjection, use } from "@/utils/helpers";
+import { CurrentStreamableKey } from "@/config/symbols";
+import { playback } from "@/services/playbackManager";
 
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenEmptyState from '@/components/ui/ScreenEmptyState.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenEmptyState from "@/components/ui/ScreenEmptyState.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
 
-let player: YouTubePlayer
-const title = ref('YouTube Video')
-const showingVideo = ref(false)
+let player: YouTubePlayer;
+const title = ref("YouTube Video");
+const showingVideo = ref(false);
 
 const getPlayer = () => {
   if (!player) {
-    player = createYouTubePlayer('player', {
-      width: '100%',
-      height: '100%',
-    })
+    player = createYouTubePlayer("player", {
+      width: "100%",
+      height: "100%",
+    });
 
     // Pause playable/radio playback when a video is played
-    player.on('stateChange', ({ data }) => data === 1 && playback('current')?.pause())
+    player.on("stateChange", ({ data }) => data === 1 && playback("current")?.pause());
   }
 
-  return player
-}
+  return player;
+};
 
-const currentStreamable = requireInjection(CurrentStreamableKey)
+const currentStreamable = requireInjection(CurrentStreamableKey);
 
 /**
  * Pause video playback when a playable is played/resumed.
  */
 watch(
   () => currentStreamable.value?.playback_state,
-  state => state === 'Playing' && player?.pauseVideo(),
-)
+  (state) => state === "Playing" && player?.pauseVideo(),
+);
 
-eventBus.on('PLAY_YOUTUBE_VIDEO', payload => {
-  showingVideo.value = true
-  title.value = unescape(payload.title)
+eventBus.on("PLAY_YOUTUBE_VIDEO", (payload) => {
+  showingVideo.value = true;
+  title.value = unescape(payload.title);
 
-  use(getPlayer(), player => {
-    player.loadVideoById(payload.id)
-    player.playVideo()
-  })
-})
+  use(getPlayer(), (player) => {
+    player.loadVideoById(payload.id);
+    player.playVideo();
+  });
+});
 </script>
 
 <style lang="postcss" scoped>

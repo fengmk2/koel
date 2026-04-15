@@ -6,7 +6,10 @@
         <span :title="podcast.title">{{ podcast.title }}</span>
 
         <template #thumbnail>
-          <article class="relative aspect-square block rounded-md overflow-hidden" data-testid="podcast-thumbnail">
+          <article
+            class="relative aspect-square block rounded-md overflow-hidden"
+            data-testid="podcast-thumbnail"
+          >
             <div class="pointer-events-none">
               <img :src="podcast.image" alt="Podcast thumbnail" />
             </div>
@@ -77,215 +80,226 @@
 </template>
 
 <script setup lang="ts">
-import DOMPurify from 'dompurify'
-import { orderBy } from 'lodash'
-import { faEllipsis, faPause, faPlay, faRotateRight } from '@fortawesome/free-solid-svg-icons'
-import { computed, nextTick, onMounted, provide, reactive, ref } from 'vue'
-import { useRouter } from '@/composables/useRouter'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { playableStore as episodeStore } from '@/stores/playableStore'
-import { podcastStore } from '@/stores/podcastStore'
-import { queueStore } from '@/stores/queueStore'
-import { isEpisode } from '@/utils/typeGuards'
-import { useFuzzySearch } from '@/composables/useFuzzySearch'
-import { playback } from '@/services/playbackManager'
-import { FilterKeywordsKey } from '@/config/symbols'
-import { eventBus } from '@/utils/eventBus'
-import { useContextMenu } from '@/composables/useContextMenu'
-import { defineAsyncComponent } from '@/utils/helpers'
+import DOMPurify from "dompurify";
+import { orderBy } from "lodash";
+import { faEllipsis, faPause, faPlay, faRotateRight } from "@fortawesome/free-solid-svg-icons";
+import { computed, nextTick, onMounted, provide, reactive, ref } from "vue";
+import { useRouter } from "@/composables/useRouter";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { playableStore as episodeStore } from "@/stores/playableStore";
+import { podcastStore } from "@/stores/podcastStore";
+import { queueStore } from "@/stores/queueStore";
+import { isEpisode } from "@/utils/typeGuards";
+import { useFuzzySearch } from "@/composables/useFuzzySearch";
+import { playback } from "@/services/playbackManager";
+import { FilterKeywordsKey } from "@/config/symbols";
+import { eventBus } from "@/utils/eventBus";
+import { useContextMenu } from "@/composables/useContextMenu";
+import { defineAsyncComponent } from "@/utils/helpers";
 
-import ScreenBase from '@/components/screens/ScreenBase.vue'
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenHeaderSkeleton from '@/components/ui/ScreenHeaderSkeleton.vue'
-import EpisodeItem from '@/components/podcast/EpisodeItem.vue'
-import VirtualScroller from '@/components/ui/VirtualScroller.vue'
-import Btn from '@/components/ui/form/Btn.vue'
-import ListFilter from '@/components/ui/ListFilter.vue'
-import BtnGroup from '@/components/ui/form/BtnGroup.vue'
-import EpisodeItemSkeleton from '@/components/podcast/EpisodeItemSkeleton.vue'
+import ScreenBase from "@/components/screens/ScreenBase.vue";
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenHeaderSkeleton from "@/components/ui/ScreenHeaderSkeleton.vue";
+import EpisodeItem from "@/components/podcast/EpisodeItem.vue";
+import VirtualScroller from "@/components/ui/VirtualScroller.vue";
+import Btn from "@/components/ui/form/Btn.vue";
+import ListFilter from "@/components/ui/ListFilter.vue";
+import BtnGroup from "@/components/ui/form/BtnGroup.vue";
+import EpisodeItemSkeleton from "@/components/podcast/EpisodeItemSkeleton.vue";
 
-const FavoriteButton = defineAsyncComponent(() => import('@/components/ui/FavoriteButton.vue'))
-const ContextMenu = defineAsyncComponent(() => import('@/components/podcast/PodcastContextMenu.vue'))
+const FavoriteButton = defineAsyncComponent(() => import("@/components/ui/FavoriteButton.vue"));
+const ContextMenu = defineAsyncComponent(
+  () => import("@/components/podcast/PodcastContextMenu.vue"),
+);
 
-const { getRouteParam, go, triggerNotFound, url } = useRouter()
-const { handleHttpError } = useErrorHandler()
+const { getRouteParam, go, triggerNotFound, url } = useRouter();
+const { handleHttpError } = useErrorHandler();
 
 const description = reactive({
   overflown: false,
   expanded: false,
-  content: '',
-})
+  content: "",
+});
 
-const descriptionEl = ref<HTMLDivElement>()
+const descriptionEl = ref<HTMLDivElement>();
 
-const headerLayout = ref<ScreenHeaderLayout>('expanded')
-const loading = ref(false)
-const podcast = ref<Podcast>()
-const episodes = ref<Episode[]>([])
-const keywords = ref('')
+const headerLayout = ref<ScreenHeaderLayout>("expanded");
+const loading = ref(false);
+const podcast = ref<Podcast>();
+const episodes = ref<Episode[]>([]);
+const keywords = ref("");
 
-provide(FilterKeywordsKey, keywords)
+provide(FilterKeywordsKey, keywords);
 
-const { search } = useFuzzySearch<Episode>(episodes, ['title', 'episode_description'])
-const { openContextMenu } = useContextMenu()
+const { search } = useFuzzySearch<Episode>(episodes, ["title", "episode_description"]);
+const { openContextMenu } = useContextMenu();
 
-const fetchDetails = async (id: Podcast['id']) => {
-  ;[podcast.value, episodes.value] = await Promise.all([
+const fetchDetails = async (id: Podcast["id"]) => {
+  [podcast.value, episodes.value] = await Promise.all([
     podcastStore.resolve(id),
     episodeStore.fetchEpisodesInPodcast(id),
-  ])
-}
+  ]);
+};
 
 const init = async () => {
-  const id = getRouteParam('id')
+  const id = getRouteParam("id");
 
   if (!id || loading.value) {
-    return
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
-    await fetchDetails(id)
-    description.content = DOMPurify.sanitize(podcast.value?.description || '')
-    await nextTick()
+    await fetchDetails(id);
+    description.content = DOMPurify.sanitize(podcast.value?.description || "");
+    await nextTick();
     if (descriptionEl.value) {
-      description.overflown = descriptionEl.value.scrollHeight > descriptionEl.value.clientHeight
+      description.overflown = descriptionEl.value.scrollHeight > descriptionEl.value.clientHeight;
     }
   } catch (error: unknown) {
     handleHttpError(error, {
       404: () => triggerNotFound(),
-    })
+    });
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const maybeExpandDescription = () => {
   if (!description.overflown || !descriptionEl.value) {
-    return
+    return;
   }
 
-  description.expanded = !description.expanded
-  descriptionEl.value.classList.toggle('line-clamp-3')
-}
+  description.expanded = !description.expanded;
+  descriptionEl.value.classList.toggle("line-clamp-3");
+};
 
 const requestContextMenu = (event: MouseEvent) =>
-  openContextMenu<'PODCAST'>(ContextMenu, event, {
+  openContextMenu<"PODCAST">(ContextMenu, event, {
     podcast: podcast.value!,
-  })
+  });
 
 const descriptionTooltip = computed(() => {
   if (!description.overflown) {
-    return ''
+    return "";
   }
 
-  return description.expanded ? 'Collapse' : 'Expand'
-})
+  return description.expanded ? "Collapse" : "Expand";
+});
 
 const displayedEpisodes = computed(() => {
   if (!episodes.value) {
-    return []
+    return [];
   }
 
   if (!keywords.value) {
-    return episodes.value
+    return episodes.value;
   }
 
-  return search(keywords.value)
-})
+  return search(keywords.value);
+});
 
-const inProgress = computed(() => Boolean(podcast.value?.state.current_episode))
+const inProgress = computed(() => Boolean(podcast.value?.state.current_episode));
 
 const currentPlayingItemIsPartOfPodcast = computed(() => {
-  const currentPlayable = queueStore.current
-  return currentPlayable && isEpisode(currentPlayable) && currentPlayable.podcast_id === podcast.value?.id
-})
+  const currentPlayable = queueStore.current;
+  return (
+    currentPlayable &&
+    isEpisode(currentPlayable) &&
+    currentPlayable.podcast_id === podcast.value?.id
+  );
+});
 
 const podcastPlaying = computed(() => {
   if (!currentPlayingItemIsPartOfPodcast.value) {
-    return false
+    return false;
   }
 
-  return queueStore.current!.playback_state === 'Playing'
-})
+  return queueStore.current!.playback_state === "Playing";
+});
 
 const playButtonLabel = computed(() => {
-  if (headerLayout.value === 'collapsed') {
-    return ''
+  if (headerLayout.value === "collapsed") {
+    return "";
   }
 
   if (podcastPlaying.value) {
-    return ''
+    return "";
   }
 
-  return inProgress.value ? 'Continue' : 'Start Listening'
-})
+  return inProgress.value ? "Continue" : "Start Listening";
+});
 
 const playOrPause = async () => {
   if (podcastPlaying.value) {
-    playback().pause()
-    return
+    playback().pause();
+    return;
   }
 
   if (currentPlayingItemIsPartOfPodcast.value) {
-    await playback().resume()
-    return
+    await playback().resume();
+    return;
   }
 
   if (inProgress.value) {
-    const currentEpisode = episodes.value?.find(episode => episode.id === podcast.value?.state.current_episode)
+    const currentEpisode = episodes.value?.find(
+      (episode) => episode.id === podcast.value?.state.current_episode,
+    );
     if (!currentEpisode) {
-      return
+      return;
     }
 
-    await playback().play(currentEpisode, podcast.value?.state.progresses[currentEpisode.id] || 0)
-    return
+    await playback().play(currentEpisode, podcast.value?.state.progresses[currentEpisode.id] || 0);
+    return;
   }
 
   if (!episodes.value?.length) {
-    return
+    return;
   }
 
-  queueStore.replaceQueueWith(orderBy(episodes.value, 'created_at'))
-  await playback().playFirstInQueue()
-}
+  queueStore.replaceQueueWith(orderBy(episodes.value, "created_at"));
+  await playback().playFirstInQueue();
+};
 
 const refresh = async () => {
   if (loading.value) {
-    return
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
-    episodes.value = await episodeStore.fetchEpisodesInPodcast(podcast.value!.id, true)
+    episodes.value = await episodeStore.fetchEpisodesInPodcast(podcast.value!.id, true);
   } catch (error: unknown) {
-    handleHttpError(error)
+    handleHttpError(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
-let lastScrollTop = 0
+let lastScrollTop = 0;
 
 const onListScroll = (e: Event) => {
-  const scroller = e.target as HTMLElement
+  const scroller = e.target as HTMLElement;
 
   if (scroller.scrollTop > 512 && lastScrollTop < 512) {
-    headerLayout.value = 'collapsed'
+    headerLayout.value = "collapsed";
   } else if (scroller.scrollTop < 512 && lastScrollTop > 512) {
-    headerLayout.value = 'expanded'
+    headerLayout.value = "expanded";
   }
 
-  lastScrollTop = scroller.scrollTop
-}
+  lastScrollTop = scroller.scrollTop;
+};
 
-const toggleFavorite = () => podcastStore.toggleFavorite(podcast.value!)
+const toggleFavorite = () => podcastStore.toggleFavorite(podcast.value!);
 
-onMounted(() => init())
+onMounted(() => init());
 
-eventBus.on('PODCAST_UNSUBSCRIBED', ({ id }) => id === podcast.value?.id && go(url('podcasts.index')))
+eventBus.on(
+  "PODCAST_UNSUBSCRIBED",
+  ({ id }) => id === podcast.value?.id && go(url("podcasts.index")),
+);
 </script>
 
 <style scoped lang="postcss">

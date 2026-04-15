@@ -6,9 +6,9 @@ description: User roles (admin, user, manager), creating and inviting users, and
 
 Koel supports multiple users with different roles and permissions.
 
-* **Admins** can do basically anything: manage settings, users, and the shared music library
-* **Users** can access the shared library and manage their own profile and preferences.
-* <PlusBadge /> **Managers** can manage users and the shared library, but not settings.
+- **Admins** can do basically anything: manage settings, users, and the shared music library
+- **Users** can access the shared library and manage their own profile and preferences.
+- <PlusBadge /> **Managers** can manage users and the shared library, but not settings.
 
 :::tip Multi-library support
 In the Community edition, all users share a common library (though playlists, favorites, and other stats are private).
@@ -17,6 +17,7 @@ A private library can only be managed by its owner.
 :::
 
 ## First Admin User
+
 Upon installation, Koel prompts to create a first (default) admin user.
 If you're using the [Docker image](../guide/getting-started#using-docker), the admin user will be created automatically with these credentials:
 
@@ -30,6 +31,7 @@ Make sure to change these credentials immediately after logging in for the first
 </div>
 
 ## Changing First Admin Password
+
 If you forgot the default admin’s password and are unable to log in, you can change it via the command line:
 
 ```bash
@@ -46,5 +48,3 @@ You cannot add, invite, edit, or delete users whose roles are higher than yours.
 
 User roles can be changed via the web interface from the Users page if the current user has the `manage users`
 permission, or via the [command line](../cli-commands#koel-admin-set-user-role).
-
-

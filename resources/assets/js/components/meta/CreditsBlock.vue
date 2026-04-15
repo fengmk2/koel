@@ -10,36 +10,38 @@
 </template>
 
 <script lang="ts" setup>
-import { orderBy } from 'lodash'
-import { onMounted, ref } from 'vue'
-import { http } from '@/services/http'
+import { orderBy } from "lodash";
+import { onMounted, ref } from "vue";
+import { http } from "@/services/http";
 
 interface DemoCredits {
-  name: string
-  url: string
+  name: string;
+  url: string;
 }
 
-const credits = ref<DemoCredits[]>([])
+const credits = ref<DemoCredits[]>([]);
 
 onMounted(async () => {
-  credits.value = window.IS_DEMO ? orderBy(await http.get<DemoCredits[]>('demo/credits'), 'name') : []
-})
+  credits.value = window.IS_DEMO
+    ? orderBy(await http.get<DemoCredits[]>("demo/credits"), "name")
+    : [];
+});
 </script>
 
 <style lang="postcss" scoped>
 li&:last-child {
   &::before {
-    content: ', and ';
+    content: ", and ";
   }
 
   &::after {
-    content: '.';
+    content: ".";
   }
 }
 
 li + li {
   &::before {
-    content: ', ';
+    content: ", ";
   }
 }
 </style>

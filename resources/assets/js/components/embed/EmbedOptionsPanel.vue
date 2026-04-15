@@ -3,7 +3,9 @@
     <FormRow>
       <template #label>Layout</template>
       <SelectBox v-model="options.layout">
-        <option v-for="layout in layouts" :key="layout.id" :value="layout.id">{{ layout.name }}</option>
+        <option v-for="layout in layouts" :key="layout.id" :value="layout.id">
+          {{ layout.name }}
+        </option>
       </SelectBox>
     </FormRow>
 
@@ -19,24 +21,24 @@
 </template>
 
 <script setup lang="ts">
-import { useKoelPlus } from '@/composables/useKoelPlus'
-import { toRefs } from 'vue'
-import { defineAsyncComponent } from '@/utils/helpers'
+import { useKoelPlus } from "@/composables/useKoelPlus";
+import { toRefs } from "vue";
+import { defineAsyncComponent } from "@/utils/helpers";
 
-import FormRow from '@/components/ui/form/FormRow.vue'
-import SelectBox from '@/components/ui/form/SelectBox.vue'
-import CheckBox from '@/components/ui/form/CheckBox.vue'
+import FormRow from "@/components/ui/form/FormRow.vue";
+import SelectBox from "@/components/ui/form/SelectBox.vue";
+import CheckBox from "@/components/ui/form/CheckBox.vue";
 
-const props = defineProps<{ modelValue: EmbedOptions }>()
+const props = defineProps<{ modelValue: EmbedOptions }>();
 
-const ThemeSelectBox = defineAsyncComponent(() => import('@/components/embed/ThemeSelectBox.vue'))
+const ThemeSelectBox = defineAsyncComponent(() => import("@/components/embed/ThemeSelectBox.vue"));
 
-const { modelValue: options } = toRefs(props)
+const { modelValue: options } = toRefs(props);
 
-const { isPlus } = useKoelPlus()
+const { isPlus } = useKoelPlus();
 
 const layouts: EmbedLayout[] = [
-  { id: 'full', name: 'Banner and tracklist' },
-  { id: 'compact', name: 'Banner only' },
-]
+  { id: "full", name: "Banner and tracklist" },
+  { id: "compact", name: "Banner only" },
+];
 </script>

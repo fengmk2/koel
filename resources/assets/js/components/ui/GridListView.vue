@@ -5,28 +5,28 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, ref, toRefs } from 'vue'
+import { nextTick, ref, toRefs } from "vue";
 
 const props = withDefaults(defineProps<{ viewMode?: ViewMode }>(), {
-  viewMode: 'thumbnails',
-})
+  viewMode: "thumbnails",
+});
 
-const container = ref<HTMLDivElement>()
+const container = ref<HTMLDivElement>();
 
-const { viewMode } = toRefs(props)
+const { viewMode } = toRefs(props);
 
 const scrollToTop = async () => {
-  await nextTick()
+  await nextTick();
 
   container.value!.scrollTo?.({
     top: 0,
-    behavior: 'smooth',
-  })
-}
+    behavior: "smooth",
+  });
+};
 
 defineExpose({
   scrollToTop,
-})
+});
 </script>
 
 <style lang="postcss" scoped>

@@ -1,23 +1,23 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { screen } from '@testing-library/vue'
-import Component from './EmbedWidgetTrackList.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { screen } from "@testing-library/vue";
+import Component from "./EmbedWidgetTrackList.vue";
 
-describe('embedWidgetTrackList.vue', async () => {
-  const h = createHarness()
+describe("embedWidgetTrackList.vue", async () => {
+  const h = createHarness();
 
-  it('renders the track list', () => {
+  it("renders the track list", () => {
     h.render(Component, {
       props: {
-        playables: h.factory('song', 10),
+        playables: h.factory("song", 10),
       },
       global: {
         stubs: {
-          TrackItem: h.stub('track-item'),
+          TrackItem: h.stub("track-item"),
         },
       },
-    })
+    });
 
-    expect(screen.queryAllByTestId('track-item')).toHaveLength(10)
-  })
-})
+    expect(screen.queryAllByTestId("track-item")).toHaveLength(10);
+  });
+});

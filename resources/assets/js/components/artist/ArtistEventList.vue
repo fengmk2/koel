@@ -14,33 +14,35 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { artistStore } from '@/stores/artistStore'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { defineAsyncComponent } from '@/utils/helpers'
+import { onMounted, ref } from "vue";
+import { artistStore } from "@/stores/artistStore";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { defineAsyncComponent } from "@/utils/helpers";
 
-import ArtistEventSkeleton from '@/components/artist/ArtistEventSkeleton.vue'
+import ArtistEventSkeleton from "@/components/artist/ArtistEventSkeleton.vue";
 
-const props = defineProps<{ artist: Artist }>()
+const props = defineProps<{ artist: Artist }>();
 
-const ArtistEventItem = defineAsyncComponent(() => import('@/components/artist/ArtistEventItem.vue'))
+const ArtistEventItem = defineAsyncComponent(
+  () => import("@/components/artist/ArtistEventItem.vue"),
+);
 
-const { artist } = props
+const { artist } = props;
 
-const loading = ref(false)
-const events = ref<LiveEvent[]>([])
+const loading = ref(false);
+const events = ref<LiveEvent[]>([]);
 
 const fetchEvents = async () => {
-  loading.value = true
+  loading.value = true;
 
   try {
-    events.value = await artistStore.fetchEvents(artist)
+    events.value = await artistStore.fetchEvents(artist);
   } catch (e: unknown) {
-    useErrorHandler('toast').handleHttpError(e)
+    useErrorHandler("toast").handleHttpError(e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
-onMounted(() => fetchEvents())
+onMounted(() => fetchEvents());
 </script>

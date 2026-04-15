@@ -16,44 +16,45 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, toRefs } from 'vue'
+import { computed, onMounted, toRefs } from "vue";
 import {
   faCircleCheck,
   faCircleExclamation,
   faCircleInfo,
   faTimesCircle,
   faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons'
+} from "@fortawesome/free-solid-svg-icons";
 
-const props = defineProps<{ message: ToastMessage }>()
-const emit = defineEmits<{ (e: 'dismiss', message: ToastMessage): void }>()
+const props = defineProps<{ message: ToastMessage }>();
+const emit = defineEmits<{ (e: "dismiss", message: ToastMessage): void }>();
 
-const { message } = toRefs(props)
+const { message } = toRefs(props);
 
 const typeIcon = computed(() => {
   switch (message.value.type) {
-    case 'info':
-      return faCircleInfo
-    case 'success':
-      return faCircleCheck
-    case 'warning':
-      return faTriangleExclamation
+    case "info":
+      return faCircleInfo;
+    case "success":
+      return faCircleCheck;
+    case "warning":
+      return faTriangleExclamation;
     default:
-      return faCircleExclamation
+      return faCircleExclamation;
   }
-})
+});
 
-let timeoutHandler: number
+let timeoutHandler: number;
 
 const dismiss = () => {
-  emit('dismiss', message.value)
-  window.clearTimeout(timeoutHandler)
-}
+  emit("dismiss", message.value);
+  window.clearTimeout(timeoutHandler);
+};
 
-const cancelAutoDismiss = () => window.clearTimeout(timeoutHandler)
-const setAutoDismiss = () => (timeoutHandler = window.setTimeout(() => dismiss(), message.value.timeout * 1000))
+const cancelAutoDismiss = () => window.clearTimeout(timeoutHandler);
+const setAutoDismiss = () =>
+  (timeoutHandler = window.setTimeout(() => dismiss(), message.value.timeout * 1000));
 
-onMounted(() => setAutoDismiss())
+onMounted(() => setAutoDismiss());
 </script>
 
 <style lang="postcss" scoped>

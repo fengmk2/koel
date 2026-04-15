@@ -3,61 +3,61 @@
 </template>
 
 <script lang="ts" setup>
-import type { KeyFilter } from '@vueuse/core'
-import { onKeyStroke as baseOnKeyStroke } from '@vueuse/core'
-import { eventBus } from '@/utils/eventBus'
-import { socketService } from '@/services/socketService'
-import { volumeManager } from '@/services/volumeManager'
-import { commonStore } from '@/stores/commonStore'
-import { queueStore } from '@/stores/queueStore'
-import { useRouter } from '@/composables/useRouter'
-import { playableStore } from '@/stores/playableStore'
-import { playback } from '@/services/playbackManager'
+import type { KeyFilter } from "@vueuse/core";
+import { onKeyStroke as baseOnKeyStroke } from "@vueuse/core";
+import { eventBus } from "@/utils/eventBus";
+import { socketService } from "@/services/socketService";
+import { volumeManager } from "@/services/volumeManager";
+import { commonStore } from "@/stores/commonStore";
+import { queueStore } from "@/stores/queueStore";
+import { useRouter } from "@/composables/useRouter";
+import { playableStore } from "@/stores/playableStore";
+import { playback } from "@/services/playbackManager";
 
-const { isCurrentScreen, go, url } = useRouter()
+const { isCurrentScreen, go, url } = useRouter();
 
 const onKeyStroke = (key: KeyFilter, callback: (e: KeyboardEvent) => void) => {
-  baseOnKeyStroke(key, e => {
+  baseOnKeyStroke(key, (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) {
-      return
+      return;
     }
 
-    const el = e.target as HTMLElement
+    const el = e.target as HTMLElement;
 
     if (
       el.isContentEditable ||
       el.matches('input, select, textarea, button, [role="button"], [role="checkbox"]') ||
-      el.closest('dialog')
+      el.closest("dialog")
     ) {
-      return
+      return;
     }
 
-    e.preventDefault()
-    callback(e)
-  })
-}
+    e.preventDefault();
+    callback(e);
+  });
+};
 
-onKeyStroke('f', () => eventBus.emit('FOCUS_SEARCH_FIELD'))
-onKeyStroke('j', () => playback('current')?.playNext())
-onKeyStroke('k', () => playback('current')?.playPrev())
-onKeyStroke(' ', () => playback('current')?.toggle())
-onKeyStroke('r', () => playback('current')?.rotateRepeatMode())
-onKeyStroke('q', () => go(isCurrentScreen('Queue') ? -1 : url('queue')))
-onKeyStroke('h', () => go(url('home')))
+onKeyStroke("f", () => eventBus.emit("FOCUS_SEARCH_FIELD"));
+onKeyStroke("j", () => playback("current")?.playNext());
+onKeyStroke("k", () => playback("current")?.playPrev());
+onKeyStroke(" ", () => playback("current")?.toggle());
+onKeyStroke("r", () => playback("current")?.rotateRepeatMode());
+onKeyStroke("q", () => go(isCurrentScreen("Queue") ? -1 : url("queue")));
+onKeyStroke("h", () => go(url("home")));
 
-onKeyStroke('ArrowRight', () => playback('current')?.forward(10))
-onKeyStroke('ArrowLeft', () => playback('current')?.rewind(-10))
-onKeyStroke('ArrowUp', () => volumeManager.increase())
-onKeyStroke('ArrowDown', () => volumeManager.decrease())
-onKeyStroke('m', () => volumeManager.toggleMute())
+onKeyStroke("ArrowRight", () => playback("current")?.forward(10));
+onKeyStroke("ArrowLeft", () => playback("current")?.rewind(-10));
+onKeyStroke("ArrowUp", () => volumeManager.increase());
+onKeyStroke("ArrowDown", () => volumeManager.decrease());
+onKeyStroke("m", () => volumeManager.toggleMute());
 
-onKeyStroke('/', () => commonStore.state.uses_ai && go(isCurrentScreen('AI') ? -1 : url('ai')))
+onKeyStroke("/", () => commonStore.state.uses_ai && go(isCurrentScreen("AI") ? -1 : url("ai")));
 
-onKeyStroke('l', () => {
+onKeyStroke("l", () => {
   if (!queueStore.current) {
-    return
+    return;
   }
-  playableStore.toggleFavorite(queueStore.current)
-  socketService.broadcast('SOCKET_STREAMABLE', queueStore.current)
-})
+  playableStore.toggleFavorite(queueStore.current);
+  socketService.broadcast("SOCKET_STREAMABLE", queueStore.current);
+});
 </script>

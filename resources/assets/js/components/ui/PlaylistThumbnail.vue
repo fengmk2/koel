@@ -8,15 +8,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue'
-import { useBranding } from '@/composables/useBranding'
+import { computed, toRefs } from "vue";
+import { useBranding } from "@/composables/useBranding";
 
-const props = defineProps<{ playlist: Playlist }>()
-const { playlist } = toRefs(props)
+const props = defineProps<{ playlist: Playlist }>();
+const { playlist } = toRefs(props);
 
-const { cover: defaultCover } = useBranding()
+const { cover: defaultCover } = useBranding();
 
-const backgroundImage = computed(() => `url(${playlist.value.cover || defaultCover})`)
+const backgroundImage = computed(() => `url(${playlist.value.cover || defaultCover})`);
 </script>
 
 <style lang="postcss" scoped>

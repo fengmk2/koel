@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import { faSquareUpRight } from '@fortawesome/free-solid-svg-icons'
+import { faSquareUpRight } from "@fortawesome/free-solid-svg-icons";
 </script>

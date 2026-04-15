@@ -10,5 +10,5 @@
 </template>
 
 <script lang="ts" setup>
-import { WifiOff } from 'lucide-vue-next'
+import { WifiOff } from "lucide-vue-next";
 </script>

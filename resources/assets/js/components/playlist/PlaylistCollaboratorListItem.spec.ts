@@ -1,93 +1,93 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { screen } from '@testing-library/vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './PlaylistCollaboratorListItem.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { screen } from "@testing-library/vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./PlaylistCollaboratorListItem.vue";
 
-describe('playlistCollaboratorListItem.vue', () => {
-  const h = createHarness()
+describe("playlistCollaboratorListItem.vue", () => {
+  const h = createHarness();
 
   const renderComponent = (props: {
-    collaborator: PlaylistCollaborator
-    removable: boolean
-    manageable: boolean
-    role: 'owner' | 'contributor'
+    collaborator: PlaylistCollaborator;
+    removable: boolean;
+    manageable: boolean;
+    role: "owner" | "contributor";
   }) => {
     return h.render(Component, {
       props,
       global: {
         stubs: {
-          UserAvatar: h.stub('UserAvatar'),
+          UserAvatar: h.stub("UserAvatar"),
         },
       },
-    })
-  }
+    });
+  };
 
-  it('does not show a badge when current user is not the collaborator', async () => {
-    const currentUser = h.factory('user') as CurrentUser
-    h.actingAsUser(currentUser)
+  it("does not show a badge when current user is not the collaborator", async () => {
+    const currentUser = h.factory("user") as CurrentUser;
+    h.actingAsUser(currentUser);
     renderComponent({
-      collaborator: h.factory('playlist-collaborator', { id: currentUser.id + 1 }),
+      collaborator: h.factory("playlist-collaborator", { id: currentUser.id + 1 }),
       removable: true,
       manageable: true,
-      role: 'owner',
-    })
+      role: "owner",
+    });
 
-    expect(screen.queryByTitle('This is you!')).toBeNull()
-  })
+    expect(screen.queryByTitle("This is you!")).toBeNull();
+  });
 
-  it('shows a badge when current user is the collaborator', async () => {
-    const currentUser = h.factory('user') as CurrentUser
-    h.actingAsUser(currentUser)
+  it("shows a badge when current user is the collaborator", async () => {
+    const currentUser = h.factory("user") as CurrentUser;
+    h.actingAsUser(currentUser);
     renderComponent({
-      collaborator: h.factory('playlist-collaborator', {
+      collaborator: h.factory("playlist-collaborator", {
         id: currentUser.id,
         name: currentUser.name,
         avatar: currentUser.avatar,
       }),
       removable: true,
       manageable: true,
-      role: 'owner',
-    })
+      role: "owner",
+    });
 
-    screen.getByTitle('This is you!')
-  })
+    screen.getByTitle("This is you!");
+  });
 
-  it('shows the role', async () => {
-    const collaborator = h.factory('playlist-collaborator')
+  it("shows the role", async () => {
+    const collaborator = h.factory("playlist-collaborator");
 
-    h.actingAsUser()
+    h.actingAsUser();
     renderComponent({
       collaborator,
       removable: true,
       manageable: true,
-      role: 'owner',
-    })
+      role: "owner",
+    });
 
-    screen.getByText('Owner')
+    screen.getByText("Owner");
 
-    h.actingAsUser()
+    h.actingAsUser();
     renderComponent({
       collaborator,
       removable: true,
       manageable: true,
-      role: 'contributor',
-    })
+      role: "contributor",
+    });
 
-    screen.getByText('Contributor')
-  })
+    screen.getByText("Contributor");
+  });
 
-  it('emits the remove event when the remove button is clicked', async () => {
-    const collaborator = h.factory('playlist-collaborator')
-    h.actingAsUser()
+  it("emits the remove event when the remove button is clicked", async () => {
+    const collaborator = h.factory("playlist-collaborator");
+    h.actingAsUser();
     const { emitted } = renderComponent({
       collaborator,
       removable: true,
       manageable: true,
-      role: 'owner',
-    })
+      role: "owner",
+    });
 
-    await h.user.click(screen.getByRole('button', { name: 'Remove' }))
+    await h.user.click(screen.getByRole("button", { name: "Remove" }));
 
-    expect(emitted('remove')).toBeTruthy()
-  })
-})
+    expect(emitted("remove")).toBeTruthy();
+  });
+});

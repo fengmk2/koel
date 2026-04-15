@@ -6,5 +6,5 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{ lines?: number }>(), { lines: 4 })
+withDefaults(defineProps<{ lines?: number }>(), { lines: 4 });
 </script>

@@ -1,8 +1,8 @@
-import { faker } from '@faker-js/faker'
+import { faker } from "@faker-js/faker";
 
 export default (): PlaylistCollaborator => ({
-  type: 'playlist-collaborators',
+  type: "playlist-collaborators",
   id: faker.string.ulid(),
   name: faker.person.fullName(),
-  avatar: 'https://gravatar.com/foo',
-})
+  avatar: "https://gravatar.com/foo",
+});

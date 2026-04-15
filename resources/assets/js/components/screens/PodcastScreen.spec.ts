@@ -1,53 +1,55 @@
-import { screen, waitFor } from '@testing-library/vue'
-import type { Mock } from 'vite-plus/test'
-import { describe, expect, it, vi } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { podcastStore } from '@/stores/podcastStore'
-import { playableStore as episodeStore } from '@/stores/playableStore'
-import { playbackService } from '@/services/QueuePlaybackService'
-import { queueStore } from '@/stores/queueStore'
-import Router from '@/router'
-import { eventBus } from '@/utils/eventBus'
-import { useContextMenu } from '@/composables/useContextMenu'
-import { assertOpenContextMenu } from '@/__tests__/assertions'
-import PodcastContextMenu from '@/components/podcast/PodcastContextMenu.vue'
-import Component from './PodcastScreen.vue'
+import { screen, waitFor } from "@testing-library/vue";
+import type { Mock } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { podcastStore } from "@/stores/podcastStore";
+import { playableStore as episodeStore } from "@/stores/playableStore";
+import { playbackService } from "@/services/QueuePlaybackService";
+import { queueStore } from "@/stores/queueStore";
+import Router from "@/router";
+import { eventBus } from "@/utils/eventBus";
+import { useContextMenu } from "@/composables/useContextMenu";
+import { assertOpenContextMenu } from "@/__tests__/assertions";
+import PodcastContextMenu from "@/components/podcast/PodcastContextMenu.vue";
+import Component from "./PodcastScreen.vue";
 
-vi.mock('@/composables/useContextMenu')
+vi.mock("@/composables/useContextMenu");
 
-describe('podcastScreen.vue', () => {
-  const h = createHarness()
+describe("podcastScreen.vue", () => {
+  const h = createHarness();
 
   const renderComponent = async (podcast?: Podcast, episodes?: Episode[]) => {
     podcast =
       podcast ||
-      h.factory('podcast', {
-        title: 'A Brief History of Time',
+      h.factory("podcast", {
+        title: "A Brief History of Time",
         favorite: false,
-      })
+      });
 
-    episodes = episodes || h.factory('episode', 9, { podcast_id: podcast.id })
+    episodes = episodes || h.factory("episode", 9, { podcast_id: podcast.id });
 
-    const resolvePodcastMock = h.mock(podcastStore, 'resolve').mockResolvedValue(podcast)
-    const fetchEpisodesMock = h.mock(episodeStore, 'fetchEpisodesInPodcast').mockResolvedValue(episodes)
+    const resolvePodcastMock = h.mock(podcastStore, "resolve").mockResolvedValue(podcast);
+    const fetchEpisodesMock = h
+      .mock(episodeStore, "fetchEpisodesInPodcast")
+      .mockResolvedValue(episodes);
 
-    h.visit(`podcasts/${podcast.id}`)
+    h.visit(`podcasts/${podcast.id}`);
 
     const rendered = h.render(Component, {
       global: {
         stubs: {
-          PodcastItem: h.stub('podcast-item'),
-          VirtualScroller: h.stub('virtual-scroller'),
+          PodcastItem: h.stub("podcast-item"),
+          VirtualScroller: h.stub("virtual-scroller"),
         },
       },
-    })
+    });
 
     await waitFor(() => {
-      expect(resolvePodcastMock).toHaveBeenCalledWith(podcast.id)
-      expect(fetchEpisodesMock).toHaveBeenCalledWith(podcast.id)
-    })
+      expect(resolvePodcastMock).toHaveBeenCalledWith(podcast.id);
+      expect(fetchEpisodesMock).toHaveBeenCalledWith(podcast.id);
+    });
 
-    await h.tick()
+    await h.tick();
 
     return {
       rendered,
@@ -55,102 +57,104 @@ describe('podcastScreen.vue', () => {
       episodes,
       resolvePodcastMock,
       fetchEpisodesMock,
-    }
-  }
+    };
+  };
 
-  it('renders', async () => {
-    await renderComponent()
+  it("renders", async () => {
+    await renderComponent();
 
     await waitFor(() => {
-      screen.getByTestId('virtual-scroller')
-      screen.getByText('A Brief History of Time')
-    })
-  })
+      screen.getByTestId("virtual-scroller");
+      screen.getByText("A Brief History of Time");
+    });
+  });
 
-  it('starts playing the podcast', async () => {
-    h.createAudioPlayer()
+  it("starts playing the podcast", async () => {
+    h.createAudioPlayer();
 
-    const playMock = h.mock(playbackService, 'playFirstInQueue')
-    await renderComponent()
-    await h.tick()
-    await h.user.click(screen.getByRole('button', { name: 'Start Listening' }))
+    const playMock = h.mock(playbackService, "playFirstInQueue");
+    await renderComponent();
+    await h.tick();
+    await h.user.click(screen.getByRole("button", { name: "Start Listening" }));
 
-    expect(playMock).toHaveBeenCalled()
-  })
+    expect(playMock).toHaveBeenCalled();
+  });
 
-  it('resumes playback if currently queue item is part of podcast', async () => {
-    h.createAudioPlayer()
+  it("resumes playback if currently queue item is part of podcast", async () => {
+    h.createAudioPlayer();
 
-    const playMock = h.mock(playbackService, 'resume')
+    const playMock = h.mock(playbackService, "resume");
 
-    const { episodes } = await renderComponent()
-    const synced = episodeStore.syncWithVault(episodes)
-    queueStore.state.playables = synced
-    synced[0].playback_state = 'Paused'
+    const { episodes } = await renderComponent();
+    const synced = episodeStore.syncWithVault(episodes);
+    queueStore.state.playables = synced;
+    synced[0].playback_state = "Paused";
 
-    await h.tick()
-    await h.user.click(screen.getByRole('button', { name: 'Start Listening' }))
+    await h.tick();
+    await h.user.click(screen.getByRole("button", { name: "Start Listening" }));
 
-    expect(playMock).toHaveBeenCalled()
-  })
+    expect(playMock).toHaveBeenCalled();
+  });
 
-  it('continues playing the current episode if any', async () => {
-    h.createAudioPlayer()
+  it("continues playing the current episode if any", async () => {
+    h.createAudioPlayer();
 
-    const playMock = h.mock(playbackService, 'play')
+    const playMock = h.mock(playbackService, "play");
 
-    const podcast = h.factory('podcast')
-    const episodes = h.factory('episode', 2, { podcast_id: podcast.id })
-    podcast.state.current_episode = episodes[0].id
+    const podcast = h.factory("podcast");
+    const episodes = h.factory("episode", 2, { podcast_id: podcast.id });
+    podcast.state.current_episode = episodes[0].id;
     podcast.state.progresses = {
       [episodes[0].id]: 123,
       [episodes[1].id]: 456,
-    }
+    };
 
-    await renderComponent(podcast, episodes)
-    await h.user.click(screen.getByRole('button', { name: 'Continue' }))
+    await renderComponent(podcast, episodes);
+    await h.user.click(screen.getByRole("button", { name: "Continue" }));
 
-    expect(playMock).toHaveBeenCalledWith(episodes[0], 123)
-  })
+    expect(playMock).toHaveBeenCalledWith(episodes[0], 123);
+  });
 
-  it('refreshes podcast', async () => {
-    const { podcast, fetchEpisodesMock } = await renderComponent()
+  it("refreshes podcast", async () => {
+    const { podcast, fetchEpisodesMock } = await renderComponent();
 
-    await h.tick()
-    await h.user.click(screen.getByRole('button', { name: 'Refresh Podcast' }))
+    await h.tick();
+    await h.user.click(screen.getByRole("button", { name: "Refresh Podcast" }));
 
-    expect(fetchEpisodesMock).toHaveBeenNthCalledWith(2, podcast.id, true)
-  })
+    expect(fetchEpisodesMock).toHaveBeenNthCalledWith(2, podcast.id, true);
+  });
 
-  it('has a Favorite button if podcast is favorite', async () => {
-    const { podcast } = await renderComponent(h.factory('podcast', { favorite: true }))
-    const toggleFavoriteMock = h.mock(podcastStore, 'toggleFavorite')
+  it("has a Favorite button if podcast is favorite", async () => {
+    const { podcast } = await renderComponent(h.factory("podcast", { favorite: true }));
+    const toggleFavoriteMock = h.mock(podcastStore, "toggleFavorite");
 
-    await waitFor(async () => await h.user.click(screen.getByRole('button', { name: 'Undo Favorite' })))
+    await waitFor(
+      async () => await h.user.click(screen.getByRole("button", { name: "Undo Favorite" })),
+    );
 
-    expect(toggleFavoriteMock).toHaveBeenCalledWith(podcast)
-  })
+    expect(toggleFavoriteMock).toHaveBeenCalledWith(podcast);
+  });
 
-  it('does not have a Favorite button if podcast is not favorite', async () => {
-    await renderComponent(h.factory('podcast', { favorite: false }))
-    expect(screen.queryByRole('button', { name: 'Favorite' })).toBeNull()
-  })
+  it("does not have a Favorite button if podcast is not favorite", async () => {
+    await renderComponent(h.factory("podcast", { favorite: false }));
+    expect(screen.queryByRole("button", { name: "Favorite" })).toBeNull();
+  });
 
-  it('requests Actions menu', async () => {
-    const { openContextMenu } = useContextMenu()
-    const { podcast } = await renderComponent()
+  it("requests Actions menu", async () => {
+    const { openContextMenu } = useContextMenu();
+    const { podcast } = await renderComponent();
 
     await waitFor(async () => {
-      await h.user.click(screen.getByRole('button', { name: 'More Actions' }))
-      await assertOpenContextMenu(openContextMenu as Mock, PodcastContextMenu, { podcast })
-    })
-  })
+      await h.user.click(screen.getByRole("button", { name: "More Actions" }));
+      await assertOpenContextMenu(openContextMenu as Mock, PodcastContextMenu, { podcast });
+    });
+  });
 
-  it('goes back to podcast list if current one is unsubscribed', async () => {
-    const goMock = h.mock(Router, 'go')
-    const { podcast } = await renderComponent()
-    eventBus.emit('PODCAST_UNSUBSCRIBED', podcast)
+  it("goes back to podcast list if current one is unsubscribed", async () => {
+    const goMock = h.mock(Router, "go");
+    const { podcast } = await renderComponent();
+    eventBus.emit("PODCAST_UNSUBSCRIBED", podcast);
 
-    expect(goMock).toHaveBeenCalledWith('/#/podcasts')
-  })
-})
+    expect(goMock).toHaveBeenCalledWith("/#/podcasts");
+  });
+});

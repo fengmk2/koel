@@ -22,47 +22,48 @@
 </template>
 
 <script lang="ts" setup>
-import { faVolumeHigh, faVolumeLow, faVolumeMute } from '@fortawesome/free-solid-svg-icons'
-import { computed, onMounted, ref } from 'vue'
-import { watchThrottled } from '@vueuse/core'
-import { socketService } from '@/services/socketService'
-import { volumeManager } from '@/services/volumeManager'
-import { preferenceStore } from '@/stores/preferenceStore'
+import { faVolumeHigh, faVolumeLow, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
+import { computed, onMounted, ref } from "vue";
+import { watchThrottled } from "@vueuse/core";
+import { socketService } from "@/services/socketService";
+import { volumeManager } from "@/services/volumeManager";
+import { preferenceStore } from "@/stores/preferenceStore";
 
-import FooterExtraControlBtn from '@/components/layout/app-footer/FooterButton.vue'
+import FooterExtraControlBtn from "@/components/layout/app-footer/FooterButton.vue";
 
-const inputEl = ref<HTMLInputElement>()
+const inputEl = ref<HTMLInputElement>();
 
 const level = computed(() => {
   if (volumeManager.volume.value === 0) {
-    return 'muted'
+    return "muted";
   }
   if (volumeManager.volume.value < 3) {
-    return 'discreet'
+    return "discreet";
   }
-  return 'loud'
-})
+  return "loud";
+});
 
-const mute = () => volumeManager.mute()
-const unmute = () => volumeManager.unmute()
-const setVolume = (e: Event) => volumeManager.set(Number.parseFloat((e.target as HTMLInputElement).value))
+const mute = () => volumeManager.mute();
+const unmute = () => volumeManager.unmute();
+const setVolume = (e: Event) =>
+  volumeManager.set(Number.parseFloat((e.target as HTMLInputElement).value));
 
 // since changing volume can be frequent, we throttle the event to avoid too many "save preferences" API calls
 // and socket broadcasts
 watchThrottled(
   volumeManager.volume,
-  volume => {
-    preferenceStore.volume = volume
-    socketService.broadcast('SOCKET_VOLUME_CHANGED', volume)
+  (volume) => {
+    preferenceStore.volume = volume;
+    socketService.broadcast("SOCKET_VOLUME_CHANGED", volume);
   },
   { throttle: 1_000 },
-)
+);
 
-onMounted(() => volumeManager.init(inputEl.value!, preferenceStore.volume))
+onMounted(() => volumeManager.init(inputEl.value!, preferenceStore.volume));
 </script>
 
 <style lang="postcss" scoped>
-.volume-slider[type='range'] {
+.volume-slider[type="range"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   vertical-align: middle;
@@ -72,18 +73,18 @@ onMounted(() => volumeManager.init(inputEl.value!, preferenceStore.volume))
   border: none;
 }
 
-.volume-slider[type='range']:focus {
+.volume-slider[type="range"]:focus {
   outline: 0;
 }
 
-.volume-slider[type='range']::-webkit-slider-runnable-track {
+.volume-slider[type="range"]::-webkit-slider-runnable-track {
   height: 6px;
   border: 0;
   border-radius: 3px;
   @apply bg-k-fg-10;
 }
 
-.volume-slider[type='range']::-webkit-slider-thumb {
+.volume-slider[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   margin-top: -3px;
   height: 12px;
@@ -95,14 +96,14 @@ onMounted(() => volumeManager.init(inputEl.value!, preferenceStore.volume))
   @apply bg-k-fg-70;
 }
 
-.volume-slider[type='range']::-moz-range-track {
+.volume-slider[type="range"]::-moz-range-track {
   height: 6px;
   border: 0;
   border-radius: 3px;
   @apply bg-k-fg-10;
 }
 
-.volume-slider[type='range']::-moz-range-thumb {
+.volume-slider[type="range"]::-moz-range-thumb {
   height: 12px;
   width: 12px;
   border: 0;
@@ -113,15 +114,15 @@ onMounted(() => volumeManager.init(inputEl.value!, preferenceStore.volume))
 }
 
 #volume {
-  [type='range']:hover::-webkit-slider-thumb {
+  [type="range"]:hover::-webkit-slider-thumb {
     @apply bg-k-fg;
   }
 
-  [type='range']:hover::-moz-range-thumb {
+  [type="range"]:hover::-moz-range-thumb {
     @apply bg-k-fg;
   }
 
-  &.muted [type='range'] {
+  &.muted [type="range"] {
     &::-webkit-slider-thumb {
       @apply bg-transparent shadow-none;
     }

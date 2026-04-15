@@ -3,7 +3,9 @@
     <header>
       <h1>
         New Playlist
-        <span v-if="playables.length" data-testid="from-playables">from {{ pluralize(playables, entityName) }}</span>
+        <span v-if="playables.length" data-testid="from-playables"
+          >from {{ pluralize(playables, entityName) }}</span
+        >
       </h1>
     </header>
 
@@ -11,7 +13,13 @@
       <div class="grid grid-cols-2 gap-4">
         <FormRow>
           <template #label>Name *</template>
-          <TextInput v-model="data.name" v-koel-focus name="name" placeholder="Playlist name" required />
+          <TextInput
+            v-model="data.name"
+            v-koel-focus
+            name="name"
+            placeholder="Playlist name"
+            required
+          />
         </FormRow>
         <FormRow>
           <template #label>Folder</template>
@@ -38,67 +46,70 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import type { CreatePlaylistData } from '@/stores/playlistStore'
-import { playlistStore } from '@/stores/playlistStore'
-import { getPlayableCollectionContentType } from '@/utils/typeGuards'
-import { pluralize } from '@/utils/formatters'
-import { useRouter } from '@/composables/useRouter'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { computed } from "vue";
+import type { CreatePlaylistData } from "@/stores/playlistStore";
+import { playlistStore } from "@/stores/playlistStore";
+import { getPlayableCollectionContentType } from "@/utils/typeGuards";
+import { pluralize } from "@/utils/formatters";
+import { useRouter } from "@/composables/useRouter";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
-import FolderSelect from '@/components/ui/form/FolderSelect.vue'
-import TextArea from '@/components/ui/form/TextArea.vue'
-import ArtworkField from '@/components/ui/form/ArtworkField.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
+import FolderSelect from "@/components/ui/form/FolderSelect.vue";
+import TextArea from "@/components/ui/form/TextArea.vue";
+import ArtworkField from "@/components/ui/form/ArtworkField.vue";
 
-const props = withDefaults(defineProps<{ playables?: Playable[]; folder?: PlaylistFolder | null }>(), {
-  playables: () => [],
-})
+const props = withDefaults(
+  defineProps<{ playables?: Playable[]; folder?: PlaylistFolder | null }>(),
+  {
+    playables: () => [],
+  },
+);
 
-const emit = defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { playables, folder: targetFolder } = props
+const { playables, folder: targetFolder } = props;
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
-const { go, url } = useRouter()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
+const { go, url } = useRouter();
 
-const close = () => emit('close')
+const close = () => emit("close");
 
 const { data, isPristine, handleSubmit } = useForm<CreatePlaylistData>({
   initialValues: {
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     folder_id: targetFolder?.id ?? null,
     folder_name: null,
     cover: null,
   },
-  onSubmit: async data => await playlistStore.store(data, playables),
+  onSubmit: async (data) => await playlistStore.store(data, playables),
   onSuccess: (playlist: Playlist) => {
-    close()
-    toastSuccess(`Playlist "${playlist.name}" created.`)
-    go(url('playlists.show', { id: playlist.id }))
+    close();
+    toastSuccess(`Playlist "${playlist.name}" created.`);
+    go(url("playlists.show", { id: playlist.id }));
   },
-})
+});
 
 const entityName = computed(() => {
   switch (getPlayableCollectionContentType(playables)) {
-    case 'songs':
-      return 'song'
-    case 'episodes':
-      return 'song'
+    case "songs":
+      return "song";
+    case "episodes":
+      return "song";
     default:
-      return 'item'
+      return "item";
   }
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>

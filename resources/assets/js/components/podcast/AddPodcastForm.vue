@@ -27,41 +27,41 @@
 </template>
 
 <script setup lang="ts">
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { podcastStore } from '@/stores/podcastStore'
-import { useForm } from '@/composables/useForm'
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { podcastStore } from "@/stores/podcastStore";
+import { useForm } from "@/composables/useForm";
 
-import TextInput from '@/components/ui/form/TextInput.vue'
-import Btn from '@/components/ui/form/Btn.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import TextInput from "@/components/ui/form/TextInput.vue";
+import Btn from "@/components/ui/form/Btn.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const emit = defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
-const close = () => emit('close')
+const close = () => emit("close");
 
-const { loading, handleSubmit, data, isPristine } = useForm<Pick<Podcast, 'url'>>({
+const { loading, handleSubmit, data, isPristine } = useForm<Pick<Podcast, "url">>({
   initialValues: {
-    url: '',
+    url: "",
   },
   onSubmit: async ({ url }) => await podcastStore.store(url),
   onSuccess: (podcast: Podcast) => {
-    close()
-    toastSuccess(`Podcast "${podcast.title}" added.`)
+    close();
+    toastSuccess(`Podcast "${podcast.title}" added.`);
   },
-  onError: error =>
-    useErrorHandler('dialog').handleHttpError(error, {
-      409: 'You have already subscribed to this podcast.',
+  onError: (error) =>
+    useErrorHandler("dialog").handleHttpError(error, {
+      409: "You have already subscribed to this podcast.",
     }),
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>

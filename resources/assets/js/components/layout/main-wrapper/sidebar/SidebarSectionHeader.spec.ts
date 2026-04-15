@@ -1,14 +1,14 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './SidebarSectionHeader.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./SidebarSectionHeader.vue";
 
-describe('SidebarSectionHeader', () => {
-  const h = createHarness()
+describe("SidebarSectionHeader", () => {
+  const h = createHarness();
 
-  it('renders correctly', () => {
+  it("renders correctly", () => {
     const { html } = h.render(Component, {
-      slots: { default: 'Library' },
-    })
-    expect(html()).toMatchSnapshot()
-  })
-})
+      slots: { default: "Library" },
+    });
+    expect(html()).toMatchSnapshot();
+  });
+});

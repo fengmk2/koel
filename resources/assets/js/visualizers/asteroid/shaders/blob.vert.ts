@@ -1,5 +1,4 @@
-export const blobVert
-  = `
+export const blobVert = `
 uniform vec2 u_mouse;
 uniform vec2 u_mouse_delta;
 uniform float u_t;
@@ -263,4 +262,4 @@ void main(){
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(m_pos, 1.);
 }
-`
+`;

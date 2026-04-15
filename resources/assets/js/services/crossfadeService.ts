@@ -1,15 +1,15 @@
-import { playableStore } from '@/stores/playableStore'
-import { logger } from '@/utils/logger'
+import { playableStore } from "@/stores/playableStore";
+import { logger } from "@/utils/logger";
 
 interface CrossfadeState {
   /** The secondary audio element for the incoming track */
-  incomingAudio: HTMLAudioElement
+  incomingAudio: HTMLAudioElement;
   /** The playable being faded in */
-  playable: Playable
+  playable: Playable;
   /** The requestAnimationFrame handle for the volume ramp */
-  rafId: number
+  rafId: number;
   /** The original volume of the primary player (0-10 scale) */
-  originalVolume: number
+  originalVolume: number;
 }
 
 export const crossfadeService = {
@@ -17,7 +17,7 @@ export const crossfadeService = {
 
   /** Whether a crossfade is currently in progress */
   get active() {
-    return this.state !== null
+    return this.state !== null;
   },
 
   /**
@@ -25,57 +25,57 @@ export const crossfadeService = {
    * with volume controlled directly. The outgoing track is faded out by the caller.
    */
   start(nextPlayable: Playable, duration: number, currentVolume: number): boolean {
-    this.cancel()
+    this.cancel();
 
     try {
-      const incomingAudio = document.createElement('audio')
-      incomingAudio.crossOrigin = 'anonymous'
-      incomingAudio.src = playableStore.getSourceUrl(nextPlayable)
-      incomingAudio.volume = 0
+      const incomingAudio = document.createElement("audio");
+      incomingAudio.crossOrigin = "anonymous";
+      incomingAudio.src = playableStore.getSourceUrl(nextPlayable);
+      incomingAudio.volume = 0;
 
       const state: CrossfadeState = {
         incomingAudio,
         playable: nextPlayable,
         rafId: 0,
         originalVolume: currentVolume,
-      }
+      };
 
-      this.state = state
+      this.state = state;
 
       incomingAudio
         .play()
         .then(() => {
-          const startTime = performance.now()
-          const durationMs = duration * 1000
-          const normalizedVolume = currentVolume / 10
+          const startTime = performance.now();
+          const durationMs = duration * 1000;
+          const normalizedVolume = currentVolume / 10;
 
           const step = () => {
             if (this.state !== state) {
-              return
+              return;
             }
 
-            const elapsed = performance.now() - startTime
-            const progress = Math.min(elapsed / durationMs, 1)
+            const elapsed = performance.now() - startTime;
+            const progress = Math.min(elapsed / durationMs, 1);
 
-            incomingAudio.volume = progress * normalizedVolume
+            incomingAudio.volume = progress * normalizedVolume;
 
             if (progress < 1) {
-              state.rafId = requestAnimationFrame(step)
+              state.rafId = requestAnimationFrame(step);
             }
-          }
+          };
 
-          state.rafId = requestAnimationFrame(step)
+          state.rafId = requestAnimationFrame(step);
         })
-        .catch(e => {
-          logger.warn('Crossfade play failed:', e)
-          this.cancel()
-        })
+        .catch((e) => {
+          logger.warn("Crossfade play failed:", e);
+          this.cancel();
+        });
 
-      return true
+      return true;
     } catch (e) {
-      logger.warn('Crossfade failed to start:', e)
-      this.cancel()
-      return false
+      logger.warn("Crossfade failed to start:", e);
+      this.cancel();
+      return false;
     }
   },
 
@@ -84,17 +84,17 @@ export const crossfadeService = {
    */
   cancel() {
     if (!this.state) {
-      return
+      return;
     }
 
-    const { incomingAudio, rafId } = this.state
+    const { incomingAudio, rafId } = this.state;
 
-    cancelAnimationFrame(rafId)
+    cancelAnimationFrame(rafId);
 
-    incomingAudio.pause()
-    incomingAudio.removeAttribute('src')
-    incomingAudio.load()
+    incomingAudio.pause();
+    incomingAudio.removeAttribute("src");
+    incomingAudio.load();
 
-    this.state = null
+    this.state = null;
   },
-}
+};

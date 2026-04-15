@@ -1,12 +1,12 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './ExternalMark.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./ExternalMark.vue";
 
-describe('ExternalMark', () => {
-  const h = createHarness()
+describe("ExternalMark", () => {
+  const h = createHarness();
 
-  it('renders correctly', () => {
-    const { html } = h.render(Component)
-    expect(html()).toMatchSnapshot()
-  })
-})
+  it("renders correctly", () => {
+    const { html } = h.render(Component);
+    expect(html()).toMatchSnapshot();
+  });
+});

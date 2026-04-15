@@ -9,7 +9,12 @@
       <h3 class="font-medium flex gap-2 items-center text-k-fg">
         <span v-if="user.name" class="name">{{ user.name }}</span>
         <span v-else class="name font-light">Anonymous</span>
-        <Icon v-if="isCurrentUser" :icon="faCircleCheck" class="you text-k-highlight" title="This is you!" />
+        <Icon
+          v-if="isCurrentUser"
+          :icon="faCircleCheck"
+          class="you text-k-highlight"
+          title="This is you!"
+        />
         <Icon
           v-if="hasAdminPrivileges"
           :icon="faShield"
@@ -39,30 +44,32 @@
 </template>
 
 <script lang="ts" setup>
-import googleLogo from '@/../img/logos/google.svg'
-import { faCircleCheck, faEllipsis, faShield } from '@fortawesome/free-solid-svg-icons'
-import { computed, toRefs } from 'vue'
-import { useRouter } from '@/composables/useRouter'
-import { useAuthorization } from '@/composables/useAuthorization'
-import { useContextMenu } from '@/composables/useContextMenu'
+import googleLogo from "@/../img/logos/google.svg";
+import { faCircleCheck, faEllipsis, faShield } from "@fortawesome/free-solid-svg-icons";
+import { computed, toRefs } from "vue";
+import { useRouter } from "@/composables/useRouter";
+import { useAuthorization } from "@/composables/useAuthorization";
+import { useContextMenu } from "@/composables/useContextMenu";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import UserAvatar from '@/components/user/UserAvatar.vue'
-import UserContextMenu from '@/components/user/UserContextMenu.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import UserAvatar from "@/components/user/UserAvatar.vue";
+import UserContextMenu from "@/components/user/UserContextMenu.vue";
 
-const props = defineProps<{ user: User }>()
-const { user } = toRefs(props)
+const props = defineProps<{ user: User }>();
+const { user } = toRefs(props);
 
-const { url } = useRouter()
-const { openContextMenu } = useContextMenu()
+const { url } = useRouter();
+const { openContextMenu } = useContextMenu();
 
-const { currentUser } = useAuthorization()
+const { currentUser } = useAuthorization();
 
-const isCurrentUser = computed(() => user.value.id === currentUser.value.id)
-const hasAdminPrivileges = computed(() => user.value.role === 'admin' || user.value.role === 'manager')
+const isCurrentUser = computed(() => user.value.id === currentUser.value.id);
+const hasAdminPrivileges = computed(
+  () => user.value.role === "admin" || user.value.role === "manager",
+);
 
 const requestContextMenu = (event: MouseEvent) =>
-  openContextMenu<'USER'>(UserContextMenu, event, {
+  openContextMenu<"USER">(UserContextMenu, event, {
     user: user.value,
-  })
+  });
 </script>

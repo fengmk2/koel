@@ -10,8 +10,8 @@
     <main class="!px-8 !py-5 text-center flex flex-col gap-5">
       <div>
         Koel Plus adds premium features on top of the default installation.<br />
-        Pay <em>once</em> and enjoy all additional features forever — including those to be built into the app in the
-        future!
+        Pay <em>once</em> and enjoy all additional features forever — including those to be built
+        into the app in the future!
       </div>
 
       <div v-show="!showingActivateLicenseForm" class="space-x-3" data-testid="buttons">
@@ -36,27 +36,27 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { useKoelPlus } from '@/composables/useKoelPlus'
+import { onMounted, ref } from "vue";
+import { useKoelPlus } from "@/composables/useKoelPlus";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import ActivateLicenseForm from '@/components/koel-plus/ActivateLicenseForm.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import ActivateLicenseForm from "@/components/koel-plus/ActivateLicenseForm.vue";
 
-const emit = defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { checkoutUrl } = useKoelPlus()
+const { checkoutUrl } = useKoelPlus();
 
-const close = () => emit('close')
+const close = () => emit("close");
 
-const showingActivateLicenseForm = ref(false)
+const showingActivateLicenseForm = ref(false);
 
 const openPurchaseOverlay = () => {
-  close()
-  window.LemonSqueezy.Url.Open(checkoutUrl.value)
-}
+  close();
+  window.LemonSqueezy.Url.Open(checkoutUrl.value);
+};
 
-const showActivateLicenseForm = () => (showingActivateLicenseForm.value = true)
-const hideActivateLicenseForm = () => (showingActivateLicenseForm.value = false)
+const showActivateLicenseForm = () => (showingActivateLicenseForm.value = true);
+const hideActivateLicenseForm = () => (showingActivateLicenseForm.value = false);
 
-onMounted(() => window.createLemonSqueezy?.())
+onMounted(() => window.createLemonSqueezy?.());
 </script>

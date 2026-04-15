@@ -1,498 +1,507 @@
-import { describe, expect, it, vi } from 'vite-plus/test'
-import { ref } from 'vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import { assertOpenModal } from '@/__tests__/assertions'
-import factory from '@/__tests__/factory'
-import { arrayify } from '@/utils/helpers'
-import { eventBus } from '@/utils/eventBus'
-import { screen, waitFor } from '@testing-library/vue'
-import { downloadService } from '@/services/downloadService'
-import { playbackService } from '@/services/QueuePlaybackService'
-import { playlistStore } from '@/stores/playlistStore'
-import { queueStore } from '@/stores/queueStore'
-import { playableStore } from '@/stores/playableStore'
-import { DialogBoxStub, MessageToasterStub } from '@/__tests__/stubs'
-import Router from '@/router'
-import EditSongForm from '@/components/playable/EditSongForm.vue'
-import CreateEmbedForm from '@/components/embed/CreateEmbedForm.vue'
-import CreatePlaylistForm from '@/components/playlist/CreatePlaylistForm.vue'
+import { describe, expect, it, vi } from "vite-plus/test";
+import { ref } from "vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import { assertOpenModal } from "@/__tests__/assertions";
+import factory from "@/__tests__/factory";
+import { arrayify } from "@/utils/helpers";
+import { eventBus } from "@/utils/eventBus";
+import { screen, waitFor } from "@testing-library/vue";
+import { downloadService } from "@/services/downloadService";
+import { playbackService } from "@/services/QueuePlaybackService";
+import { playlistStore } from "@/stores/playlistStore";
+import { queueStore } from "@/stores/queueStore";
+import { playableStore } from "@/stores/playableStore";
+import { DialogBoxStub, MessageToasterStub } from "@/__tests__/stubs";
+import Router from "@/router";
+import EditSongForm from "@/components/playable/EditSongForm.vue";
+import CreateEmbedForm from "@/components/embed/CreateEmbedForm.vue";
+import CreatePlaylistForm from "@/components/playlist/CreatePlaylistForm.vue";
 
-const openModalMock = vi.fn()
+const openModalMock = vi.fn();
 
-vi.mock('@/composables/useModal', () => ({
+vi.mock("@/composables/useModal", () => ({
   useModal: () => ({
     openModal: openModalMock,
   }),
-}))
+}));
 
-const makeAvailableOfflineMock = vi.fn()
-const removeOfflineCacheMock = vi.fn()
-const isCachedMock = vi.fn().mockReturnValue(false)
+const makeAvailableOfflineMock = vi.fn();
+const removeOfflineCacheMock = vi.fn();
+const isCachedMock = vi.fn().mockReturnValue(false);
 
-vi.mock('@/composables/useOfflinePlayback', () => ({
+vi.mock("@/composables/useOfflinePlayback", () => ({
   useOfflinePlayback: () => ({
     swReady: ref(true),
     makeAvailableOffline: makeAvailableOfflineMock,
     removeOfflineCache: removeOfflineCacheMock,
     isCached: isCachedMock,
   }),
-}))
+}));
 
-import Component from './PlayableContextMenu.vue'
+import Component from "./PlayableContextMenu.vue";
 
 // Mock service worker controller so offline menu items show up
-Object.defineProperty(navigator, 'serviceWorker', {
+Object.defineProperty(navigator, "serviceWorker", {
   value: { controller: { postMessage: vi.fn() }, addEventListener: vi.fn() },
   writable: true,
   configurable: true,
-})
+});
 
-describe('playableContextMenu.vue', () => {
+describe("playableContextMenu.vue", () => {
   const h = createHarness({
     beforeEach: () => {
-      queueStore.state.playables = []
-      openModalMock.mockClear()
-      makeAvailableOfflineMock.mockClear()
-      removeOfflineCacheMock.mockClear()
-      isCachedMock.mockReturnValue(false)
+      queueStore.state.playables = [];
+      openModalMock.mockClear();
+      makeAvailableOfflineMock.mockClear();
+      removeOfflineCacheMock.mockClear();
+      isCachedMock.mockReturnValue(false);
     },
-  })
+  });
 
   const renderComponent = async (playables?: MaybeArray<Playable>) => {
-    playables = playables ? arrayify(playables) : h.factory('song', 5)
+    playables = playables ? arrayify(playables) : h.factory("song", 5);
 
     const rendered = h.render(Component, {
       props: {
         playables,
       },
-    })
+    });
 
-    await h.tick(2)
+    await h.tick(2);
 
     return {
       ...rendered,
       playables,
-    }
-  }
+    };
+  };
 
   const fillQueue = () => {
-    queueStore.state.playables = h.factory('song', 5)
-    playableStore.syncWithVault(queueStore.state.playables)
-    queueStore.state.playables[2].playback_state = 'Playing'
-  }
+    queueStore.state.playables = h.factory("song", 5);
+    playableStore.syncWithVault(queueStore.state.playables);
+    queueStore.state.playables[2].playback_state = "Playing";
+  };
 
-  it('plays', async () => {
-    h.createAudioPlayer()
+  it("plays", async () => {
+    h.createAudioPlayer();
 
-    const playMock = h.mock(playbackService, 'play')
-    const song = h.factory('song', { playback_state: 'Stopped' })
-    await renderComponent(song)
+    const playMock = h.mock(playbackService, "play");
+    const song = h.factory("song", { playback_state: "Stopped" });
+    await renderComponent(song);
 
-    await h.user.click(screen.getByText('Play'))
+    await h.user.click(screen.getByText("Play"));
 
-    expect(playMock).toHaveBeenCalledWith(song)
-  })
+    expect(playMock).toHaveBeenCalledWith(song);
+  });
 
-  it('pauses playback', async () => {
-    h.createAudioPlayer()
+  it("pauses playback", async () => {
+    h.createAudioPlayer();
 
-    const pauseMock = h.mock(playbackService, 'pause')
-    await renderComponent(h.factory('song', { playback_state: 'Playing' }))
+    const pauseMock = h.mock(playbackService, "pause");
+    await renderComponent(h.factory("song", { playback_state: "Playing" }));
 
-    await h.user.click(screen.getByText('Pause'))
+    await h.user.click(screen.getByText("Pause"));
 
-    expect(pauseMock).toHaveBeenCalled()
-  })
+    expect(pauseMock).toHaveBeenCalled();
+  });
 
-  it('resumes playback', async () => {
-    h.createAudioPlayer()
+  it("resumes playback", async () => {
+    h.createAudioPlayer();
 
-    const resumeMock = h.mock(playbackService, 'resume')
-    await renderComponent(h.factory('song', { playback_state: 'Paused' }))
+    const resumeMock = h.mock(playbackService, "resume");
+    await renderComponent(h.factory("song", { playback_state: "Paused" }));
 
-    await h.user.click(screen.getByText('Play'))
+    await h.user.click(screen.getByText("Play"));
 
-    expect(resumeMock).toHaveBeenCalled()
-  })
+    expect(resumeMock).toHaveBeenCalled();
+  });
 
-  it('goes to album details screen', async () => {
-    const goMock = h.mock(Router, 'go')
-    const song = h.factory('song')
-    await renderComponent(song)
+  it("goes to album details screen", async () => {
+    const goMock = h.mock(Router, "go");
+    const song = h.factory("song");
+    await renderComponent(song);
 
-    await h.user.click(screen.getByText(song.album_name))
+    await h.user.click(screen.getByText(song.album_name));
 
-    expect(goMock).toHaveBeenCalledWith(`/#/albums/${song.album_id}`)
-  })
+    expect(goMock).toHaveBeenCalledWith(`/#/albums/${song.album_id}`);
+  });
 
-  it('goes to artist details screen', async () => {
-    const goMock = h.mock(Router, 'go')
-    const song = h.factory('song')
-    await renderComponent(song)
+  it("goes to artist details screen", async () => {
+    const goMock = h.mock(Router, "go");
+    const song = h.factory("song");
+    await renderComponent(song);
 
-    await h.user.click(screen.getByText(song.artist_name))
+    await h.user.click(screen.getByText(song.artist_name));
 
-    expect(goMock).toHaveBeenCalledWith(`/#/artists/${song.artist_id}`)
-  })
+    expect(goMock).toHaveBeenCalledWith(`/#/artists/${song.artist_id}`);
+  });
 
-  it('goes to podcast screen', async () => {
-    const goMock = h.mock(Router, 'go')
-    const episode = h.factory('episode')
-    await renderComponent(episode)
+  it("goes to podcast screen", async () => {
+    const goMock = h.mock(Router, "go");
+    const episode = h.factory("episode");
+    await renderComponent(episode);
 
-    await h.user.click(screen.getByText('Podcast'))
+    await h.user.click(screen.getByText("Podcast"));
 
-    expect(goMock).toHaveBeenCalledWith(`/#/podcasts/${episode.podcast_id}`)
-  })
+    expect(goMock).toHaveBeenCalledWith(`/#/podcasts/${episode.podcast_id}`);
+  });
 
-  it('goes to episode description', async () => {
-    const goMock = h.mock(Router, 'go')
-    const episode = h.factory('episode')
-    await renderComponent(episode)
+  it("goes to episode description", async () => {
+    const goMock = h.mock(Router, "go");
+    const episode = h.factory("episode");
+    await renderComponent(episode);
 
-    await h.user.click(screen.getByText('Episode'))
+    await h.user.click(screen.getByText("Episode"));
 
-    expect(goMock).toHaveBeenCalledWith(`/#/episodes/${episode.id}`)
-  })
+    expect(goMock).toHaveBeenCalledWith(`/#/episodes/${episode.id}`);
+  });
 
-  it('downloads', async () => {
-    const downloadMock = h.mock(downloadService, 'fromPlayables')
-    const { playables } = await renderComponent()
+  it("downloads", async () => {
+    const downloadMock = h.mock(downloadService, "fromPlayables");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Download'))
+    await h.user.click(screen.getByText("Download"));
 
-    expect(downloadMock).toHaveBeenCalledWith(playables)
-  })
+    expect(downloadMock).toHaveBeenCalledWith(playables);
+  });
 
-  it('queues', async () => {
-    const queueMock = h.mock(queueStore, 'queue')
-    const { playables } = await renderComponent()
+  it("queues", async () => {
+    const queueMock = h.mock(queueStore, "queue");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Queue'))
+    await h.user.click(screen.getByText("Queue"));
 
-    expect(queueMock).toHaveBeenCalledWith(playables)
-  })
+    expect(queueMock).toHaveBeenCalledWith(playables);
+  });
 
-  it('queues after current', async () => {
-    fillQueue()
-    const queueMock = h.mock(queueStore, 'queueAfterCurrent')
-    const { playables } = await renderComponent()
+  it("queues after current", async () => {
+    fillQueue();
+    const queueMock = h.mock(queueStore, "queueAfterCurrent");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('After Current'))
+    await h.user.click(screen.getByText("After Current"));
 
-    expect(queueMock).toHaveBeenCalledWith(playables)
-  })
+    expect(queueMock).toHaveBeenCalledWith(playables);
+  });
 
-  it('queues to bottom', async () => {
-    fillQueue()
-    const queueMock = h.mock(queueStore, 'queue')
-    const { playables } = await renderComponent()
+  it("queues to bottom", async () => {
+    fillQueue();
+    const queueMock = h.mock(queueStore, "queue");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Bottom of Queue'))
+    await h.user.click(screen.getByText("Bottom of Queue"));
 
-    expect(queueMock).toHaveBeenCalledWith(playables)
-  })
+    expect(queueMock).toHaveBeenCalledWith(playables);
+  });
 
-  it('queues to top', async () => {
-    fillQueue()
-    const queueMock = h.mock(queueStore, 'queueToTop')
-    const { playables } = await renderComponent()
+  it("queues to top", async () => {
+    fillQueue();
+    const queueMock = h.mock(queueStore, "queueToTop");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Top of Queue'))
+    await h.user.click(screen.getByText("Top of Queue"));
 
-    expect(queueMock).toHaveBeenCalledWith(playables)
-  })
+    expect(queueMock).toHaveBeenCalledWith(playables);
+  });
 
-  it('removes from queue', async () => {
-    fillQueue()
-    const removeMock = h.mock(queueStore, 'unqueue')
+  it("removes from queue", async () => {
+    fillQueue();
+    const removeMock = h.mock(queueStore, "unqueue");
 
-    h.visit('/queue')
-    const { playables } = await renderComponent()
+    h.visit("/queue");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Remove from Queue'))
+    await h.user.click(screen.getByText("Remove from Queue"));
 
-    expect(removeMock).toHaveBeenCalledWith(playables)
-  })
+    expect(removeMock).toHaveBeenCalledWith(playables);
+  });
 
   it('does not show "Remove from Queue" when not on Queue screen', async () => {
-    fillQueue()
+    fillQueue();
 
-    h.visit('/songs')
-    await renderComponent()
+    h.visit("/songs");
+    await renderComponent();
 
-    expect(screen.queryByText('Remove from Queue')).toBeNull()
-  })
+    expect(screen.queryByText("Remove from Queue")).toBeNull();
+  });
 
-  it('adds to favorites', async () => {
-    const likeMock = h.mock(playableStore, 'favorite')
-    const { playables } = await renderComponent()
+  it("adds to favorites", async () => {
+    const likeMock = h.mock(playableStore, "favorite");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Favorites'))
+    await h.user.click(screen.getByText("Favorites"));
 
-    expect(likeMock).toHaveBeenCalledWith(playables)
-  })
+    expect(likeMock).toHaveBeenCalledWith(playables);
+  });
 
-  it('does not have an option to add to favorites for Favorites screen', async () => {
-    h.visit('/favorites')
-    await renderComponent()
+  it("does not have an option to add to favorites for Favorites screen", async () => {
+    h.visit("/favorites");
+    await renderComponent();
 
-    expect(screen.queryByText('Favorites')).toBeNull()
-  })
+    expect(screen.queryByText("Favorites")).toBeNull();
+  });
 
-  it('removes from favorites', async () => {
-    const unlikeMock = h.mock(playableStore, 'undoFavorite')
+  it("removes from favorites", async () => {
+    const unlikeMock = h.mock(playableStore, "undoFavorite");
 
-    h.visit('/favorites')
-    const { playables } = await renderComponent()
+    h.visit("/favorites");
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Remove from Favorites'))
+    await h.user.click(screen.getByText("Remove from Favorites"));
 
-    expect(unlikeMock).toHaveBeenCalledWith(playables)
-  })
+    expect(unlikeMock).toHaveBeenCalledWith(playables);
+  });
 
-  it('lists and adds to existing playlist', async () => {
-    playlistStore.state.playlists = h.factory('playlist', 3)
-    const addMock = h.mock(playlistStore, 'addContent')
-    h.mock(MessageToasterStub.value, 'success')
-    const { playables } = await renderComponent()
+  it("lists and adds to existing playlist", async () => {
+    playlistStore.state.playlists = h.factory("playlist", 3);
+    const addMock = h.mock(playlistStore, "addContent");
+    h.mock(MessageToasterStub.value, "success");
+    const { playables } = await renderComponent();
 
-    playlistStore.state.playlists.forEach(playlist => screen.queryByText(playlist.name))
+    playlistStore.state.playlists.forEach((playlist) => screen.queryByText(playlist.name));
 
-    await h.user.click(screen.getByText(playlistStore.state.playlists[0].name))
+    await h.user.click(screen.getByText(playlistStore.state.playlists[0].name));
 
-    expect(addMock).toHaveBeenCalledWith(playlistStore.state.playlists[0], playables)
-  })
+    expect(addMock).toHaveBeenCalledWith(playlistStore.state.playlists[0], playables);
+  });
 
-  it('does not list smart playlists', async () => {
-    playlistStore.state.playlists = h.factory('playlist', 3)
-    playlistStore.state.playlists.push(factory.states('smart')('playlist', { name: 'My Smart Playlist' }))
+  it("does not list smart playlists", async () => {
+    playlistStore.state.playlists = h.factory("playlist", 3);
+    playlistStore.state.playlists.push(
+      factory.states("smart")("playlist", { name: "My Smart Playlist" }),
+    );
 
-    await renderComponent()
+    await renderComponent();
 
-    expect(screen.queryByText('My Smart Playlist')).toBeNull()
-  })
+    expect(screen.queryByText("My Smart Playlist")).toBeNull();
+  });
 
-  it('removes from playlist', async () => {
-    const playlist = h.factory('playlist')
-    playlistStore.state.playlists.push(playlist)
+  it("removes from playlist", async () => {
+    const playlist = h.factory("playlist");
+    playlistStore.state.playlists.push(playlist);
 
-    h.visit(`/playlists/${playlist.id}`)
-    const { playables } = await renderComponent()
+    h.visit(`/playlists/${playlist.id}`);
+    const { playables } = await renderComponent();
 
-    const removeContentMock = h.mock(playlistStore, 'removeContent')
-    const emitMock = h.mock(eventBus, 'emit')
+    const removeContentMock = h.mock(playlistStore, "removeContent");
+    const emitMock = h.mock(eventBus, "emit");
 
-    await h.user.click(screen.getByText('Remove from Playlist'))
-
-    await waitFor(() => {
-      expect(removeContentMock).toHaveBeenCalledWith(playlist, playables)
-      expect(emitMock).toHaveBeenCalledWith('PLAYLIST_CONTENT_REMOVED', playlist, playables)
-    })
-  })
-
-  it('does not have an option to remove from playlist if not on Playlist screen', async () => {
-    h.visit('/songs')
-    await renderComponent()
-
-    expect(screen.queryByText('Remove from Playlist')).toBeNull()
-  })
-
-  it('allows edit songs if current user is admin', async () => {
-    h.actingAsAdmin()
-    const { playables } = await renderComponent()
-
-    await h.user.click(screen.getByText('Edit…'))
-
-    await assertOpenModal(openModalMock, EditSongForm, { songs: playables as Song[], initialTab: 'details' })
-  })
-
-  it('does not allow edit songs if current user is not admin', async () => {
-    h.actingAsUser()
-    await renderComponent()
-    expect(screen.queryByText('Edit…')).toBeNull()
-  })
-
-  it('has an option to copy shareable URL in Community edition', async () => {
-    await renderComponent(h.factory('song'))
-    screen.getByText('Copy URL')
-  })
-
-  it('has an option to copy shareable URL if song is public in Plus edition', async () => {
-    await h.withPlusEdition(async () => {
-      await renderComponent(h.factory('song', { is_public: true }))
-      screen.getByText('Copy URL')
-    })
-  })
-
-  it('does not have an option to share if song is private in Plus edition', async () => {
-    await h.withPlusEdition(async () => {
-      await renderComponent(h.factory('song', { is_public: false }))
-      expect(screen.queryByText('Copy URL')).toBeNull()
-    })
-  })
-
-  it('deletes song', async () => {
-    const confirmMock = h.mock(DialogBoxStub.value, 'confirm', true)
-    const toasterMock = h.mock(MessageToasterStub.value, 'success')
-    const deleteMock = h.mock(playableStore, 'deleteSongsFromFilesystem')
-    h.actingAsAdmin()
-    const { playables } = await renderComponent()
-
-    const emitMock = h.mock(eventBus, 'emit')
-
-    await h.user.click(screen.getByText('Delete from Filesystem'))
+    await h.user.click(screen.getByText("Remove from Playlist"));
 
     await waitFor(() => {
-      expect(confirmMock).toHaveBeenCalled()
-      expect(deleteMock).toHaveBeenCalledWith(playables)
-      expect(toasterMock).toHaveBeenCalledWith('Deleted 5 songs from the filesystem.')
-      expect(emitMock).toHaveBeenCalledWith('SONGS_DELETED', playables)
-    })
-  })
+      expect(removeContentMock).toHaveBeenCalledWith(playlist, playables);
+      expect(emitMock).toHaveBeenCalledWith("PLAYLIST_CONTENT_REMOVED", playlist, playables);
+    });
+  });
 
-  it('does not have an option to delete songs if current user is not admin', async () => {
-    h.actingAsUser()
-    await renderComponent()
-    expect(screen.queryByText('Delete from Filesystem')).toBeNull()
-  })
+  it("does not have an option to remove from playlist if not on Playlist screen", async () => {
+    h.visit("/songs");
+    await renderComponent();
 
-  it('creates playlist from selected songs', async () => {
-    h.actingAsUser()
-    const { playables } = await renderComponent()
+    expect(screen.queryByText("Remove from Playlist")).toBeNull();
+  });
 
-    await h.user.click(screen.getByText('New Playlist…'))
+  it("allows edit songs if current user is admin", async () => {
+    h.actingAsAdmin();
+    const { playables } = await renderComponent();
 
-    await assertOpenModal(openModalMock, CreatePlaylistForm, { folder: null, playables })
-  })
+    await h.user.click(screen.getByText("Edit…"));
 
-  it('does not have the options to mark song as private or public in Community edition', async () => {
-    await renderComponent(h.factory('song'))
-    expect(screen.queryByText('Mark as Private')).toBeNull()
-    expect(screen.queryByText('Unmark as Private')).toBeNull()
-  })
+    await assertOpenModal(openModalMock, EditSongForm, {
+      songs: playables as Song[],
+      initialTab: "details",
+    });
+  });
 
-  it('makes songs private', async () =>
+  it("does not allow edit songs if current user is not admin", async () => {
+    h.actingAsUser();
+    await renderComponent();
+    expect(screen.queryByText("Edit…")).toBeNull();
+  });
+
+  it("has an option to copy shareable URL in Community edition", async () => {
+    await renderComponent(h.factory("song"));
+    screen.getByText("Copy URL");
+  });
+
+  it("has an option to copy shareable URL if song is public in Plus edition", async () => {
     await h.withPlusEdition(async () => {
-      const user = h.factory.states('current')('user') as CurrentUser
-      const songs = h.factory('song', 5, {
+      await renderComponent(h.factory("song", { is_public: true }));
+      screen.getByText("Copy URL");
+    });
+  });
+
+  it("does not have an option to share if song is private in Plus edition", async () => {
+    await h.withPlusEdition(async () => {
+      await renderComponent(h.factory("song", { is_public: false }));
+      expect(screen.queryByText("Copy URL")).toBeNull();
+    });
+  });
+
+  it("deletes song", async () => {
+    const confirmMock = h.mock(DialogBoxStub.value, "confirm", true);
+    const toasterMock = h.mock(MessageToasterStub.value, "success");
+    const deleteMock = h.mock(playableStore, "deleteSongsFromFilesystem");
+    h.actingAsAdmin();
+    const { playables } = await renderComponent();
+
+    const emitMock = h.mock(eventBus, "emit");
+
+    await h.user.click(screen.getByText("Delete from Filesystem"));
+
+    await waitFor(() => {
+      expect(confirmMock).toHaveBeenCalled();
+      expect(deleteMock).toHaveBeenCalledWith(playables);
+      expect(toasterMock).toHaveBeenCalledWith("Deleted 5 songs from the filesystem.");
+      expect(emitMock).toHaveBeenCalledWith("SONGS_DELETED", playables);
+    });
+  });
+
+  it("does not have an option to delete songs if current user is not admin", async () => {
+    h.actingAsUser();
+    await renderComponent();
+    expect(screen.queryByText("Delete from Filesystem")).toBeNull();
+  });
+
+  it("creates playlist from selected songs", async () => {
+    h.actingAsUser();
+    const { playables } = await renderComponent();
+
+    await h.user.click(screen.getByText("New Playlist…"));
+
+    await assertOpenModal(openModalMock, CreatePlaylistForm, { folder: null, playables });
+  });
+
+  it("does not have the options to mark song as private or public in Community edition", async () => {
+    await renderComponent(h.factory("song"));
+    expect(screen.queryByText("Mark as Private")).toBeNull();
+    expect(screen.queryByText("Unmark as Private")).toBeNull();
+  });
+
+  it("makes songs private", async () =>
+    await h.withPlusEdition(async () => {
+      const user = h.factory.states("current")("user") as CurrentUser;
+      const songs = h.factory("song", 5, {
         is_public: true,
         owner_id: user.id,
-      })
+      });
 
-      h.actingAsUser(user)
+      h.actingAsUser(user);
 
-      await renderComponent(songs)
-      const privatizeMock = h.mock(playableStore, 'privatizeSongs').mockResolvedValue(songs.map(song => song.id))
+      await renderComponent(songs);
+      const privatizeMock = h
+        .mock(playableStore, "privatizeSongs")
+        .mockResolvedValue(songs.map((song) => song.id));
 
-      await h.user.click(screen.getByText('Mark as Private'))
+      await h.user.click(screen.getByText("Mark as Private"));
 
-      expect(privatizeMock).toHaveBeenCalledWith(songs)
-    }))
+      expect(privatizeMock).toHaveBeenCalledWith(songs);
+    }));
 
-  it('makes songs public', async () =>
+  it("makes songs public", async () =>
     await h.withPlusEdition(async () => {
-      const user = h.factory.states('current')('user') as CurrentUser
-      const songs = h.factory('song', 5, {
+      const user = h.factory.states("current")("user") as CurrentUser;
+      const songs = h.factory("song", 5, {
         is_public: false,
         owner_id: user.id,
-      })
+      });
 
-      h.actingAsUser(user)
+      h.actingAsUser(user);
 
-      await renderComponent(songs)
-      const publicizeMock = h.mock(playableStore, 'publicizeSongs').mockResolvedValue(songs.map(song => song.id))
+      await renderComponent(songs);
+      const publicizeMock = h
+        .mock(playableStore, "publicizeSongs")
+        .mockResolvedValue(songs.map((song) => song.id));
 
-      await h.user.click(screen.getByText('Unmark as Private'))
+      await h.user.click(screen.getByText("Unmark as Private"));
 
-      expect(publicizeMock).toHaveBeenCalledWith(songs)
-    }))
+      expect(publicizeMock).toHaveBeenCalledWith(songs);
+    }));
 
-  it('does not have an option to make songs public or private if current user is not owner', async () => {
+  it("does not have an option to make songs public or private if current user is not owner", async () => {
     await h.withPlusEdition(async () => {
-      const user = h.factory.states('current')('user') as CurrentUser
-      const owner = h.factory('user')
-      const songs = h.factory('song', 5, {
+      const user = h.factory.states("current")("user") as CurrentUser;
+      const owner = h.factory("user");
+      const songs = h.factory("song", 5, {
         is_public: false,
         owner_id: owner.id,
-      })
+      });
 
-      h.actingAsUser(user)
+      h.actingAsUser(user);
 
-      await renderComponent(songs)
+      await renderComponent(songs);
 
-      expect(screen.queryByText('Unmark as Private')).toBeNull()
-      expect(screen.queryByText('Mark as Private')).toBeNull()
-    })
-  })
+      expect(screen.queryByText("Unmark as Private")).toBeNull();
+      expect(screen.queryByText("Mark as Private")).toBeNull();
+    });
+  });
 
-  it('has both options to make public and private if songs have mixed visibilities', async () => {
+  it("has both options to make public and private if songs have mixed visibilities", async () => {
     await h.withPlusEdition(async () => {
-      const owner = h.factory.states('current')('user') as CurrentUser
+      const owner = h.factory.states("current")("user") as CurrentUser;
       const songs = h
-        .factory('song', 2, {
+        .factory("song", 2, {
           is_public: false,
           owner_id: owner.id,
         })
         .concat(
-          ...h.factory('song', 3, {
+          ...h.factory("song", 3, {
             is_public: true,
             owner_id: owner.id,
           }),
-        )
+        );
 
-      h.actingAsUser(owner)
-      await renderComponent(songs)
+      h.actingAsUser(owner);
+      await renderComponent(songs);
 
-      screen.getByText('Unmark as Private')
-      screen.getByText('Mark as Private')
-    })
-  })
+      screen.getByText("Unmark as Private");
+      screen.getByText("Mark as Private");
+    });
+  });
 
-  it('does not have an option to make songs public or private or Community edition', async () => {
-    const owner = h.factory.states('current')('user') as CurrentUser
-    const songs = h.factory('song', 5, {
+  it("does not have an option to make songs public or private or Community edition", async () => {
+    const owner = h.factory.states("current")("user") as CurrentUser;
+    const songs = h.factory("song", 5, {
       is_public: false,
       owner_id: owner.id,
-    })
+    });
 
-    h.actingAsUser(owner)
-    await renderComponent(songs)
+    h.actingAsUser(owner);
+    await renderComponent(songs);
 
-    expect(screen.queryByText('Unmark as Private')).toBeNull()
-    expect(screen.queryByText('Mark as Private')).toBeNull()
-  })
+    expect(screen.queryByText("Unmark as Private")).toBeNull();
+    expect(screen.queryByText("Mark as Private")).toBeNull();
+  });
 
-  it('requests the embed form', async () => {
-    const { playables } = await renderComponent(h.factory('song'))
-    await h.user.click(screen.getByText('Embed…'))
+  it("requests the embed form", async () => {
+    const { playables } = await renderComponent(h.factory("song"));
+    await h.user.click(screen.getByText("Embed…"));
 
-    await assertOpenModal(openModalMock, CreateEmbedForm, { embeddable: playables[0] })
-  })
+    await assertOpenModal(openModalMock, CreateEmbedForm, { embeddable: playables[0] });
+  });
 
-  it('makes songs available offline', async () => {
-    const { playables } = await renderComponent()
+  it("makes songs available offline", async () => {
+    const { playables } = await renderComponent();
 
-    await h.user.click(screen.getByText('Make Available Offline'))
-
-    for (const playable of playables) {
-      expect(makeAvailableOfflineMock).toHaveBeenCalledWith(playable)
-    }
-  })
-
-  it('does not show offline option for episodes', async () => {
-    await renderComponent(h.factory('episode'))
-    expect(screen.queryByText('Make Available Offline')).toBeNull()
-  })
-
-  it('removes offline versions when all songs are cached', async () => {
-    isCachedMock.mockReturnValue(true)
-    const { playables } = await renderComponent()
-
-    await h.user.click(screen.getByText('Remove Offline Versions'))
+    await h.user.click(screen.getByText("Make Available Offline"));
 
     for (const playable of playables) {
-      expect(removeOfflineCacheMock).toHaveBeenCalledWith(playable)
+      expect(makeAvailableOfflineMock).toHaveBeenCalledWith(playable);
     }
-  })
-})
+  });
+
+  it("does not show offline option for episodes", async () => {
+    await renderComponent(h.factory("episode"));
+    expect(screen.queryByText("Make Available Offline")).toBeNull();
+  });
+
+  it("removes offline versions when all songs are cached", async () => {
+    isCachedMock.mockReturnValue(true);
+    const { playables } = await renderComponent();
+
+    await h.user.click(screen.getByText("Remove Offline Versions"));
+
+    for (const playable of playables) {
+      expect(removeOfflineCacheMock).toHaveBeenCalledWith(playable);
+    }
+  });
+});

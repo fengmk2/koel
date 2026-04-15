@@ -1,62 +1,62 @@
 export const is: SmartPlaylistOperator = {
-  operator: 'is',
-  label: 'is',
-}
+  operator: "is",
+  label: "is",
+};
 
 export const isNot: SmartPlaylistOperator = {
-  operator: 'isNot',
-  label: 'is not',
-}
+  operator: "isNot",
+  label: "is not",
+};
 
 export const contains: SmartPlaylistOperator = {
-  operator: 'contains',
-  label: 'contains',
-}
+  operator: "contains",
+  label: "contains",
+};
 
 export const notContain: SmartPlaylistOperator = {
-  operator: 'notContain',
-  label: 'does not contain',
-}
+  operator: "notContain",
+  label: "does not contain",
+};
 
 export const isBetween: SmartPlaylistOperator = {
-  operator: 'isBetween',
-  label: 'is between',
+  operator: "isBetween",
+  label: "is between",
   inputs: 2,
-}
+};
 
 export const isGreaterThan: SmartPlaylistOperator = {
-  operator: 'isGreaterThan',
-  label: 'is greater than',
-}
+  operator: "isGreaterThan",
+  label: "is greater than",
+};
 
 export const isLessThan: SmartPlaylistOperator = {
-  operator: 'isLessThan',
-  label: 'is less than',
-}
+  operator: "isLessThan",
+  label: "is less than",
+};
 
 export const beginsWith: SmartPlaylistOperator = {
-  operator: 'beginsWith',
-  label: 'begins with',
-}
+  operator: "beginsWith",
+  label: "begins with",
+};
 
 export const endsWith: SmartPlaylistOperator = {
-  operator: 'endsWith',
-  label: 'ends with',
-}
+  operator: "endsWith",
+  label: "ends with",
+};
 
 export const inLast: SmartPlaylistOperator = {
-  operator: 'inLast',
-  label: 'in the last',
-  type: 'number', // overriding
-  unit: 'days',
-}
+  operator: "inLast",
+  label: "in the last",
+  type: "number", // overriding
+  unit: "days",
+};
 
 export const notInLast: SmartPlaylistOperator = {
-  operator: 'notInLast',
-  label: 'not in the last',
-  type: 'number', // overriding
-  unit: 'days',
-}
+  operator: "notInLast",
+  label: "not in the last",
+  type: "number", // overriding
+  unit: "days",
+};
 
 export default [
   is,
@@ -70,4 +70,4 @@ export default [
   endsWith,
   inLast,
   notInLast,
-]
+];

@@ -12,15 +12,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Sparkles } from 'lucide-vue-next'
-import { useRouter } from '@/composables/useRouter'
+import { Sparkles } from "lucide-vue-next";
+import { useRouter } from "@/composables/useRouter";
 
-const { go, url } = useRouter()
+const { go, url } = useRouter();
 </script>
 
 <style scoped>
 @property --angle {
-  syntax: '<angle>';
+  syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }

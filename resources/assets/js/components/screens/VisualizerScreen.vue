@@ -8,9 +8,15 @@
   >
     <div
       class="controls absolute z-[1] w-full h-full top-0 left-0 opacity-0 transition-opacity duration-300 ease-in-out"
-      :class="{ 'hover:opacity-100': !isFullscreen, 'show-controls': !controlsHidden && isFullscreen }"
+      :class="{
+        'hover:opacity-100': !isFullscreen,
+        'show-controls': !controlsHidden && isFullscreen,
+      }"
     >
-      <div v-if="selectedVisualizer" class="absolute bottom-8 left-8 px-6 py-4 bg-black/30 rounded-md">
+      <div
+        v-if="selectedVisualizer"
+        class="absolute bottom-8 left-8 px-6 py-4 bg-black/30 rounded-md"
+      >
         <h3 class="text-lg mb-2">{{ selectedVisualizer.name }}</h3>
         <p v-if="selectedVisualizer.credits">
           by {{ selectedVisualizer.credits.author }}
@@ -33,94 +39,94 @@
 </template>
 
 <script lang="ts" setup>
-import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useFullscreen } from '@vueuse/core'
-import { throttle } from 'lodash'
-import { logger } from '@/utils/logger'
-import { preferenceStore as preferences } from '@/stores/preferenceStore'
-import { visualizerStore } from '@/stores/visualizerStore'
+import { faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useFullscreen } from "@vueuse/core";
+import { throttle } from "lodash";
+import { logger } from "@/utils/logger";
+import { preferenceStore as preferences } from "@/stores/preferenceStore";
+import { visualizerStore } from "@/stores/visualizerStore";
 
-import SelectBox from '@/components/ui/form/SelectBox.vue'
+import SelectBox from "@/components/ui/form/SelectBox.vue";
 
-const visualizers = visualizerStore.all
-let destroyVisualizer: () => void
-let hideControlsTimeout: number
+const visualizers = visualizerStore.all;
+let destroyVisualizer: () => void;
+let hideControlsTimeout: number;
 
-const el = ref<HTMLElement | null>(null)
-const container = ref<HTMLElement | null>(null)
-const selectedId = ref<Visualizer['id']>()
+const el = ref<HTMLElement | null>(null);
+const container = ref<HTMLElement | null>(null);
+const selectedId = ref<Visualizer["id"]>();
 
-const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(container)
+const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(container);
 
-const controlsHidden = ref(false)
+const controlsHidden = ref(false);
 
 const setupControlHidingTimer = () => {
-  window.clearTimeout(hideControlsTimeout)
-  hideControlsTimeout = window.setTimeout(() => (controlsHidden.value = true), 5000)
-}
+  window.clearTimeout(hideControlsTimeout);
+  hideControlsTimeout = window.setTimeout(() => (controlsHidden.value = true), 5000);
+};
 
 const showControls = throttle(() => {
   if (!isFullscreen.value) {
-    return
+    return;
   }
 
-  controlsHidden.value = false
-  setupControlHidingTimer()
-}, 100)
+  controlsHidden.value = false;
+  setupControlHidingTimer();
+}, 100);
 
-watch(isFullscreen, fullscreen => {
+watch(isFullscreen, (fullscreen) => {
   if (fullscreen) {
-    setupControlHidingTimer()
+    setupControlHidingTimer();
   } else {
-    window.clearTimeout(hideControlsTimeout)
-    showControls.cancel()
-    controlsHidden.value = false
+    window.clearTimeout(hideControlsTimeout);
+    showControls.cancel();
+    controlsHidden.value = false;
   }
-})
+});
 
 const freeUp = () => {
-  destroyVisualizer?.()
-  el.value && (el.value.innerHTML = '')
-}
+  destroyVisualizer?.();
+  el.value && (el.value.innerHTML = "");
+};
 
 const render = async (viz: Visualizer) => {
   if (!el.value) {
-    await nextTick()
-    await render(viz)
+    await nextTick();
+    await render(viz);
   }
 
-  freeUp()
+  freeUp();
 
   try {
-    destroyVisualizer = await viz.init(el.value!)
+    destroyVisualizer = await viz.init(el.value!);
   } catch (error: unknown) {
     // in e.g., DOM testing, the call will fail due to the lack of proper API support
-    logger.warn('Failed to initialize visualizer', error)
+    logger.warn("Failed to initialize visualizer", error);
   }
-}
+};
 
-const selectedVisualizer = ref<Visualizer>()
+const selectedVisualizer = ref<Visualizer>();
 
-watch(selectedId, id => {
-  preferences.visualizer = id
-  selectedVisualizer.value = visualizerStore.getVisualizerById(id || 'default')!
-  render(selectedVisualizer.value)
-})
+watch(selectedId, (id) => {
+  preferences.visualizer = id;
+  selectedVisualizer.value = visualizerStore.getVisualizerById(id || "default")!;
+  render(selectedVisualizer.value);
+});
 
 onMounted(() => {
-  selectedId.value = preferences.visualizer || 'default'
+  selectedId.value = preferences.visualizer || "default";
 
   if (!visualizerStore.getVisualizerById(selectedId.value)) {
-    selectedId.value = 'default'
+    selectedId.value = "default";
   }
-})
+});
 
 onBeforeUnmount(() => {
-  window.clearTimeout(hideControlsTimeout)
-  showControls.cancel()
-  freeUp()
-})
+  window.clearTimeout(hideControlsTimeout);
+  showControls.cancel();
+  freeUp();
+});
 </script>
 
 <style lang="postcss" scoped>

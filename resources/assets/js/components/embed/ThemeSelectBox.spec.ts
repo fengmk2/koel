@@ -1,28 +1,28 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { themeStore } from '@/stores/themeStore'
-import { screen } from '@testing-library/vue'
-import Component from './ThemeSelectBox.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { themeStore } from "@/stores/themeStore";
+import { screen } from "@testing-library/vue";
+import Component from "./ThemeSelectBox.vue";
 
-describe('themeSelectBox.vue', () => {
-  const h = createHarness()
+describe("themeSelectBox.vue", () => {
+  const h = createHarness();
 
-  it('fetches and renders the options', async () => {
-    const theme = h.factory('theme', {
-      id: 'frodo',
-      name: 'One Theme to Rule Them All',
-    })
+  it("fetches and renders the options", async () => {
+    const theme = h.factory("theme", {
+      id: "frodo",
+      name: "One Theme to Rule Them All",
+    });
 
-    const fetchThemesMock = h.mock(themeStore, 'fetchCustomThemes')
+    const fetchThemesMock = h.mock(themeStore, "fetchCustomThemes");
 
-    h.render(Component)
+    h.render(Component);
 
     // since the mock overrides the actual implementation, we manually mutate the store
-    themeStore.state.themes.push(theme)
+    themeStore.state.themes.push(theme);
 
-    await h.tick()
+    await h.tick();
 
-    expect(fetchThemesMock).toHaveBeenCalled()
-    await h.user.selectOptions(screen.getByRole('combobox'), ['frodo'])
-  })
-})
+    expect(fetchThemesMock).toHaveBeenCalled();
+    await h.user.selectOptions(screen.getByRole("combobox"), ["frodo"]);
+  });
+});
