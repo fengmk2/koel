@@ -1,25 +1,25 @@
-import { ref } from 'vue'
-import { screen } from '@testing-library/vue'
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { playableStore } from '@/stores/playableStore'
-import { playbackService } from '@/services/QueuePlaybackService'
-import { PlayablesKey } from '@/config/symbols'
-import Component from './AlbumTrackListItem.vue'
+import { ref } from "vue";
+import { screen } from "@testing-library/vue";
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { playableStore } from "@/stores/playableStore";
+import { playbackService } from "@/services/QueuePlaybackService";
+import { PlayablesKey } from "@/config/symbols";
+import Component from "./AlbumTrackListItem.vue";
 
-describe('albumTrackListItem.vue', () => {
-  const h = createHarness()
+describe("albumTrackListItem.vue", () => {
+  const h = createHarness();
 
   const renderComponent = (matchedSong?: Song) => {
-    const songsToMatchAgainst = h.factory('song', 10)
-    const album = h.factory('album')
+    const songsToMatchAgainst = h.factory("song", 10);
+    const album = h.factory("album");
 
-    const track = h.factory('album-track', {
-      title: 'Fahrstuhl to Heaven',
+    const track = h.factory("album-track", {
+      title: "Fahrstuhl to Heaven",
       length: 280,
-    })
+    });
 
-    const matchMock = h.mock(playableStore, 'matchSongsByTitle', matchedSong)
+    const matchMock = h.mock(playableStore, "matchSongsByTitle", matchedSong);
 
     const rendered = h.render(Component, {
       props: {
@@ -31,25 +31,25 @@ describe('albumTrackListItem.vue', () => {
           [<symbol>PlayablesKey]: ref(songsToMatchAgainst),
         },
       },
-    })
+    });
 
-    expect(matchMock).toHaveBeenCalledWith('Fahrstuhl to Heaven', songsToMatchAgainst)
+    expect(matchMock).toHaveBeenCalledWith("Fahrstuhl to Heaven", songsToMatchAgainst);
 
-    return rendered
-  }
+    return rendered;
+  };
 
-  it('renders', () => expect(renderComponent().html()).toMatchSnapshot())
+  it("renders", () => expect(renderComponent().html()).toMatchSnapshot());
 
-  it('plays', async () => {
-    h.createAudioPlayer()
+  it("plays", async () => {
+    h.createAudioPlayer();
 
-    const matchedSong = h.factory('song')
-    const playMock = h.mock(playbackService, 'play')
+    const matchedSong = h.factory("song");
+    const playMock = h.mock(playbackService, "play");
 
-    renderComponent(matchedSong)
+    renderComponent(matchedSong);
 
-    await h.user.click(screen.getByTitle('Click to play'))
+    await h.user.click(screen.getByTitle("Click to play"));
 
-    expect(playMock).toHaveBeenCalledWith(matchedSong)
-  })
-})
+    expect(playMock).toHaveBeenCalledWith(matchedSong);
+  });
+});

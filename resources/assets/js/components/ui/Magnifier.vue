@@ -1,6 +1,11 @@
 <template>
   <span class="flex transition-opacity duration-200">
-    <button class="!rounded-l !border-r-0" title="Zoom out" type="button" @click.prevent="$emit('out')">
+    <button
+      class="!rounded-l !border-r-0"
+      title="Zoom out"
+      type="button"
+      @click.prevent="$emit('out')"
+    >
       <Icon :icon="faSearchMinus" />
     </button>
     <button class="!rounded-r" title="Zoom in" type="button" @click.prevent="$emit('in')">
@@ -10,9 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-import { faSearchMinus, faSearchPlus } from '@fortawesome/free-solid-svg-icons'
+import { faSearchMinus, faSearchPlus } from "@fortawesome/free-solid-svg-icons";
 
-defineEmits<{ (e: 'in' | 'out'): void }>()
+defineEmits<{ (e: "in" | "out"): void }>();
 </script>
 
 <style lang="postcss" scoped>

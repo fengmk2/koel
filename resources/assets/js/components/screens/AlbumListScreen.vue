@@ -35,7 +35,9 @@
         <Icon :icon="faCompactDisc" />
       </template>
       No albums found.
-      <span v-if="currentUserCan.manageSettings()" class="secondary block"> Have you set up your library yet? </span>
+      <span v-if="currentUserCan.manageSettings()" class="secondary block">
+        Have you set up your library yet?
+      </span>
     </ScreenEmptyState>
 
     <ScreenEmptyState v-else-if="noFavoriteAlbums">
@@ -47,7 +49,10 @@
 
     <template v-else>
       <template v-if="showSkeletons">
-        <div class="grid gap-5 p-6" :style="{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }">
+        <div
+          class="grid gap-5 p-6"
+          :style="{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }"
+        >
           <AlbumCardSkeleton v-for="i in 10" :key="i" :layout="itemLayout" />
         </div>
       </template>
@@ -75,41 +80,43 @@
 </template>
 
 <script lang="ts" setup>
-import { faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons'
-import { faCompactDisc, faStar } from '@fortawesome/free-solid-svg-icons'
-import { computed, nextTick, onMounted, ref, toRef } from 'vue'
-import { albumStore } from '@/stores/albumStore'
-import { commonStore } from '@/stores/commonStore'
-import { preferenceStore as preferences } from '@/stores/preferenceStore'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { usePolicies } from '@/composables/usePolicies'
+import { faStar as faEmptyStar } from "@fortawesome/free-regular-svg-icons";
+import { faCompactDisc, faStar } from "@fortawesome/free-solid-svg-icons";
+import { computed, nextTick, onMounted, ref, toRef } from "vue";
+import { albumStore } from "@/stores/albumStore";
+import { commonStore } from "@/stores/commonStore";
+import { preferenceStore as preferences } from "@/stores/preferenceStore";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { usePolicies } from "@/composables/usePolicies";
 
-import AlbumCard from '@/components/album/AlbumCard.vue'
-import AlbumCardSkeleton from '@/components/ui/album-artist/ArtistAlbumCardSkeleton.vue'
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ViewModeSwitch from '@/components/ui/ViewModeSwitch.vue'
-import ScreenEmptyState from '@/components/ui/ScreenEmptyState.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
-import VirtualGridScroller from '@/components/ui/VirtualGridScroller.vue'
-import AlbumListSorter from '@/components/album/AlbumListSorter.vue'
-import Btn from '@/components/ui/form/Btn.vue'
+import AlbumCard from "@/components/album/AlbumCard.vue";
+import AlbumCardSkeleton from "@/components/ui/album-artist/ArtistAlbumCardSkeleton.vue";
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ViewModeSwitch from "@/components/ui/ViewModeSwitch.vue";
+import ScreenEmptyState from "@/components/ui/ScreenEmptyState.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
+import VirtualGridScroller from "@/components/ui/VirtualGridScroller.vue";
+import AlbumListSorter from "@/components/album/AlbumListSorter.vue";
+import Btn from "@/components/ui/form/Btn.vue";
 
-const { currentUserCan } = usePolicies()
+const { currentUserCan } = usePolicies();
 
-const grid = ref<InstanceType<typeof VirtualGridScroller>>()
-const albums = toRef(albumStore.state, 'albums')
+const grid = ref<InstanceType<typeof VirtualGridScroller>>();
+const albums = toRef(albumStore.state, "albums");
 
-const loading = ref(false)
-const page = ref<number | null>(1)
+const loading = ref(false);
+const page = ref<number | null>(1);
 
-const libraryEmpty = computed(() => commonStore.state.song_length === 0)
+const libraryEmpty = computed(() => commonStore.state.song_length === 0);
 
-const itemLayout = computed<CardLayout>(() => (preferences.albums_view_mode === 'thumbnails' ? 'full' : 'compact'))
-const minItemWidth = computed(() => (preferences.albums_view_mode === 'thumbnails' ? 240 : 350))
+const itemLayout = computed<CardLayout>(() =>
+  preferences.albums_view_mode === "thumbnails" ? "full" : "compact",
+);
+const minItemWidth = computed(() => (preferences.albums_view_mode === "thumbnails" ? 240 : 350));
 
 const displayedAlbums = computed(() =>
   preferences.albums_favorites_only ? albums.value.filter((a: Album) => a.favorite) : albums.value,
-)
+);
 
 const noFavoriteAlbums = computed(
   () =>
@@ -117,16 +124,16 @@ const noFavoriteAlbums = computed(
     preferences.albums_favorites_only &&
     displayedAlbums.value.length === 0 &&
     !moreAlbumsAvailable.value,
-)
-const moreAlbumsAvailable = computed(() => page.value !== null)
-const showSkeletons = computed(() => loading.value && albums.value.length === 0)
+);
+const moreAlbumsAvailable = computed(() => page.value !== null);
+const showSkeletons = computed(() => loading.value && albums.value.length === 0);
 
 const fetchAlbums = async () => {
   if (loading.value || !moreAlbumsAvailable.value) {
-    return
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
     page.value = await albumStore.paginate({
@@ -134,41 +141,41 @@ const fetchAlbums = async () => {
       page: page!.value || 1,
       sort: preferences.albums_sort_field,
       order: preferences.albums_sort_order,
-    })
+    });
   } catch (error: unknown) {
-    useErrorHandler().handleHttpError(error)
+    useErrorHandler().handleHttpError(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const resetState = async () => {
-  page.value = 1
+  page.value = 1;
 
-  albumStore.reset()
-  grid.value?.scrollToTop()
-}
+  albumStore.reset();
+  grid.value?.scrollToTop();
+};
 
 const sort = async (field: AlbumListSortField, order: SortOrder) => {
-  preferences.albums_sort_field = field
-  preferences.albums_sort_order = order
+  preferences.albums_sort_field = field;
+  preferences.albums_sort_order = order;
 
-  await resetState()
-  await nextTick()
-  await fetchAlbums()
-}
+  await resetState();
+  await nextTick();
+  await fetchAlbums();
+};
 
 const toggleFavoritesOnly = async () => {
-  preferences.albums_favorites_only = !preferences.albums_favorites_only
+  preferences.albums_favorites_only = !preferences.albums_favorites_only;
 
-  await resetState()
-  await nextTick()
-  await fetchAlbums()
-}
+  await resetState();
+  await nextTick();
+  await fetchAlbums();
+};
 
 onMounted(() => {
   if (!libraryEmpty.value) {
-    fetchAlbums()
+    fetchAlbums();
   }
-})
+});
 </script>

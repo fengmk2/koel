@@ -29,63 +29,69 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { faCheck, faExclamation, faInfo, faQuestion, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { computed, ref } from "vue";
+import {
+  faCheck,
+  faExclamation,
+  faInfo,
+  faQuestion,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 
-import Btn from '@/components/ui/form/Btn.vue'
+import Btn from "@/components/ui/form/Btn.vue";
 
-type DialogType = 'info' | 'success' | 'warning' | 'danger' | 'confirm'
+type DialogType = "info" | "success" | "warning" | "danger" | "confirm";
 
-const dialog = ref<HTMLDialogElement>()
-const type = ref<DialogType>('info')
-const title = ref('')
-const message = ref('')
+const dialog = ref<HTMLDialogElement>();
+const type = ref<DialogType>("info");
+const title = ref("");
+const message = ref("");
 
-const showCancelButton = computed(() => type.value === 'confirm')
+const showCancelButton = computed(() => type.value === "confirm");
 
 // @ts-ignore
-const close = () => dialog.value?.close()
-const cancel = () => dialog.value?.dispatchEvent(new Event('cancel'))
+const close = () => dialog.value?.close();
+const cancel = () => dialog.value?.dispatchEvent(new Event("cancel"));
 
 const waitForInput = () =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     dialog.value?.addEventListener(
-      'cancel',
+      "cancel",
       () => {
-        close()
-        resolve(false)
+        close();
+        resolve(false);
       },
       { once: true },
-    )
+    );
 
-    dialog.value?.querySelector('[name=ok]')!.addEventListener(
-      'click',
+    dialog.value?.querySelector("[name=ok]")!.addEventListener(
+      "click",
       () => {
-        close()
-        resolve(true)
+        close();
+        resolve(true);
       },
       { once: true },
-    )
-  })
+    );
+  });
 
-const show = async (_type: DialogType, _message: string, _title: string = '') => {
-  type.value = _type
-  message.value = _message
-  title.value = _title
+const show = async (_type: DialogType, _message: string, _title: string = "") => {
+  type.value = _type;
+  message.value = _message;
+  title.value = _title;
 
   // @ts-ignore
-  dialog.value.showModal()
+  dialog.value.showModal();
 
-  return waitForInput()
-}
+  return waitForInput();
+};
 
-const success = async (message: string, title: string = '') => show('success', message, title)
-const info = async (message: string, title: string = '') => show('info', message, title)
-const warning = async (message: string, title: string = '') => show('warning', message, title)
-const error = async (message: string, title: string = '') => show('danger', message, title)
-const confirm = async (message: string, title: string = '') => show('confirm', message, title)
+const success = async (message: string, title: string = "") => show("success", message, title);
+const info = async (message: string, title: string = "") => show("info", message, title);
+const warning = async (message: string, title: string = "") => show("warning", message, title);
+const error = async (message: string, title: string = "") => show("danger", message, title);
+const confirm = async (message: string, title: string = "") => show("confirm", message, title);
 
-defineExpose({ success, info, warning, error, confirm })
+defineExpose({ success, info, warning, error, confirm });
 </script>
 
 <style lang="postcss" scoped>

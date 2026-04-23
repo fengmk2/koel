@@ -1,35 +1,35 @@
-import type { Ref } from 'vue'
-import { ref } from 'vue'
-import { shuffle } from 'lodash'
-import { commonStore } from '@/stores/commonStore'
-import { preferenceStore as preferences } from '@/stores/preferenceStore'
-import { queueStore } from '@/stores/queueStore'
-import { recentlyPlayedStore } from '@/stores/recentlyPlayedStore'
-import { playableStore } from '@/stores/playableStore'
-import { userStore } from '@/stores/userStore'
-import { logger } from '@/utils/logger'
-import { isEpisode, isSong } from '@/utils/typeGuards'
-import { arrayify, getPlayableProp } from '@/utils/helpers'
-import { eventBus } from '@/utils/eventBus'
-import { isAudioContextSupported } from '@/utils/supports'
-import { audioService } from '@/services/audioService'
-import { http } from '@/services/http'
-import { socketService } from '@/services/socketService'
-import { useEpisodeProgressTracking } from '@/composables/useEpisodeProgressTracking'
-import { BasePlaybackService } from '@/services/BasePlaybackService'
-import { crossfadeService } from '@/services/crossfadeService'
-import { encyclopediaService } from '@/services/encyclopediaService'
-import { volumeManager } from '@/services/volumeManager'
-import { useBranding } from '@/composables/useBranding'
+import type { Ref } from "vue";
+import { ref } from "vue";
+import { shuffle } from "lodash";
+import { commonStore } from "@/stores/commonStore";
+import { preferenceStore as preferences } from "@/stores/preferenceStore";
+import { queueStore } from "@/stores/queueStore";
+import { recentlyPlayedStore } from "@/stores/recentlyPlayedStore";
+import { playableStore } from "@/stores/playableStore";
+import { userStore } from "@/stores/userStore";
+import { logger } from "@/utils/logger";
+import { isEpisode, isSong } from "@/utils/typeGuards";
+import { arrayify, getPlayableProp } from "@/utils/helpers";
+import { eventBus } from "@/utils/eventBus";
+import { isAudioContextSupported } from "@/utils/supports";
+import { audioService } from "@/services/audioService";
+import { http } from "@/services/http";
+import { socketService } from "@/services/socketService";
+import { useEpisodeProgressTracking } from "@/composables/useEpisodeProgressTracking";
+import { BasePlaybackService } from "@/services/BasePlaybackService";
+import { crossfadeService } from "@/services/crossfadeService";
+import { encyclopediaService } from "@/services/encyclopediaService";
+import { volumeManager } from "@/services/volumeManager";
+import { useBranding } from "@/composables/useBranding";
 
 /**
  * The number of seconds before the current playable ends to start preloading the next one.
  */
-const PRELOAD_BUFFER = 30
+const PRELOAD_BUFFER = 30;
 
 export class QueuePlaybackService extends BasePlaybackService {
-  private repeatModes: RepeatMode[] = ['NO_REPEAT', 'REPEAT_ALL', 'REPEAT_ONE']
-  private upNext: Ref<Playable | null> = ref(null)
+  private repeatModes: RepeatMode[] = ["NO_REPEAT", "REPEAT_ALL", "REPEAT_ONE"];
+  private upNext: Ref<Playable | null> = ref(null);
 
   /**
    * The next item in the queue.
@@ -37,11 +37,11 @@ export class QueuePlaybackService extends BasePlaybackService {
    */
   public get next() {
     if (queueStore.next) {
-      return queueStore.next
+      return queueStore.next;
     }
 
-    if (preferences.repeat_mode === 'REPEAT_ALL') {
-      return queueStore.first
+    if (preferences.repeat_mode === "REPEAT_ALL") {
+      return queueStore.first;
     }
   }
 
@@ -51,30 +51,30 @@ export class QueuePlaybackService extends BasePlaybackService {
    */
   public get previous() {
     if (queueStore.previous) {
-      return queueStore.previous
+      return queueStore.previous;
     }
 
-    if (preferences.repeat_mode === 'REPEAT_ALL') {
-      return queueStore.last
+    if (preferences.repeat_mode === "REPEAT_ALL") {
+      return queueStore.last;
     }
   }
 
   public registerPlay(playable: Playable) {
-    recentlyPlayedStore.add(playable)
-    playableStore.registerPlay(playable)
-    playable.play_count_registered = true
+    recentlyPlayedStore.add(playable);
+    playableStore.registerPlay(playable);
+    playable.play_count_registered = true;
 
     if (isSong(playable) && !playable.album_cover) {
-      encyclopediaService.fetchForAlbum({ id: playable.album_id } as Album).catch(logger.error)
+      encyclopediaService.fetchForAlbum({ id: playable.album_id } as Album).catch(logger.error);
     }
   }
 
   public preload(playable: Playable) {
-    const audioElement = document.createElement('audio')
-    audioElement.setAttribute('src', playableStore.getSourceUrl(playable))
-    audioElement.setAttribute('preload', 'auto')
-    audioElement.load()
-    playable.preloaded = true
+    const audioElement = document.createElement("audio");
+    audioElement.setAttribute("src", playableStore.getSourceUrl(playable));
+    audioElement.setAttribute("preload", "auto");
+    audioElement.load();
+    playable.preloaded = true;
   }
 
   /**
@@ -86,154 +86,157 @@ export class QueuePlaybackService extends BasePlaybackService {
    * We'll let them come true
    */
   public async play(playable: Playable, position = 0) {
-    const isCrossfadeFinalization = crossfadeService.active && crossfadeService.state!.playable.id === playable.id
+    const isCrossfadeFinalization =
+      crossfadeService.active && crossfadeService.state!.playable.id === playable.id;
 
     // Cancel any active crossfade unless we're finalizing it
     if (!isCrossfadeFinalization) {
-      this.cancelCrossfade()
+      this.cancelCrossfade();
     }
 
     if (isEpisode(playable)) {
-      useEpisodeProgressTracking().trackEpisode(playable)
+      useEpisodeProgressTracking().trackEpisode(playable);
     }
 
-    queueStore.queueIfNotQueued(playable, 'after-current')
+    queueStore.queueIfNotQueued(playable, "after-current");
 
     // If for any reason (most likely a bug), the requested playable has been deleted, attempt the next item in the queue.
     if (isSong(playable) && playable.deleted) {
-      logger.warn('Attempted to play a deleted playable', playable)
+      logger.warn("Attempted to play a deleted playable", playable);
 
       if (this.next && this.next.id !== playable.id) {
-        await this.playNext()
+        await this.playNext();
       }
 
-      return
+      return;
     }
 
     if (queueStore.current) {
-      queueStore.current.playback_state = 'Stopped'
+      queueStore.current.playback_state = "Stopped";
     }
 
-    playable.playback_state = 'Playing'
+    playable.playback_state = "Playing";
 
-    await this.setNowPlayingMeta(playable)
+    await this.setNowPlayingMeta(playable);
 
     if (isCrossfadeFinalization) {
       // The incoming track is already playing via the crossfade audio element.
       // Simply swap it in as the new primary — no src change, no seeking, no interruption.
-      const { incomingAudio } = crossfadeService.state!
+      const { incomingAudio } = crossfadeService.state!;
 
       // Stop and fully discard the old element
-      this.media.pause()
-      this.media.removeAttribute('src')
-      this.media.load()
+      this.media.pause();
+      this.media.removeAttribute("src");
+      this.media.load();
 
       // The incoming audio is already playing at the right position.
       // Just make it the new primary media element.
-      this.swapMediaElement(incomingAudio)
-      this.setVolume(volumeManager.get())
+      this.swapMediaElement(incomingAudio);
+      this.setVolume(volumeManager.get());
 
       // Reconnect the audio graph to the new element
       if (isAudioContextSupported && audioService.context) {
-        audioService.reconnectSource(incomingAudio)
+        audioService.reconnectSource(incomingAudio);
       }
 
-      crossfadeService.state = null
+      crossfadeService.state = null;
 
-      this.recordStartTime(playable)
-      this.showNotification(playable)
+      this.recordStartTime(playable);
+      this.showNotification(playable);
     } else {
       // Normal playback: set src and start
-      this.media.src = playableStore.getSourceUrl(playable)
+      this.media.src = playableStore.getSourceUrl(playable);
 
       if (position === 0) {
-        await this.restart()
+        await this.restart();
       } else {
-        this.seekTo(position)
-        await this.resume()
+        this.seekTo(position);
+        await this.resume();
       }
     }
 
-    this.setMediaSessionActionHandlers()
+    this.setMediaSessionActionHandlers();
   }
 
   public showNotification(playable: Playable) {
     if (!isSong(playable) && !isEpisode(playable)) {
-      throw new Error('Invalid playable type.')
+      throw new Error("Invalid playable type.");
     }
 
     if (preferences.show_now_playing_notification) {
       try {
         const notification = new window.Notification(`♫ ${playable.title}`, {
-          icon: getPlayableProp(playable, 'album_cover', 'episode_image'),
-          body: isSong(playable) ? `${playable.album_name} – ${playable.artist_name}` : playable.title,
-        })
+          icon: getPlayableProp(playable, "album_cover", "episode_image"),
+          body: isSong(playable)
+            ? `${playable.album_name} – ${playable.artist_name}`
+            : playable.title,
+        });
 
-        notification.onclick = () => window.focus()
+        notification.onclick = () => window.focus();
 
-        window.setTimeout(() => notification.close(), 5000)
+        window.setTimeout(() => notification.close(), 5000);
       } catch (error: unknown) {
         // Notification fails.
         // @link https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification
-        logger.error(error)
+        logger.error(error);
       }
     }
 
     if (!navigator.mediaSession) {
-      return
+      return;
     }
 
     navigator.mediaSession.metadata = new MediaMetadata({
       title: playable.title,
-      artist: getPlayableProp(playable, 'artist_name', 'podcast_author'),
-      album: getPlayableProp(playable, 'album_name', 'podcast_title'),
-      artwork: [48, 64, 96, 128, 192, 256, 384, 512].map(d => ({
-        src: getPlayableProp(playable, 'album_cover', 'episode_image'),
+      artist: getPlayableProp(playable, "artist_name", "podcast_author"),
+      album: getPlayableProp(playable, "album_name", "podcast_title"),
+      artwork: [48, 64, 96, 128, 192, 256, 384, 512].map((d) => ({
+        src: getPlayableProp(playable, "album_cover", "episode_image"),
         sizes: `${d}x${d}`,
-        type: 'image/png',
+        type: "image/png",
       })),
-    })
+    });
   }
 
   public async restart() {
-    const playable = queueStore.current!
+    const playable = queueStore.current!;
 
     // Reset the "up next" value to let subscribers know that the next item is cleared
     // (because another playable, likely the "next" one, is being played)
-    this.upNext.value = null
+    this.upNext.value = null;
 
-    this.recordStartTime(playable)
-    socketService.broadcast('SOCKET_STREAMABLE', playable)
+    this.recordStartTime(playable);
+    socketService.broadcast("SOCKET_STREAMABLE", playable);
 
     try {
-      http.silently.put('queue/playback-status', {
+      http.silently.put("queue/playback-status", {
         song: playable.id,
         position: 0,
-      })
+      });
     } catch (error: unknown) {
-      logger.error(error)
+      logger.error(error);
     }
 
-    this.media.currentTime = 0
+    this.media.currentTime = 0;
 
     try {
-      await this.media.play()
-      navigator.mediaSession && (navigator.mediaSession.playbackState = 'playing')
-      this.showNotification(playable)
+      await this.media.play();
+      navigator.mediaSession && (navigator.mediaSession.playbackState = "playing");
+      this.showNotification(playable);
     } catch (error: unknown) {
       // convert this into a warning to avoid breaking the app
-      logger.warn(error)
+      logger.warn(error);
     }
   }
 
   public rotateRepeatMode() {
-    let index = this.repeatModes.indexOf(preferences.repeat_mode) + 1
+    let index = this.repeatModes.indexOf(preferences.repeat_mode) + 1;
 
     if (index >= this.repeatModes.length) {
-      index = 0
+      index = 0;
     }
 
-    preferences.repeat_mode = this.repeatModes[index]
+    preferences.repeat_mode = this.repeatModes[index];
   }
 
   /**
@@ -244,15 +247,15 @@ export class QueuePlaybackService extends BasePlaybackService {
     // If the item's duration is greater than 5 seconds, and we've passed 5 seconds into it,
     // restart playing instead.
     if (this.media.currentTime > 5 && queueStore.current!.length > 5) {
-      this.media.currentTime = 0
+      this.media.currentTime = 0;
 
-      return
+      return;
     }
 
-    if (!this.previous && preferences.repeat_mode === 'NO_REPEAT') {
-      await this.stop()
+    if (!this.previous && preferences.repeat_mode === "NO_REPEAT") {
+      await this.stop();
     } else {
-      this.previous && (await this.play(this.previous))
+      this.previous && (await this.play(this.previous));
     }
   }
 
@@ -261,119 +264,122 @@ export class QueuePlaybackService extends BasePlaybackService {
    * If there's no next item and the current mode is NO_REPEAT, we stop completely.
    */
   public async playNext() {
-    if (!this.next && preferences.repeat_mode === 'NO_REPEAT') {
-      await this.stop() //  Nothing lasts forever, even cold November rain.
+    if (!this.next && preferences.repeat_mode === "NO_REPEAT") {
+      await this.stop(); //  Nothing lasts forever, even cold November rain.
     } else {
-      this.next && (await this.play(this.next))
+      this.next && (await this.play(this.next));
     }
   }
 
   public async stop() {
-    this.cancelCrossfade()
+    this.cancelCrossfade();
 
     if (this.media) {
-      this.media.pause()
-      this.seekTo(0)
+      this.media.pause();
+      this.seekTo(0);
     }
 
-    document.title = useBranding().name
+    document.title = useBranding().name;
 
-    queueStore.current && (queueStore.current.playback_state = 'Stopped')
+    queueStore.current && (queueStore.current.playback_state = "Stopped");
 
-    navigator.mediaSession && (navigator.mediaSession.playbackState = 'none')
+    navigator.mediaSession && (navigator.mediaSession.playbackState = "none");
 
-    socketService.broadcast('SOCKET_PLAYBACK_STOPPED')
+    socketService.broadcast("SOCKET_PLAYBACK_STOPPED");
   }
 
   public async pause() {
-    this.cancelCrossfade()
-    this.media.pause()
+    this.cancelCrossfade();
+    this.media.pause();
 
-    queueStore.current!.playback_state = 'Paused'
-    navigator.mediaSession && (navigator.mediaSession.playbackState = 'paused')
+    queueStore.current!.playback_state = "Paused";
+    navigator.mediaSession && (navigator.mediaSession.playbackState = "paused");
 
-    socketService.broadcast('SOCKET_STREAMABLE', queueStore.current)
+    socketService.broadcast("SOCKET_STREAMABLE", queueStore.current);
   }
 
   public async resume() {
-    const playable = queueStore.current!
+    const playable = queueStore.current!;
 
     if (!this.media.src) {
       // on first load when the queue is loaded from saved state, the player's src is empty
       // we need to properly set it as well as any kind of playback metadata
-      this.media.src = playableStore.getSourceUrl(playable)
-      this.seekTo(commonStore.state.queue_state.playback_position)
+      this.media.src = playableStore.getSourceUrl(playable);
+      this.seekTo(commonStore.state.queue_state.playback_position);
 
-      await this.setNowPlayingMeta(queueStore.current!)
-      this.recordStartTime(playable)
+      await this.setNowPlayingMeta(queueStore.current!);
+      this.recordStartTime(playable);
     }
 
     try {
-      await this.media.play()
+      await this.media.play();
     } catch (error: unknown) {
-      logger.error(error)
+      logger.error(error);
     }
 
-    queueStore.current!.playback_state = 'Playing'
-    navigator.mediaSession && (navigator.mediaSession.playbackState = 'playing')
+    queueStore.current!.playback_state = "Playing";
+    navigator.mediaSession && (navigator.mediaSession.playbackState = "playing");
 
-    socketService.broadcast('SOCKET_STREAMABLE', playable)
+    socketService.broadcast("SOCKET_STREAMABLE", playable);
   }
 
   public async toggle() {
     if (!queueStore.current) {
-      await this.playFirstInQueue()
-      return
+      await this.playFirstInQueue();
+      return;
     }
 
-    if (queueStore.current.playback_state !== 'Playing') {
-      await this.resume()
-      return
+    if (queueStore.current.playback_state !== "Playing") {
+      await this.resume();
+      return;
     }
 
-    this.pause()
+    this.pause();
   }
 
   /**
    * Queue up playables (replace them into the queue) and start playing right away.
    */
   public async queueAndPlay(playables: MaybeArray<Playable>, shuffled = false) {
-    playables = arrayify(playables)
+    playables = arrayify(playables);
 
     if (shuffled) {
-      playables = shuffle(playables)
+      playables = shuffle(playables);
     }
 
-    await this.stop()
-    queueStore.replaceQueueWith(playables)
-    await this.play(queueStore.first)
+    await this.stop();
+    queueStore.replaceQueueWith(playables);
+    await this.play(queueStore.first);
   }
 
   public async playFirstInQueue() {
-    queueStore.all.length && (await this.play(queueStore.first))
+    queueStore.all.length && (await this.play(queueStore.first));
   }
 
   private async setNowPlayingMeta(playable: Playable) {
-    document.title = `${playable.title} ♫ ${useBranding().name}`
-    this.media.setAttribute('title', isSong(playable) ? `${playable.artist_name} - ${playable.title}` : playable.title)
+    document.title = `${playable.title} ♫ ${useBranding().name}`;
+    this.media.setAttribute(
+      "title",
+      isSong(playable) ? `${playable.artist_name} - ${playable.title}` : playable.title,
+    );
 
     if (isAudioContextSupported) {
-      await audioService.context.resume()
+      await audioService.context.resume();
     }
   }
 
   // Record the UNIX timestamp the playable starts playing, for scrobbling purpose
   private recordStartTime(song: Playable) {
     if (!isSong(song)) {
-      return
+      return;
     }
 
-    song.play_start_time = Math.floor(Date.now() / 1000)
-    song.play_count_registered = false
+    song.play_start_time = Math.floor(Date.now() / 1000);
+    song.play_count_registered = false;
   }
 
   public forward(seconds: number): void {
-    this.media.currentTime += seconds
+    this.media.currentTime += seconds;
   }
 
   protected onEnded(): void {
@@ -383,118 +389,118 @@ export class QueuePlaybackService extends BasePlaybackService {
       commonStore.state.uses_last_fm &&
       userStore.current.preferences.lastfm_session_key
     ) {
-      playableStore.scrobble(queueStore.current)
+      playableStore.scrobble(queueStore.current);
     }
 
     // If a crossfade is active (completed or not), the outgoing track has ended — transition to the next song
     if (crossfadeService.active) {
-      const { playable } = crossfadeService.state!
-      this.play(playable)
-      return
+      const { playable } = crossfadeService.state!;
+      this.play(playable);
+      return;
     }
 
-    preferences.repeat_mode === 'REPEAT_ONE' ? this.restart() : this.playNext()
+    preferences.repeat_mode === "REPEAT_ONE" ? this.restart() : this.playNext();
   }
 
   protected onError(error: ErrorEvent): void {
-    logger.error(error)
-    this.playNext()
+    logger.error(error);
+    this.playNext();
   }
 
   protected onTimeUpdate(): void {
-    const currentPlayable = queueStore.current
+    const currentPlayable = queueStore.current;
 
     if (!currentPlayable) {
-      return
+      return;
     }
 
-    const media = this.media
+    const media = this.media;
 
     // If we've passed 25% of the playable, it's safe to say it has been "played".
     // See https://github.com/koel/koel/issues/1087
     if (!currentPlayable.play_count_registered && media.currentTime * 4 >= media.duration) {
-      this.registerPlay(currentPlayable)
+      this.registerPlay(currentPlayable);
     }
 
     if (Math.ceil(media.currentTime) % 5 === 0) {
       // every 5 seconds, we save the current playback position to the server
       try {
-        http.silently.put('queue/playback-status', {
+        http.silently.put("queue/playback-status", {
           song: currentPlayable.id,
           position: Math.ceil(media.currentTime),
-        })
+        });
       } catch (error: unknown) {
-        logger.error(error)
+        logger.error(error);
       }
 
       // if the current item is an episode, we emit an event to update the progress on the client side as well
       if (isEpisode(currentPlayable)) {
-        eventBus.emit('EPISODE_PROGRESS_UPDATED', currentPlayable, Math.ceil(media.currentTime))
+        eventBus.emit("EPISODE_PROGRESS_UPDATED", currentPlayable, Math.ceil(media.currentTime));
       }
     }
 
-    const nextPlayable = queueStore.next
+    const nextPlayable = queueStore.next;
 
     if (!nextPlayable) {
-      return
+      return;
     }
 
     // Set the "up next" value to the next playable if we're near the end of the current playback.
-    this.upNext.value = media.currentTime + 15 > media.duration ? nextPlayable : null
+    this.upNext.value = media.currentTime + 15 > media.duration ? nextPlayable : null;
 
     // Preload the next playable if we're near the end of the current playback.
     if (media.currentTime + PRELOAD_BUFFER > media.duration && !nextPlayable.preloaded) {
-      this.preload(nextPlayable)
+      this.preload(nextPlayable);
     }
 
     // Initiate crossfade if enabled and near the end of the track
-    const crossfadeDuration = preferences.crossfade_duration
+    const crossfadeDuration = preferences.crossfade_duration;
 
     if (
       crossfadeDuration > 0 &&
       !crossfadeService.active &&
-      preferences.repeat_mode !== 'REPEAT_ONE' &&
+      preferences.repeat_mode !== "REPEAT_ONE" &&
       media.duration > crossfadeDuration * 2 && // skip for short tracks
       media.currentTime + crossfadeDuration >= media.duration
     ) {
       if (crossfadeService.start(nextPlayable, crossfadeDuration, volumeManager.get())) {
         // Show the incoming track as "now playing" immediately
-        queueStore.current!.playback_state = 'Stopped'
-        nextPlayable.playback_state = 'Playing'
-        this.setNowPlayingMeta(nextPlayable)
-        this.showNotification(nextPlayable)
-        this.registerPlay(nextPlayable)
+        queueStore.current!.playback_state = "Stopped";
+        nextPlayable.playback_state = "Playing";
+        this.setNowPlayingMeta(nextPlayable);
+        this.showNotification(nextPlayable);
+        this.registerPlay(nextPlayable);
       }
     }
 
     // Fade out the primary player during an active crossfade
     if (crossfadeService.active && crossfadeService.state) {
-      const remaining = media.duration - media.currentTime
-      const progress = Math.max(0, 1 - remaining / crossfadeDuration)
-      this.setVolume(volumeManager.get() * (1 - progress))
+      const remaining = media.duration - media.currentTime;
+      const progress = Math.max(0, 1 - remaining / crossfadeDuration);
+      this.setVolume(volumeManager.get() * (1 - progress));
     }
   }
 
   public rewind(seconds: number): void {
-    this.media.currentTime -= seconds
+    this.media.currentTime -= seconds;
   }
 
   public fastSeek(position: number): void {
-    this.media.fastSeek(position || 0)
+    this.media.fastSeek(position || 0);
   }
 
   public seekTo(position: number): void {
-    this.cancelCrossfade()
-    this.media.currentTime = position || 0
+    this.cancelCrossfade();
+    this.media.currentTime = position || 0;
   }
 
   /** Cancel any active crossfade and restore volume */
   private cancelCrossfade() {
     if (crossfadeService.active) {
-      crossfadeService.cancel()
-      this.setVolume(volumeManager.get())
+      crossfadeService.cancel();
+      this.setVolume(volumeManager.get());
     }
   }
 }
 
-export const playbackService = new QueuePlaybackService()
+export const playbackService = new QueuePlaybackService();

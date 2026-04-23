@@ -1,7 +1,11 @@
 <template>
-  <div class="add-to w-full max-w-[256px] min-w-[200px] p-3 space-y-3" data-testid="add-to-menu" tabindex="0">
+  <div
+    class="add-to w-full max-w-[256px] min-w-[200px] p-3 space-y-3"
+    data-testid="add-to-menu"
+    tabindex="0"
+  >
     <section class="existing-playlists">
-      <p class="mb-2 text-[0.9rem]">Add {{ pluralize(playables, 'item') }} to</p>
+      <p class="mb-2 text-[0.9rem]">Add {{ pluralize(playables, "item") }} to</p>
 
       <ul v-koel-overflow-fade class="relative max-h-48 overflow-y-scroll space-y-1.5">
         <template v-if="config.queue">
@@ -15,8 +19,12 @@
             >
               After Current
             </li>
-            <li class="bottom-queue" data-testid="queue-bottom" tabindex="0" @click="queueToBottom">Bottom of Queue</li>
-            <li class="top-queue" data-testid="queue-top" tabindex="0" @click="queueToTop">Top of Queue</li>
+            <li class="bottom-queue" data-testid="queue-bottom" tabindex="0" @click="queueToBottom">
+              Bottom of Queue
+            </li>
+            <li class="top-queue" data-testid="queue-top" tabindex="0" @click="queueToTop">
+              Top of Queue
+            </li>
           </template>
           <li v-else data-testid="queue" tabindex="0" @click="queueToBottom">Queue</li>
         </template>
@@ -44,38 +52,48 @@
       </ul>
     </section>
 
-    <Btn class="!w-full !border !border-solid !border-white/20" transparent @click.prevent="addToNewPlaylist">
+    <Btn
+      class="!w-full !border !border-solid !border-white/20"
+      transparent
+      @click.prevent="addToNewPlaylist"
+    >
       New Playlist…
     </Btn>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef, toRefs, watch } from 'vue'
-import { pluralize } from '@/utils/formatters'
-import { playlistStore } from '@/stores/playlistStore'
-import { queueStore } from '@/stores/queueStore'
-import { usePlayableMenuMethods } from '@/composables/usePlayableMenuMethods'
+import { computed, toRef, toRefs, watch } from "vue";
+import { pluralize } from "@/utils/formatters";
+import { playlistStore } from "@/stores/playlistStore";
+import { queueStore } from "@/stores/queueStore";
+import { usePlayableMenuMethods } from "@/composables/usePlayableMenuMethods";
 
-import Btn from '@/components/ui/form/Btn.vue'
+import Btn from "@/components/ui/form/Btn.vue";
 
-const props = defineProps<{ playables: Playable[]; config: AddToMenuConfig }>()
-const emit = defineEmits<{ (e: 'closing'): void }>()
+const props = defineProps<{ playables: Playable[]; config: AddToMenuConfig }>();
+const emit = defineEmits<{ (e: "closing"): void }>();
 
-const { playables, config } = toRefs(props)
+const { playables, config } = toRefs(props);
 
-const queue = toRef(queueStore.state, 'playables')
-const currentPlayable = computed(() => queueStore.current)
+const queue = toRef(queueStore.state, "playables");
+const currentPlayable = computed(() => queueStore.current);
 
-const allPlaylists = toRef(playlistStore.state, 'playlists')
-const playlists = computed(() => allPlaylists.value.filter(({ is_smart }) => !is_smart))
+const allPlaylists = toRef(playlistStore.state, "playlists");
+const playlists = computed(() => allPlaylists.value.filter(({ is_smart }) => !is_smart));
 
-const close = () => emit('closing')
+const close = () => emit("closing");
 
-const { queueAfterCurrent, queueToBottom, queueToTop, addToFavorites, addToExistingPlaylist, addToNewPlaylist } =
-  usePlayableMenuMethods(playables, close)
+const {
+  queueAfterCurrent,
+  queueToBottom,
+  queueToTop,
+  addToFavorites,
+  addToExistingPlaylist,
+  addToNewPlaylist,
+} = usePlayableMenuMethods(playables, close);
 
-watch(playables, () => playables.value.length || close())
+watch(playables, () => playables.value.length || close());
 </script>
 
 <style lang="postcss" scoped>

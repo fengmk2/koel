@@ -31,23 +31,23 @@
 </template>
 
 <script generic="T extends SortField" lang="ts" setup>
-import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
-import { OnClickOutside } from '@vueuse/components'
-import { computed, onBeforeUnmount, onMounted, ref, toRefs } from 'vue'
-import { useFloatingUi } from '@/composables/useFloatingUi'
+import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { OnClickOutside } from "@vueuse/components";
+import { computed, onBeforeUnmount, onMounted, ref, toRefs } from "vue";
+import { useFloatingUi } from "@/composables/useFloatingUi";
 
 const props = defineProps<{
-  items: BasicListSorterDropDownItem<T>[]
-  field?: T
-  order?: SortOrder
-}>()
+  items: BasicListSorterDropDownItem<T>[];
+  field?: T;
+  order?: SortOrder;
+}>();
 
-const emit = defineEmits<{ (e: 'sort', field: T, order: SortOrder): void }>()
+const emit = defineEmits<{ (e: "sort", field: T, order: SortOrder): void }>();
 
-const { field: currentField, order: currentOrder, items } = toRefs(props)
+const { field: currentField, order: currentOrder, items } = toRefs(props);
 
-const button = ref<HTMLButtonElement>()
-const menu = ref<HTMLDivElement>()
+const button = ref<HTMLButtonElement>();
+const menu = ref<HTMLDivElement>();
 
 const {
   setup: setupDropdown,
@@ -55,33 +55,36 @@ const {
   trigger: triggerDropdown,
   hide: hideDropdown,
 } = useFloatingUi(button, menu, {
-  placement: 'bottom-end',
+  placement: "bottom-end",
   useArrow: false,
   autoTrigger: false,
-})
+});
 
 const currentLabel = computed(() => {
-  return items.value.find((item: BasicListSorterDropDownItem<T>) => item.field === currentField.value)?.label
-})
+  return items.value.find(
+    (item: BasicListSorterDropDownItem<T>) => item.field === currentField.value,
+  )?.label;
+});
 
 const sort = (field: T) => {
   if (field === currentField.value) {
     // if clicking the same field, toggle the order
-    emit('sort', field, currentOrder.value === 'asc' ? 'desc' : 'asc')
+    emit("sort", field, currentOrder.value === "asc" ? "desc" : "asc");
   } else {
     // otherwise, we do ascending order by default
-    emit('sort', field, 'asc')
+    emit("sort", field, "asc");
   }
 
-  hideDropdown()
-}
+  hideDropdown();
+};
 
-const isCurrentField = (field: T) => field === currentField.value
+const isCurrentField = (field: T) => field === currentField.value;
 
 const title = computed(
-  () => `Sorting by ${currentLabel.value}, ${currentOrder.value === 'asc' ? 'ascending' : 'descending'}`,
-)
+  () =>
+    `Sorting by ${currentLabel.value}, ${currentOrder.value === "asc" ? "ascending" : "descending"}`,
+);
 
-onMounted(() => menu.value && setupDropdown())
-onBeforeUnmount(() => teardownDropdown())
+onMounted(() => menu.value && setupDropdown());
+onBeforeUnmount(() => teardownDropdown());
 </script>

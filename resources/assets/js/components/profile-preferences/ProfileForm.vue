@@ -5,7 +5,8 @@
         You’re authenticated by a reverse proxy.
       </template>
       <template v-else>
-        You’re logged in via single sign-on provided by <strong>{{ currentUser.sso_provider }}</strong
+        You’re logged in via single sign-on provided by
+        <strong>{{ currentUser.sso_provider }}</strong
         >.
       </template>
       You can still update your name and avatar here.
@@ -52,7 +53,9 @@
             minlength="10"
             placeholder="Leave empty to keep current password"
           />
-          <template #help>Min. 10 characters. Should be a mix of characters, numbers, and symbols.</template>
+          <template #help
+            >Min. 10 characters. Should be a mix of characters, numbers, and symbols.</template
+          >
         </FormRow>
       </div>
 
@@ -63,60 +66,62 @@
 
     <footer class="mt-8">
       <Btn class="btn-submit" type="submit">Save</Btn>
-      <span v-if="isDemo" class="text-[.95rem] opacity-70 ml-2"> Changes will not be saved in the demo version. </span>
+      <span v-if="isDemo" class="text-[.95rem] opacity-70 ml-2">
+        Changes will not be saved in the demo version.
+      </span>
     </footer>
   </form>
 </template>
 
 <script lang="ts" setup>
-import { pick } from 'lodash'
-import type { UpdateCurrentProfileData } from '@/services/authService'
-import { authService } from '@/services/authService'
-import { useAuthorization } from '@/composables/useAuthorization'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { pick } from "lodash";
+import type { UpdateCurrentProfileData } from "@/services/authService";
+import { authService } from "@/services/authService";
+import { useAuthorization } from "@/composables/useAuthorization";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import PasswordField from '@/components/ui/form/PasswordField.vue'
-import EditableProfileAvatar from '@/components/profile-preferences/EditableProfileAvatar.vue'
-import AlertBox from '@/components/ui/AlertBox.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import PasswordField from "@/components/ui/form/PasswordField.vue";
+import EditableProfileAvatar from "@/components/profile-preferences/EditableProfileAvatar.vue";
+import AlertBox from "@/components/ui/AlertBox.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const { toastSuccess } = useMessageToaster()
-const { currentUser } = useAuthorization()
+const { toastSuccess } = useMessageToaster();
+const { currentUser } = useAuthorization();
 
-const isDemo = window.IS_DEMO
+const isDemo = window.IS_DEMO;
 
 const { data, handleSubmit } = useForm<UpdateCurrentProfileData>({
   initialValues: {
-    ...pick(currentUser.value, 'name', 'email', 'avatar'),
-    current_password: '',
-    new_password: '',
+    ...pick(currentUser.value, "name", "email", "avatar"),
+    current_password: "",
+    new_password: "",
   },
-  onSubmit: async data => {
+  onSubmit: async (data) => {
     if (isDemo) {
-      return
+      return;
     }
 
-    const formattedData = { ...data }
+    const formattedData = { ...data };
 
     // if the new_password field is empty, remove the field entirely
     // to ensure the field doesn't get sent to the server.
     if (!formattedData.new_password) {
-      delete formattedData.new_password
+      delete formattedData.new_password;
     }
 
-    await authService.updateProfile(formattedData)
+    await authService.updateProfile(formattedData);
   },
   onSuccess: () => {
-    data.current_password = ''
-    data.new_password = ''
-    toastSuccess('Profile updated.')
+    data.current_password = "";
+    data.new_password = "";
+    toastSuccess("Profile updated.");
   },
-})
+});
 
 const onAvatarChanged = (avatar: string) => {
-  data.avatar = avatar
-}
+  data.avatar = avatar;
+};
 </script>

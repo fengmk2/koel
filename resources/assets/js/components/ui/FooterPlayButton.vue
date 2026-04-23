@@ -10,80 +10,80 @@
 </template>
 
 <script lang="ts" setup>
-import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
-import { computed, ref } from 'vue'
-import { commonStore } from '@/stores/commonStore'
-import { queueStore } from '@/stores/queueStore'
-import { recentlyPlayedStore } from '@/stores/recentlyPlayedStore'
-import { playableStore } from '@/stores/playableStore'
-import { useRouter } from '@/composables/useRouter'
-import { requireInjection } from '@/utils/helpers'
-import { CurrentStreamableKey } from '@/config/symbols'
-import { playback } from '@/services/playbackManager'
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { computed, ref } from "vue";
+import { commonStore } from "@/stores/commonStore";
+import { queueStore } from "@/stores/queueStore";
+import { recentlyPlayedStore } from "@/stores/recentlyPlayedStore";
+import { playableStore } from "@/stores/playableStore";
+import { useRouter } from "@/composables/useRouter";
+import { requireInjection } from "@/utils/helpers";
+import { CurrentStreamableKey } from "@/config/symbols";
+import { playback } from "@/services/playbackManager";
 
-import FooterButton from '@/components/layout/app-footer/FooterButton.vue'
+import FooterButton from "@/components/layout/app-footer/FooterButton.vue";
 
-const { getCurrentScreen, getRouteParam, go, url } = useRouter()
-const streamable = requireInjection(CurrentStreamableKey, ref())
+const { getCurrentScreen, getRouteParam, go, url } = useRouter();
+const streamable = requireInjection(CurrentStreamableKey, ref());
 
-const libraryEmpty = computed(() => commonStore.state.song_count === 0)
-const playing = computed(() => streamable.value?.playback_state === 'Playing')
-const isRadio = computed(() => streamable.value?.type === 'radio-stations')
+const libraryEmpty = computed(() => commonStore.state.song_count === 0);
+const playing = computed(() => streamable.value?.playback_state === "Playing");
+const isRadio = computed(() => streamable.value?.type === "radio-stations");
 
 const title = computed(() => {
   if (isRadio.value) {
-    return streamable.value?.playback_state === 'Playing' ? 'Stop streaming' : 'Start streaming'
+    return streamable.value?.playback_state === "Playing" ? "Stop streaming" : "Start streaming";
   }
 
-  return playing.value ? 'Pause' : 'Play or resume'
-})
+  return playing.value ? "Pause" : "Play or resume";
+});
 
 const initiatePlayback = async () => {
   if (libraryEmpty.value) {
-    return
+    return;
   }
 
-  let playables: Playable[]
+  let playables: Playable[];
 
   switch (getCurrentScreen()) {
-    case 'Album':
-      playables = await playableStore.fetchSongsForAlbum(getRouteParam('id')!)
-      break
-    case 'Artist':
-      playables = await playableStore.fetchSongsForArtist(getRouteParam('id')!)
-      break
-    case 'Playlist':
-      playables = await playableStore.fetchForPlaylist(getRouteParam('id')!)
-      break
-    case 'Favorites':
-      playables = await playableStore.fetchFavorites()
-      break
-    case 'RecentlyPlayed':
-      playables = await recentlyPlayedStore.fetch()
-      break
-    case 'Genre':
-      playables = await playableStore.fetchSongsByGenre(getRouteParam('id')!)
-      break
+    case "Album":
+      playables = await playableStore.fetchSongsForAlbum(getRouteParam("id")!);
+      break;
+    case "Artist":
+      playables = await playableStore.fetchSongsForArtist(getRouteParam("id")!);
+      break;
+    case "Playlist":
+      playables = await playableStore.fetchForPlaylist(getRouteParam("id")!);
+      break;
+    case "Favorites":
+      playables = await playableStore.fetchFavorites();
+      break;
+    case "RecentlyPlayed":
+      playables = await recentlyPlayedStore.fetch();
+      break;
+    case "Genre":
+      playables = await playableStore.fetchSongsByGenre(getRouteParam("id")!);
+      break;
     default:
-      playables = await queueStore.fetchRandom()
-      break
+      playables = await queueStore.fetchRandom();
+      break;
   }
 
-  await playback().queueAndPlay(playables)
-  go(url('queue'))
-}
+  await playback().queueAndPlay(playables);
+  go(url("queue"));
+};
 
 const toggle = async () => {
   if (!streamable.value) {
-    await initiatePlayback()
-    return
+    await initiatePlayback();
+    return;
   }
 
   if (isRadio.value) {
-    await playback('radio').toggle()
-    return
+    await playback("radio").toggle();
+    return;
   }
 
-  await playback('queue').toggle()
-}
+  await playback("queue").toggle();
+};
 </script>

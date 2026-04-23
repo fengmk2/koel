@@ -9,7 +9,7 @@
         </template>
 
         <template v-if="playables.length" #meta>
-          <span>{{ pluralize(playables, 'item') }}</span>
+          <span>{{ pluralize(playables, "item") }}</span>
           <span>{{ duration }}</span>
         </template>
 
@@ -52,25 +52,25 @@
 </template>
 
 <script lang="ts" setup>
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { computed, nextTick, ref, toRef } from 'vue'
-import { pluralize } from '@/utils/formatters'
-import { commonStore } from '@/stores/commonStore'
-import { queueStore } from '@/stores/queueStore'
-import { playableStore } from '@/stores/playableStore'
-import { cache } from '@/services/cache'
-import { useRouter } from '@/composables/useRouter'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { usePlayableList } from '@/composables/usePlayableList'
-import { usePlayableListControls } from '@/composables/usePlayableListControls'
-import { playback } from '@/services/playbackManager'
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { computed, nextTick, ref, toRef } from "vue";
+import { pluralize } from "@/utils/formatters";
+import { commonStore } from "@/stores/commonStore";
+import { queueStore } from "@/stores/queueStore";
+import { playableStore } from "@/stores/playableStore";
+import { cache } from "@/services/cache";
+import { useRouter } from "@/composables/useRouter";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { usePlayableList } from "@/composables/usePlayableList";
+import { usePlayableListControls } from "@/composables/usePlayableListControls";
+import { playback } from "@/services/playbackManager";
 
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenEmptyState from '@/components/ui/ScreenEmptyState.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
-import PlayableListSkeleton from '@/components/playable/playable-list/PlayableListSkeleton.vue'
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenEmptyState from "@/components/ui/ScreenEmptyState.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
+import PlayableListSkeleton from "@/components/playable/playable-list/PlayableListSkeleton.vue";
 
-const { go, onScreenActivated, url } = useRouter()
+const { go, onScreenActivated, url } = useRouter();
 
 const {
   PlayableList,
@@ -84,92 +84,97 @@ const {
   playSelected,
   applyFilter,
   onSwipe,
-} = usePlayableList(toRef(queueStore.state, 'playables'), { type: 'Queue' }, { reorderable: true, sortable: false })
+} = usePlayableList(
+  toRef(queueStore.state, "playables"),
+  { type: "Queue" },
+  { reorderable: true, sortable: false },
+);
 
-const { PlayableListControls, config } = usePlayableListControls('Queue')
+const { PlayableListControls, config } = usePlayableListControls("Queue");
 
-const loading = ref(false)
-const libraryNotEmpty = computed(() => commonStore.state.song_count > 0)
+const loading = ref(false);
+const libraryNotEmpty = computed(() => commonStore.state.song_count > 0);
 
 const playAll = async (shuffle = true) => {
-  playback().queueAndPlay(playables.value, shuffle)
-  go(url('queue'))
-}
+  playback().queueAndPlay(playables.value, shuffle);
+  go(url("queue"));
+};
 
 const shuffleSome = async () => {
   try {
-    loading.value = true
-    await queueStore.fetchRandom()
-    await playback().playFirstInQueue()
+    loading.value = true;
+    await queueStore.fetchRandom();
+    await playback().playFirstInQueue();
   } catch (error: unknown) {
-    useErrorHandler('dialog').handleHttpError(error)
+    useErrorHandler("dialog").handleHttpError(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const clearQueue = () => {
-  playback().stop()
-  queueStore.clear()
-}
+  playback().stop();
+  queueStore.clear();
+};
 
 const removeSelected = async () => {
   if (!selectedPlayables.value.length) {
-    return
+    return;
   }
 
-  const currentId = queueStore.current?.id
-  queueStore.unqueue(selectedPlayables.value)
+  const currentId = queueStore.current?.id;
+  queueStore.unqueue(selectedPlayables.value);
 
   if (currentId && selectedPlayables.value.find(({ id }) => id === currentId)) {
-    await playback().playNext()
+    await playback().playNext();
   }
-}
+};
 
-const onPressEnter = () => selectedPlayables.value.length && playback().play(selectedPlayables.value[0])
+const onPressEnter = () =>
+  selectedPlayables.value.length && playback().play(selectedPlayables.value[0]);
 
 const onReorder = (target: Playable, placement: Placement) =>
-  queueStore.move(selectedPlayables.value, target, placement)
+  queueStore.move(selectedPlayables.value, target, placement);
 
-onScreenActivated('Queue', async () => {
-  if (!cache.get('song-to-queue')) {
-    return
+onScreenActivated("Queue", async () => {
+  if (!cache.get("song-to-queue")) {
+    return;
   }
 
-  let playable: Playable | undefined
+  let playable: Playable | undefined;
 
   try {
-    loading.value = true
-    playable = await playableStore.resolve(cache.get('song-to-queue')!)
+    loading.value = true;
+    playable = await playableStore.resolve(cache.get("song-to-queue")!);
 
     if (!playable) {
-      throw new Error('Song not found')
+      throw new Error("Song not found");
     }
   } catch (error: unknown) {
-    useErrorHandler('dialog').handleHttpError(error)
-    return
+    useErrorHandler("dialog").handleHttpError(error);
+    return;
   } finally {
-    cache.remove('playable-to-queue')
-    loading.value = false
+    cache.remove("playable-to-queue");
+    loading.value = false;
   }
 
-  queueStore.clearSilently()
-  queueStore.queue(playable!)
-})
+  queueStore.clearSilently();
+  queueStore.queue(playable!);
+});
 
-onScreenActivated('Queue', async () => {
-  if (!cache.hit('scroll-to-current-in-queue')) {
-    return
+onScreenActivated("Queue", async () => {
+  if (!cache.hit("scroll-to-current-in-queue")) {
+    return;
   }
 
-  cache.remove('scroll-to-current-in-queue')
-  const current = queueStore.current
+  cache.remove("scroll-to-current-in-queue");
+  const current = queueStore.current;
 
   if (!current) {
-    return
+    return;
   }
 
-  await nextTick()
-  playableList.value?.scrollToPlayable(current)
-})
+  await nextTick();
+  playableList.value?.scrollToPlayable(current);
+});
 </script>

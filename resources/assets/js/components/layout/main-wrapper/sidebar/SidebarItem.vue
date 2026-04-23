@@ -24,42 +24,42 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from '@/composables/useRouter'
-import { eventBus } from '@/utils/eventBus'
-import MarqueeText from '@/components/ui/MarqueeText.vue'
+import { useRouter } from "@/composables/useRouter";
+import { eventBus } from "@/utils/eventBus";
+import MarqueeText from "@/components/ui/MarqueeText.vue";
 
 const props = withDefaults(
   defineProps<{
-    href?: string | undefined
-    active?: boolean
+    href?: string | undefined;
+    active?: boolean;
   }>(),
   {
     active: false,
   },
-)
+);
 
-const emit = defineEmits<{ dblclick: [] }>()
+const emit = defineEmits<{ dblclick: [] }>();
 
-const { go } = useRouter()
+const { go } = useRouter();
 
-let clickTimer = 0
+let clickTimer = 0;
 
 const navigate = () => {
   if (props.href) {
-    go(props.href)
-    eventBus.emit('TOGGLE_SIDEBAR')
+    go(props.href);
+    eventBus.emit("TOGGLE_SIDEBAR");
   }
-}
+};
 
 const onClick = () => {
-  clearTimeout(clickTimer)
-  clickTimer = window.setTimeout(navigate, 150)
-}
+  clearTimeout(clickTimer);
+  clickTimer = window.setTimeout(navigate, 150);
+};
 
 const onDblClick = () => {
-  clearTimeout(clickTimer)
-  emit('dblclick')
-}
+  clearTimeout(clickTimer);
+  emit("dblclick");
+};
 </script>
 
 <style lang="postcss" scoped>

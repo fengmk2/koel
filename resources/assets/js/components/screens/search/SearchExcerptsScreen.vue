@@ -18,7 +18,11 @@
       />
       <ArtistResultsBlock :artists="excerpt.artists" :searching data-testid="artist-excerpts" />
       <AlbumResultsBlock :albums="excerpt.albums" :searching data-testid="album-excerpts" />
-      <PodcastExcerptResultsBlock :podcasts="excerpt.podcasts" :searching data-testid="podcast-excerpts" />
+      <PodcastExcerptResultsBlock
+        :podcasts="excerpt.podcasts"
+        :searching
+        data-testid="podcast-excerpts"
+      />
       <RadioStationExcerptResultsBlock
         :stations="excerpt.radio_stations"
         :searching
@@ -37,39 +41,39 @@
 </template>
 
 <script lang="ts" setup>
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { intersectionBy } from 'lodash'
-import { ref, toRef } from 'vue'
-import { eventBus } from '@/utils/eventBus'
-import { searchStore } from '@/stores/searchStore'
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { intersectionBy } from "lodash";
+import { ref, toRef } from "vue";
+import { eventBus } from "@/utils/eventBus";
+import { searchStore } from "@/stores/searchStore";
 
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenEmptyState from '@/components/ui/ScreenEmptyState.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
-import PlayableExcerptResultsBlock from '@/components/screens/search/PlayableExcerptResultsBlock.vue'
-import ArtistResultsBlock from '@/components/screens/search/ArtistExcerptResultsBlock.vue'
-import AlbumResultsBlock from '@/components/screens/search/AlbumExcerptResultsBlock.vue'
-import PodcastExcerptResultsBlock from '@/components/screens/search/PodcastExcerptResultsBlock.vue'
-import RadioStationExcerptResultsBlock from '@/components/screens/search/RadioStationExcerptResultsBlock.vue'
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenEmptyState from "@/components/ui/ScreenEmptyState.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
+import PlayableExcerptResultsBlock from "@/components/screens/search/PlayableExcerptResultsBlock.vue";
+import ArtistResultsBlock from "@/components/screens/search/ArtistExcerptResultsBlock.vue";
+import AlbumResultsBlock from "@/components/screens/search/AlbumExcerptResultsBlock.vue";
+import PodcastExcerptResultsBlock from "@/components/screens/search/PodcastExcerptResultsBlock.vue";
+import RadioStationExcerptResultsBlock from "@/components/screens/search/RadioStationExcerptResultsBlock.vue";
 
-const excerpt = toRef(searchStore.state, 'excerpt')
-const q = ref('')
-const searching = ref(false)
+const excerpt = toRef(searchStore.state, "excerpt");
+const q = ref("");
+const searching = ref(false);
 
 const doSearch = async () => {
-  searching.value = true
-  await searchStore.excerptSearch(q.value)
-  searching.value = false
-}
+  searching.value = true;
+  await searchStore.excerptSearch(q.value);
+  searching.value = false;
+};
 
 eventBus
-  .on('SEARCH_KEYWORDS_CHANGED', async _q => {
-    q.value = _q
-    await doSearch()
+  .on("SEARCH_KEYWORDS_CHANGED", async (_q) => {
+    q.value = _q;
+    await doSearch();
   })
-  .on('SONGS_DELETED', async songs => {
-    if (intersectionBy(songs, excerpt.value.playables, 'id').length !== 0) {
-      await doSearch()
+  .on("SONGS_DELETED", async (songs) => {
+    if (intersectionBy(songs, excerpt.value.playables, "id").length !== 0) {
+      await doSearch();
     }
-  })
+  });
 </script>

@@ -10,13 +10,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue'
+import { computed, toRefs } from "vue";
 
-import UserAvatar from '@/components/user/UserAvatar.vue'
+import UserAvatar from "@/components/user/UserAvatar.vue";
 
-const props = defineProps<{ collaborators: PlaylistCollaborator[] }>()
-const { collaborators } = toRefs(props)
+const props = defineProps<{ collaborators: PlaylistCollaborator[] }>();
+const { collaborators } = toRefs(props);
 
-const displayedCollaborators = computed(() => collaborators.value.slice(0, 3))
-const remainderCount = computed(() => collaborators.value.length - displayedCollaborators.value.length)
+const displayedCollaborators = computed(() => collaborators.value.slice(0, 3));
+const remainderCount = computed(
+  () => collaborators.value.length - displayedCollaborators.value.length,
+);
 </script>

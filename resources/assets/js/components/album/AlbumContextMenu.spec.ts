@@ -1,128 +1,128 @@
-import { describe, expect, it, vi } from 'vite-plus/test'
-import { screen } from '@testing-library/vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import { assertOpenModal } from '@/__tests__/assertions'
-import factory from '@/__tests__/factory'
-import { downloadService } from '@/services/downloadService'
-import { playbackService } from '@/services/QueuePlaybackService'
-import { commonStore } from '@/stores/commonStore'
-import { playableStore } from '@/stores/playableStore'
-import { acl } from '@/services/acl'
-import EditAlbumForm from '@/components/album/EditAlbumForm.vue'
-import CreateEmbedForm from '@/components/embed/CreateEmbedForm.vue'
+import { describe, expect, it, vi } from "vite-plus/test";
+import { screen } from "@testing-library/vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import { assertOpenModal } from "@/__tests__/assertions";
+import factory from "@/__tests__/factory";
+import { downloadService } from "@/services/downloadService";
+import { playbackService } from "@/services/QueuePlaybackService";
+import { commonStore } from "@/stores/commonStore";
+import { playableStore } from "@/stores/playableStore";
+import { acl } from "@/services/acl";
+import EditAlbumForm from "@/components/album/EditAlbumForm.vue";
+import CreateEmbedForm from "@/components/embed/CreateEmbedForm.vue";
 
-const openModalMock = vi.fn()
+const openModalMock = vi.fn();
 
-vi.mock('@/composables/useModal', () => ({
+vi.mock("@/composables/useModal", () => ({
   useModal: () => ({
     openModal: openModalMock,
   }),
-}))
+}));
 
-import Component from './AlbumContextMenu.vue'
+import Component from "./AlbumContextMenu.vue";
 
-describe('albumContextMenu.vue', () => {
+describe("albumContextMenu.vue", () => {
   const h = createHarness({
     beforeEach: () => openModalMock.mockClear(),
-  })
+  });
 
   const renderComponent = async (album?: Album) => {
-    h.mock(acl, 'checkResourcePermission').mockReturnValue(true)
+    h.mock(acl, "checkResourcePermission").mockReturnValue(true);
 
     if (!vi.isMockFunction(playableStore.fetchSongsForAlbum)) {
-      h.mock(playableStore, 'fetchSongsForAlbum').mockResolvedValue([])
+      h.mock(playableStore, "fetchSongsForAlbum").mockResolvedValue([]);
     }
 
     album =
       album ||
-      h.factory('album', {
-        name: 'IV',
+      h.factory("album", {
+        name: "IV",
         favorite: false,
-      })
+      });
 
     const rendered = h.actingAsAdmin().render(Component, {
       props: {
         album,
       },
-    })
+    });
 
     return {
       ...rendered,
       album,
-    }
-  }
+    };
+  };
 
-  it('renders', async () => expect((await renderComponent()).html()).toMatchSnapshot())
+  it("renders", async () => expect((await renderComponent()).html()).toMatchSnapshot());
 
-  it('plays all', async () => {
-    h.createAudioPlayer()
+  it("plays all", async () => {
+    h.createAudioPlayer();
 
-    const songs = h.factory('song', 10)
-    const fetchMock = h.mock(playableStore, 'fetchSongsForAlbum').mockResolvedValue(songs)
-    const playMock = h.mock(playbackService, 'queueAndPlay')
+    const songs = h.factory("song", 10);
+    const fetchMock = h.mock(playableStore, "fetchSongsForAlbum").mockResolvedValue(songs);
+    const playMock = h.mock(playbackService, "queueAndPlay");
 
-    const { album } = await renderComponent()
-    await h.user.click(screen.getByText('Play All'))
-    await h.tick()
+    const { album } = await renderComponent();
+    await h.user.click(screen.getByText("Play All"));
+    await h.tick();
 
-    expect(fetchMock).toHaveBeenCalledWith(album)
-    expect(playMock).toHaveBeenCalledWith(songs)
-  })
+    expect(fetchMock).toHaveBeenCalledWith(album);
+    expect(playMock).toHaveBeenCalledWith(songs);
+  });
 
-  it('shuffles all', async () => {
-    h.createAudioPlayer()
+  it("shuffles all", async () => {
+    h.createAudioPlayer();
 
-    const songs = h.factory('song', 10)
-    const fetchMock = h.mock(playableStore, 'fetchSongsForAlbum').mockResolvedValue(songs)
-    const playMock = h.mock(playbackService, 'queueAndPlay')
+    const songs = h.factory("song", 10);
+    const fetchMock = h.mock(playableStore, "fetchSongsForAlbum").mockResolvedValue(songs);
+    const playMock = h.mock(playbackService, "queueAndPlay");
 
-    const { album } = await renderComponent()
-    await h.user.click(screen.getByText('Shuffle All'))
-    await h.tick()
+    const { album } = await renderComponent();
+    await h.user.click(screen.getByText("Shuffle All"));
+    await h.tick();
 
-    expect(fetchMock).toHaveBeenCalledWith(album)
-    expect(playMock).toHaveBeenCalledWith(songs, true)
-  })
+    expect(fetchMock).toHaveBeenCalledWith(album);
+    expect(playMock).toHaveBeenCalledWith(songs, true);
+  });
 
-  it('downloads', async () => {
-    const downloadMock = h.mock(downloadService, 'fromAlbum')
-    const { album } = await renderComponent()
+  it("downloads", async () => {
+    const downloadMock = h.mock(downloadService, "fromAlbum");
+    const { album } = await renderComponent();
 
-    await h.user.click(screen.getByText('Download'))
+    await h.user.click(screen.getByText("Download"));
 
-    expect(downloadMock).toHaveBeenCalledWith(album)
-  })
+    expect(downloadMock).toHaveBeenCalledWith(album);
+  });
 
-  it('does not have an option to download if downloading is disabled', async () => {
-    commonStore.state.allows_download = false
-    await renderComponent()
+  it("does not have an option to download if downloading is disabled", async () => {
+    commonStore.state.allows_download = false;
+    await renderComponent();
 
-    expect(screen.queryByText('Download')).toBeNull()
-  })
+    expect(screen.queryByText("Download")).toBeNull();
+  });
 
-  it('does not have an option to download or go to Unknown Album and Artist', async () => {
-    await renderComponent(factory.states('unknown')('album'))
+  it("does not have an option to download or go to Unknown Album and Artist", async () => {
+    await renderComponent(factory.states("unknown")("album"));
 
-    expect(screen.queryByText('Go to Album')).toBeNull()
-    expect(screen.queryByText('Go to Artist')).toBeNull()
-    expect(screen.queryByText('Download')).toBeNull()
-  })
+    expect(screen.queryByText("Go to Album")).toBeNull();
+    expect(screen.queryByText("Go to Artist")).toBeNull();
+    expect(screen.queryByText("Download")).toBeNull();
+  });
 
-  it('requests edit form', async () => {
-    const { album } = await renderComponent()
+  it("requests edit form", async () => {
+    const { album } = await renderComponent();
 
     // for the "Edit…" menu item to show up
-    await h.tick(2)
+    await h.tick(2);
 
-    await h.user.click(screen.getByText('Edit…'))
+    await h.user.click(screen.getByText("Edit…"));
 
-    await assertOpenModal(openModalMock, EditAlbumForm, { album })
-  })
+    await assertOpenModal(openModalMock, EditAlbumForm, { album });
+  });
 
-  it('requests the embed form', async () => {
-    const { album } = await renderComponent()
-    await h.user.click(screen.getByText('Embed…'))
+  it("requests the embed form", async () => {
+    const { album } = await renderComponent();
+    await h.user.click(screen.getByText("Embed…"));
 
-    await assertOpenModal(openModalMock, CreateEmbedForm, { embeddable: album })
-  })
-})
+    await assertOpenModal(openModalMock, CreateEmbedForm, { embeddable: album });
+  });
+});

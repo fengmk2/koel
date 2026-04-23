@@ -1,23 +1,23 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './PlaylistCollaborationModal.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./PlaylistCollaborationModal.vue";
 
-describe('playlistCollaborationModal.vue', () => {
-  const h = createHarness()
+describe("playlistCollaborationModal.vue", () => {
+  const h = createHarness();
 
-  it('renders the modal', async () => {
+  it("renders the modal", async () => {
     const { html } = h.render(Component, {
       props: {
-        playlist: h.factory('playlist'),
+        playlist: h.factory("playlist"),
       },
       global: {
         stubs: {
-          InviteCollaborators: h.stub('InviteCollaborators'),
-          CollaboratorList: h.stub('CollaboratorList'),
+          InviteCollaborators: h.stub("InviteCollaborators"),
+          CollaboratorList: h.stub("CollaboratorList"),
         },
       },
-    })
+    });
 
-    expect(html()).toMatchSnapshot()
-  })
-})
+    expect(html()).toMatchSnapshot();
+  });
+});

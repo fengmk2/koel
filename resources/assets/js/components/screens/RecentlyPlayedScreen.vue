@@ -9,7 +9,7 @@
         </template>
 
         <template v-if="playables.length" #meta>
-          <span>{{ pluralize(playables, 'item') }}</span>
+          <span>{{ pluralize(playables, "item") }}</span>
           <span>{{ duration }}</span>
         </template>
 
@@ -46,20 +46,20 @@
 </template>
 
 <script lang="ts" setup>
-import { faClock } from '@fortawesome/free-regular-svg-icons'
-import { ref, toRef } from 'vue'
-import { pluralize } from '@/utils/formatters'
-import { recentlyPlayedStore } from '@/stores/recentlyPlayedStore'
-import { useRouter } from '@/composables/useRouter'
-import { usePlayableList } from '@/composables/usePlayableList'
-import { usePlayableListControls } from '@/composables/usePlayableListControls'
+import { faClock } from "@fortawesome/free-regular-svg-icons";
+import { ref, toRef } from "vue";
+import { pluralize } from "@/utils/formatters";
+import { recentlyPlayedStore } from "@/stores/recentlyPlayedStore";
+import { useRouter } from "@/composables/useRouter";
+import { usePlayableList } from "@/composables/usePlayableList";
+import { usePlayableListControls } from "@/composables/usePlayableListControls";
 
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenEmptyState from '@/components/ui/ScreenEmptyState.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
-import PlayableListSkeleton from '@/components/playable/playable-list/PlayableListSkeleton.vue'
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenEmptyState from "@/components/ui/ScreenEmptyState.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
+import PlayableListSkeleton from "@/components/playable/playable-list/PlayableListSkeleton.vue";
 
-const recentlyPlayedSongs = toRef(recentlyPlayedStore.state, 'playables')
+const recentlyPlayedSongs = toRef(recentlyPlayedStore.state, "playables");
 
 const {
   PlayableList,
@@ -74,19 +74,19 @@ const {
   playSelected,
   applyFilter,
   onSwipe,
-} = usePlayableList(recentlyPlayedSongs, { type: 'RecentlyPlayed' }, { sortable: false })
+} = usePlayableList(recentlyPlayedSongs, { type: "RecentlyPlayed" }, { sortable: false });
 
-const { PlayableListControls, config } = usePlayableListControls('RecentlyPlayed')
+const { PlayableListControls, config } = usePlayableListControls("RecentlyPlayed");
 
-let initialized = false
-const loading = ref(false)
+let initialized = false;
+const loading = ref(false);
 
-useRouter().onScreenActivated('RecentlyPlayed', async () => {
+useRouter().onScreenActivated("RecentlyPlayed", async () => {
   if (!initialized) {
-    loading.value = true
-    initialized = true
-    await recentlyPlayedStore.fetch()
-    loading.value = false
+    loading.value = true;
+    initialized = true;
+    await recentlyPlayedStore.fetch();
+    loading.value = false;
   }
-})
+});
 </script>

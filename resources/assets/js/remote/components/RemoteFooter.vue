@@ -1,11 +1,16 @@
 <template>
-  <footer class="h-[18vh] w-screen flex justify-around items-center border-t border-solid border-t-k-fg-10 py-4">
+  <footer
+    class="h-[18vh] w-screen flex justify-around items-center border-t border-solid border-t-k-fg-10 py-4"
+  >
     <button
       class="text-[5vmin] has-[.yep]:text-k-fg-70"
       data-testid="btn-toggle-favorite"
       @click.prevent="toggleFavorite"
     >
-      <Icon :class="streamable.favorite && 'yep'" :icon="streamable.favorite ? faStar : faEmptyStar" />
+      <Icon
+        :class="streamable.favorite && 'yep'"
+        :icon="streamable.favorite ? faStar : faEmptyStar"
+      />
     </button>
 
     <button
@@ -39,32 +44,39 @@
 </template>
 
 <script lang="ts" setup>
-import { faPause, faPlay, faStar, faStepBackward, faStepForward } from '@fortawesome/free-solid-svg-icons'
-import { faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons'
-import { computed, toRefs } from 'vue'
-import { socketService } from '@/services/socketService'
-import { isRadioStation } from '@/utils/typeGuards'
+import {
+  faPause,
+  faPlay,
+  faStar,
+  faStepBackward,
+  faStepForward,
+} from "@fortawesome/free-solid-svg-icons";
+import { faStar as faEmptyStar } from "@fortawesome/free-regular-svg-icons";
+import { computed, toRefs } from "vue";
+import { socketService } from "@/services/socketService";
+import { isRadioStation } from "@/utils/typeGuards";
 
-import VolumeControl from '@/remote/components/VolumeControl.vue'
+import VolumeControl from "@/remote/components/VolumeControl.vue";
 
-const props = defineProps<{ streamable: Streamable }>()
-const { streamable } = toRefs(props)
+const props = defineProps<{ streamable: Streamable }>();
+const { streamable } = toRefs(props);
 
 const toggleFavorite = () => {
-  streamable.value.favorite = !streamable.value.favorite
-  socketService.broadcast('SOCKET_TOGGLE_FAVORITE')
-}
+  streamable.value.favorite = !streamable.value.favorite;
+  socketService.broadcast("SOCKET_TOGGLE_FAVORITE");
+};
 
-const playing = computed(() => streamable.value.playback_state === 'Playing')
-const canRewindAndFastForward = computed(() => !isRadioStation(streamable.value))
+const playing = computed(() => streamable.value.playback_state === "Playing");
+const canRewindAndFastForward = computed(() => !isRadioStation(streamable.value));
 
 const togglePlayback = () => {
-  streamable.value.playback_state = streamable.value.playback_state === 'Playing' ? 'Paused' : 'Playing'
-  socketService.broadcast('SOCKET_TOGGLE_PLAYBACK')
-}
+  streamable.value.playback_state =
+    streamable.value.playback_state === "Playing" ? "Paused" : "Playing";
+  socketService.broadcast("SOCKET_TOGGLE_PLAYBACK");
+};
 
-const playNext = () => socketService.broadcast('SOCKET_PLAY_NEXT')
-const playPrev = () => socketService.broadcast('SOCKET_PLAY_PREV')
+const playNext = () => socketService.broadcast("SOCKET_PLAY_NEXT");
+const playPrev = () => socketService.broadcast("SOCKET_PLAY_PREV");
 </script>
 
 <style lang="postcss" scoped>

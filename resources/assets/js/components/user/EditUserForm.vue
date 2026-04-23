@@ -32,7 +32,9 @@
           name="password"
           placeholder="Leave blank for no changes"
         />
-        <template #help>Min. 10 characters. Should be a mix of characters, numbers, and symbols.</template>
+        <template #help
+          >Min. 10 characters. Should be a mix of characters, numbers, and symbols.</template
+        >
       </FormRow>
       <RolePicker v-model="data.role" />
     </main>
@@ -45,53 +47,53 @@
 </template>
 
 <script lang="ts" setup>
-import { pick } from 'lodash'
-import type { UpdateUserData } from '@/stores/userStore'
-import { userStore } from '@/stores/userStore'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { pick } from "lodash";
+import type { UpdateUserData } from "@/stores/userStore";
+import { userStore } from "@/stores/userStore";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import AlertBox from '@/components/ui/AlertBox.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
-import RolePicker from '@/components/user/RolePicker.vue'
-import PasswordField from '@/components/ui/form/PasswordField.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import AlertBox from "@/components/ui/AlertBox.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
+import RolePicker from "@/components/user/RolePicker.vue";
+import PasswordField from "@/components/ui/form/PasswordField.vue";
 
-const props = defineProps<{ user: User }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ user: User }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { user } = props
+const { user } = props;
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
-const close = () => emit('close')
+const close = () => emit("close");
 
 const { data, isPristine, handleSubmit } = useForm<UpdateUserData>({
   initialValues: {
-    ...pick(user, 'name', 'email', 'role'),
-    password: '',
+    ...pick(user, "name", "email", "role"),
+    password: "",
   },
-  onSubmit: async data => {
-    const formattedData = { ...data }
+  onSubmit: async (data) => {
+    const formattedData = { ...data };
 
     if (!formattedData.password) {
-      delete formattedData.password
+      delete formattedData.password;
     }
 
-    await userStore.update(user, formattedData)
+    await userStore.update(user, formattedData);
   },
   onSuccess: () => {
-    toastSuccess('User profile updated.')
-    close()
+    toastSuccess("User profile updated.");
+    close();
   },
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>

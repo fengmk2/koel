@@ -19,18 +19,18 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { toRefs } from "vue";
 
-import ExcerptResultBlock from '@/components/screens/search/ExcerptResultBlock.vue'
-import PodcastCardSkeleton from '@/components/ui/album-artist/ArtistAlbumCardSkeleton.vue'
-import PodcastCard from '@/components/podcast/PodcastCard.vue'
+import ExcerptResultBlock from "@/components/screens/search/ExcerptResultBlock.vue";
+import PodcastCardSkeleton from "@/components/ui/album-artist/ArtistAlbumCardSkeleton.vue";
+import PodcastCard from "@/components/podcast/PodcastCard.vue";
 
 const props = withDefaults(defineProps<{ podcasts?: Podcast[]; searching?: boolean }>(), {
   podcasts: () => [],
   searching: false,
-})
+});
 
-const { podcasts, searching } = toRefs(props)
+const { podcasts, searching } = toRefs(props);
 </script>
 
 <style lang="postcss" scoped>

@@ -15,32 +15,32 @@
 </template>
 
 <script lang="ts" setup>
-import { take } from 'lodash'
-import { computed, ref, toRefs, watch } from 'vue'
-import { useBranding } from '@/composables/useBranding'
+import { take } from "lodash";
+import { computed, ref, toRefs, watch } from "vue";
+import { useBranding } from "@/composables/useBranding";
 
-const props = defineProps<{ thumbnails: string[] }>()
-const { thumbnails } = toRefs(props)
+const props = defineProps<{ thumbnails: string[] }>();
+const { thumbnails } = toRefs(props);
 
-const { cover: defaultCover } = useBranding()
-const defaultBackgroundImage = `url(${defaultCover})`
-const displayedThumbnails = ref<string[]>([])
+const { cover: defaultCover } = useBranding();
+const defaultBackgroundImage = `url(${defaultCover})`;
+const displayedThumbnails = ref<string[]>([]);
 
 watch(
   thumbnails,
   () => {
     if (thumbnails.value.length === 0) {
-      displayedThumbnails.value = [defaultCover]
+      displayedThumbnails.value = [defaultCover];
     } else {
       displayedThumbnails.value = take(thumbnails.value, thumbnails.value.length < 4 ? 1 : 4).map(
-        url => url || defaultCover,
-      )
+        (url) => url || defaultCover,
+      );
     }
   },
   { immediate: true },
-)
+);
 
-const layout = computed(() => (displayedThumbnails.value.length < 4 ? 'single' : 'tiles'))
+const layout = computed(() => (displayedThumbnails.value.length < 4 ? "single" : "tiles"));
 </script>
 
 <style lang="postcss" scoped>

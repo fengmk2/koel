@@ -13,7 +13,14 @@
     <main>
       <div class="grid grid-cols-[max-content_1fr] gap-x-5 gap-y-5">
         <label for="themeName">Name</label>
-        <TextInput id="themeName" v-model="data.name" v-koel-focus placeholder="My Fancy Theme" required title="Name" />
+        <TextInput
+          id="themeName"
+          v-model="data.name"
+          v-koel-focus
+          placeholder="My Fancy Theme"
+          required
+          title="Name"
+        />
 
         <label>Colors</label>
         <div>
@@ -47,12 +54,20 @@
               Remove
             </button>
           </span>
-          <FileInput aria-label="Background image" accept="image/*" @change="onBackgroundImageChange" />
+          <FileInput
+            aria-label="Background image"
+            accept="image/*"
+            @change="onBackgroundImageChange"
+          />
         </div>
 
         <label>Font</label>
         <div class="flex gap-2">
-          <SelectBox v-model="data.font_family" aria-label="Font family" @click="onFontSelectBoxClick">
+          <SelectBox
+            v-model="data.font_family"
+            aria-label="Font family"
+            @click="onFontSelectBoxClick"
+          >
             <option value="">Default</option>
             <option v-for="name in availableFonts" :key="name" :value="name">{{ name }}</option>
           </SelectBox>
@@ -75,151 +90,161 @@
       <Btn transparent @click.prevent="maybeClose">Cancel</Btn>
     </footer>
 
-    <Btn v-if="previewing" class="btn-exit-preview fixed right-4 top-3" @click.prevent="previewing = false">
+    <Btn
+      v-if="previewing"
+      class="btn-exit-preview fixed right-4 top-3"
+      @click.prevent="previewing = false"
+    >
       Exit preview
     </Btn>
   </form>
 </template>
 
 <script setup lang="ts">
-import { faFillDrip, faFont, faHighlighter } from '@fortawesome/free-solid-svg-icons'
-import { computed, onMounted, ref, watch } from 'vue'
-import { logger } from '@/utils/logger'
-import { useImageFileInput } from '@/composables/useImageFileInput'
-import { useForm } from '@/composables/useForm'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { themeStore } from '@/stores/themeStore'
-import type { ThemeData } from '@/stores/themeStore'
-import { commonFonts, genericFonts } from '@/config/fonts'
+import { faFillDrip, faFont, faHighlighter } from "@fortawesome/free-solid-svg-icons";
+import { computed, onMounted, ref, watch } from "vue";
+import { logger } from "@/utils/logger";
+import { useImageFileInput } from "@/composables/useImageFileInput";
+import { useForm } from "@/composables/useForm";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { themeStore } from "@/stores/themeStore";
+import type { ThemeData } from "@/stores/themeStore";
+import { commonFonts, genericFonts } from "@/config/fonts";
 
-import SelectBox from '@/components/ui/form/SelectBox.vue'
-import FileInput from '@/components/ui/form/FileInput.vue'
-import Btn from '@/components/ui/form/Btn.vue'
-import ColorPicker from '@/components/ui/form/ColorPicker.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
+import SelectBox from "@/components/ui/form/SelectBox.vue";
+import FileInput from "@/components/ui/form/FileInput.vue";
+import Btn from "@/components/ui/form/Btn.vue";
+import ColorPicker from "@/components/ui/form/ColorPicker.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
 
-const props = defineProps<{ toggleCssClass: (...classes: string[]) => void }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ toggleCssClass: (...classes: string[]) => void }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const toggleCssClass = props.toggleCssClass
+const toggleCssClass = props.toggleCssClass;
 
-const close = () => emit('close')
+const close = () => emit("close");
 
-const { showConfirmDialog } = useDialogBox()
-const { toastSuccess } = useMessageToaster()
+const { showConfirmDialog } = useDialogBox();
+const { toastSuccess } = useMessageToaster();
 
-const style = window.getComputedStyle(document.body)
+const style = window.getComputedStyle(document.body);
 
 const { data, isPristine, handleSubmit } = useForm<ThemeData>({
   initialValues: {
-    name: '',
-    font_family: style.getPropertyValue('--font-family'),
-    font_size: Number.parseFloat(style.getPropertyValue('--font-size')) || 13,
-    bg_color: style.getPropertyValue('--color-bg'),
-    fg_color: style.getPropertyValue('--color-fg'),
-    highlight_color: style.getPropertyValue('--color-highlight'),
-    bg_image: '',
+    name: "",
+    font_family: style.getPropertyValue("--font-family"),
+    font_size: Number.parseFloat(style.getPropertyValue("--font-size")) || 13,
+    bg_color: style.getPropertyValue("--color-bg"),
+    fg_color: style.getPropertyValue("--color-fg"),
+    highlight_color: style.getPropertyValue("--color-highlight"),
+    bg_image: "",
   },
-  onSubmit: async data => await themeStore.store(data),
+  onSubmit: async (data) => await themeStore.store(data),
   onSuccess: (theme: Theme) => {
-    toastSuccess('Theme created.')
-    themeStore.setTheme(theme)
-    close()
+    toastSuccess("Theme created.");
+    themeStore.setTheme(theme);
+    close();
   },
-})
+});
 
-const previewing = ref(false)
-const availableFonts = ref<string[]>([])
+const previewing = ref(false);
+const availableFonts = ref<string[]>([]);
 
-const hasLocalFontsApi = 'queryLocalFonts' in window
-const systemFontsLoaded = ref(false)
-const localFontsPermissionDenied = ref(false)
+const hasLocalFontsApi = "queryLocalFonts" in window;
+const systemFontsLoaded = ref(false);
+const localFontsPermissionDenied = ref(false);
 
 const shouldTryLoadSystemFonts = computed(() => {
-  return hasLocalFontsApi && !systemFontsLoaded.value && !localFontsPermissionDenied.value
-})
+  return hasLocalFontsApi && !systemFontsLoaded.value && !localFontsPermissionDenied.value;
+});
 
-const loadCommonFonts = () => (availableFonts.value = genericFonts.concat(...commonFonts))
+const loadCommonFonts = () => (availableFonts.value = genericFonts.concat(...commonFonts));
 
 const tryLoadSystemFonts = async () => {
   try {
     // @ts-expect-error
-    const localFonts: [{ family: string }] = await window.queryLocalFonts()
-    availableFonts.value = genericFonts.concat(...[...new Set(localFonts.map(font => font.family))].sort())
+    const localFonts: [{ family: string }] = await window.queryLocalFonts();
+    availableFonts.value = genericFonts.concat(
+      ...[...new Set(localFonts.map((font) => font.family))].sort(),
+    );
 
-    systemFontsLoaded.value = true
+    systemFontsLoaded.value = true;
   } catch (err: unknown) {
-    logger.error('Failed to load system fonts.', err)
-    loadCommonFonts()
+    logger.error("Failed to load system fonts.", err);
+    loadCommonFonts();
   }
-}
+};
 
-const loadAvailableFonts = async () => (shouldTryLoadSystemFonts.value ? await tryLoadSystemFonts() : loadCommonFonts())
+const loadAvailableFonts = async () =>
+  shouldTryLoadSystemFonts.value ? await tryLoadSystemFonts() : loadCommonFonts();
 
 const onFontSelectBoxClick = async () => {
   if (availableFonts.value.length === 0) {
-    await loadAvailableFonts()
+    await loadAvailableFonts();
   }
-}
+};
 
-const applyProperty = (property: string, value: string) => document.body.style.setProperty(property, value)
+const applyProperty = (property: string, value: string) =>
+  document.body.style.setProperty(property, value);
 
-watch(previewing, () => toggleCssClass('backdrop:bg-transparent', 'bg-transparent', 'cursor-not-allowed'))
+watch(previewing, () =>
+  toggleCssClass("backdrop:bg-transparent", "bg-transparent", "cursor-not-allowed"),
+);
 watch(
   () => data.fg_color,
-  color => applyProperty('--color-fg', color),
-)
+  (color) => applyProperty("--color-fg", color),
+);
 watch(
   () => data.bg_color,
-  color => applyProperty('--color-bg', color),
-)
+  (color) => applyProperty("--color-bg", color),
+);
 watch(
   () => data.highlight_color,
-  color => applyProperty('--color-highlight', color),
-)
+  (color) => applyProperty("--color-highlight", color),
+);
 
 watch(
   () => data.bg_image,
-  imageUrl => applyProperty('--bg-image', imageUrl ? `url(${imageUrl})` : 'none'),
+  (imageUrl) => applyProperty("--bg-image", imageUrl ? `url(${imageUrl})` : "none"),
   {
     immediate: true,
   },
-)
+);
 
 watch(
   () => data.font_family,
-  font => applyProperty('--font-family', font),
+  (font) => applyProperty("--font-family", font),
   { immediate: true },
-)
+);
 watch(
   () => data.font_size,
-  size => applyProperty('--font-size', `${size}px`),
-)
+  (size) => applyProperty("--font-size", `${size}px`),
+);
 
 const { onImageInputChange: onBackgroundImageChange } = useImageFileInput({
-  onImageDataUrl: dataUrl => (data.bg_image = dataUrl),
-})
+  onImageDataUrl: (dataUrl) => (data.bg_image = dataUrl),
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
     // restore the theme
-    themeStore.setTheme()
-    close()
+    themeStore.setTheme();
+    close();
   }
-}
+};
 
 onMounted(async () => {
   try {
     // @ts-expect-error 'local-fonts' is not yet supported in Firefox and Safari.
-    const permission = await navigator.permissions.query({ name: 'local-fonts' })
-    localFontsPermissionDenied.value = permission.state === 'denied'
+    const permission = await navigator.permissions.query({ name: "local-fonts" });
+    localFontsPermissionDenied.value = permission.state === "denied";
   } catch (err: unknown) {
-    window.RUNNING_UNIT_TESTS || logger.error('Failed to check local fonts permission.', err)
+    window.RUNNING_UNIT_TESTS || logger.error("Failed to check local fonts permission.", err);
   }
 
-  await loadAvailableFonts()
-})
+  await loadAvailableFonts();
+});
 </script>
 
 <style scoped lang="postcss">

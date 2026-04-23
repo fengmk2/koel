@@ -1,20 +1,20 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './EpisodeProgress.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./EpisodeProgress.vue";
 
-describe('episodeProgress.vue', () => {
-  const h = createHarness()
+describe("episodeProgress.vue", () => {
+  const h = createHarness();
 
-  it('renders', () => {
+  it("renders", () => {
     const { html } = h.render(Component, {
       props: {
-        episode: h.factory('episode', {
+        episode: h.factory("episode", {
           length: 300,
         }),
         position: 60,
       },
-    })
+    });
 
-    expect(html()).toMatchSnapshot()
-  })
-})
+    expect(html()).toMatchSnapshot();
+  });
+});

@@ -25,141 +25,155 @@
 </template>
 
 <script lang="ts" setup>
-import { faClockRotateLeft, faStar, faUsers, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
-import { ListMusicIcon } from 'lucide-vue-next'
-import { computed, ref, toRefs } from 'vue'
-import { defineAsyncComponent } from '@/utils/helpers'
-import { playableStore } from '@/stores/playableStore'
-import { recentlyPlayedStore } from '@/stores/recentlyPlayedStore'
-import { useRouter } from '@/composables/useRouter'
-import { useDraggable, useDroppable } from '@/composables/useDragAndDrop'
-import { usePlaylistContentManagement } from '@/composables/usePlaylistContentManagement'
-import { useContextMenu } from '@/composables/useContextMenu'
-import { playback } from '@/services/playbackManager'
+import {
+  faClockRotateLeft,
+  faStar,
+  faUsers,
+  faWandMagicSparkles,
+} from "@fortawesome/free-solid-svg-icons";
+import { ListMusicIcon } from "lucide-vue-next";
+import { computed, ref, toRefs } from "vue";
+import { defineAsyncComponent } from "@/utils/helpers";
+import { playableStore } from "@/stores/playableStore";
+import { recentlyPlayedStore } from "@/stores/recentlyPlayedStore";
+import { useRouter } from "@/composables/useRouter";
+import { useDraggable, useDroppable } from "@/composables/useDragAndDrop";
+import { usePlaylistContentManagement } from "@/composables/usePlaylistContentManagement";
+import { useContextMenu } from "@/composables/useContextMenu";
+import { playback } from "@/services/playbackManager";
 
-import SidebarItem from '@/components/layout/main-wrapper/sidebar/SidebarItem.vue'
+import SidebarItem from "@/components/layout/main-wrapper/sidebar/SidebarItem.vue";
 
-const props = defineProps<{ list: PlaylistLike }>()
+const props = defineProps<{ list: PlaylistLike }>();
 
-const PlaylistContextMenu = defineAsyncComponent(() => import('@/components/playlist/PlaylistContextMenu.vue'))
+const PlaylistContextMenu = defineAsyncComponent(
+  () => import("@/components/playlist/PlaylistContextMenu.vue"),
+);
 
-const { url, isCurrentScreen, getRouteParam } = useRouter()
-const { startDragging } = useDraggable('playlist')
-const { acceptsDrop, resolveDroppedItems } = useDroppable(['playables', 'album', 'artist', 'browser-media'])
-const { openContextMenu } = useContextMenu()
+const { url, isCurrentScreen, getRouteParam } = useRouter();
+const { startDragging } = useDraggable("playlist");
+const { acceptsDrop, resolveDroppedItems } = useDroppable([
+  "playables",
+  "album",
+  "artist",
+  "browser-media",
+]);
+const { openContextMenu } = useContextMenu();
 
-const droppable = ref(false)
+const droppable = ref(false);
 
-const { addToPlaylist } = usePlaylistContentManagement()
+const { addToPlaylist } = usePlaylistContentManagement();
 
-const { list } = toRefs(props)
+const { list } = toRefs(props);
 
-const isPlaylist = (list: PlaylistLike): list is Playlist => 'id' in list
-const isFavoriteList = (list: PlaylistLike): list is FavoriteList => list.name === 'Favorites'
-const isRecentlyPlayedList = (list: PlaylistLike): list is RecentlyPlayedList => list.name === 'Recently Played'
+const isPlaylist = (list: PlaylistLike): list is Playlist => "id" in list;
+const isFavoriteList = (list: PlaylistLike): list is FavoriteList => list.name === "Favorites";
+const isRecentlyPlayedList = (list: PlaylistLike): list is RecentlyPlayedList =>
+  list.name === "Recently Played";
 
 const active = computed(() => {
   return (
-    (isCurrentScreen('Favorites') && isFavoriteList(list.value)) ||
-    (isCurrentScreen('RecentlyPlayed') && isRecentlyPlayedList(list.value)) ||
-    (isCurrentScreen('Playlist') && (list.value as Playlist).id === getRouteParam('id'))
-  )
-})
+    (isCurrentScreen("Favorites") && isFavoriteList(list.value)) ||
+    (isCurrentScreen("RecentlyPlayed") && isRecentlyPlayedList(list.value)) ||
+    (isCurrentScreen("Playlist") && (list.value as Playlist).id === getRouteParam("id"))
+  );
+});
 
 const href = computed(() => {
   if (isPlaylist(list.value)) {
-    return url('playlists.show', { id: list.value.id })
+    return url("playlists.show", { id: list.value.id });
   }
 
   if (isFavoriteList(list.value)) {
-    return url('favorites')
+    return url("favorites");
   }
 
   if (isRecentlyPlayedList(list.value)) {
-    return url('recently-played')
+    return url("recently-played");
   }
 
-  throw new Error('Invalid playlist-like type.')
-})
+  throw new Error("Invalid playlist-like type.");
+});
 
 const contentEditable = computed(() => {
   if (isRecentlyPlayedList(list.value)) {
-    return false
+    return false;
   }
   if (isFavoriteList(list.value)) {
-    return true
+    return true;
   }
 
-  return !list.value.is_smart
-})
+  return !list.value.is_smart;
+});
 
 const onContextMenu = (event: MouseEvent) => {
   if (isPlaylist(list.value)) {
-    event.preventDefault()
-    openContextMenu<'PLAYLIST'>(PlaylistContextMenu, event, {
+    event.preventDefault();
+    openContextMenu<"PLAYLIST">(PlaylistContextMenu, event, {
       playlist: list.value,
-    })
+    });
   }
-}
+};
 
 const onDblClick = async () => {
-  let playables: Playable[]
+  let playables: Playable[];
 
   if (isFavoriteList(list.value)) {
-    playables = await playableStore.fetchFavorites()
+    playables = await playableStore.fetchFavorites();
   } else if (isRecentlyPlayedList(list.value)) {
-    playables = await recentlyPlayedStore.fetch()
+    playables = await recentlyPlayedStore.fetch();
   } else {
-    playables = await playableStore.fetchForPlaylist(list.value as Playlist)
+    playables = await playableStore.fetchForPlaylist(list.value as Playlist);
   }
 
   if (playables.length) {
-    playback().queueAndPlay(playables)
+    playback().queueAndPlay(playables);
   }
-}
+};
 
-const onDragStart = (event: DragEvent) => isPlaylist(list.value) && startDragging(event, list.value)
+const onDragStart = (event: DragEvent) =>
+  isPlaylist(list.value) && startDragging(event, list.value);
 
 const onDragOver = (event: DragEvent) => {
   if (!contentEditable.value) {
-    return false
+    return false;
   }
   if (!acceptsDrop(event)) {
-    return false
+    return false;
   }
 
-  event.preventDefault()
-  droppable.value = true
+  event.preventDefault();
+  droppable.value = true;
 
-  return false
-}
+  return false;
+};
 
-const onDragLeave = () => (droppable.value = false)
+const onDragLeave = () => (droppable.value = false);
 
 const onDrop = async (event: DragEvent) => {
-  droppable.value = false
+  droppable.value = false;
 
   if (!contentEditable.value) {
-    return false
+    return false;
   }
   if (!acceptsDrop(event)) {
-    return false
+    return false;
   }
 
-  const playables = await resolveDroppedItems(event)
+  const playables = await resolveDroppedItems(event);
 
   if (!playables?.length) {
-    return false
+    return false;
   }
 
   if (isFavoriteList(list.value)) {
-    await playableStore.favorite(playables)
+    await playableStore.favorite(playables);
   } else if (isPlaylist(list.value)) {
-    await addToPlaylist(list.value, playables)
+    await addToPlaylist(list.value, playables);
   }
 
-  return false
-}
+  return false;
+};
 </script>
 
 <style lang="postcss" scoped>

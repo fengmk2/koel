@@ -29,23 +29,26 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue'
-import { useRouter } from '@/composables/useRouter'
-import { getPlayableCollectionContentType } from '@/utils/typeGuards'
-import { usePlayableList } from '@/composables/usePlayableList'
-import { playback } from '@/services/playbackManager'
+import { computed, toRefs } from "vue";
+import { useRouter } from "@/composables/useRouter";
+import { getPlayableCollectionContentType } from "@/utils/typeGuards";
+import { usePlayableList } from "@/composables/usePlayableList";
+import { playback } from "@/services/playbackManager";
 
-import ExcerptResultBlock from '@/components/screens/search/ExcerptResultBlock.vue'
-import Btn from '@/components/ui/form/Btn.vue'
-import PlayableListSkeleton from '@/components/playable/playable-list/PlayableListSkeleton.vue'
+import ExcerptResultBlock from "@/components/screens/search/ExcerptResultBlock.vue";
+import Btn from "@/components/ui/form/Btn.vue";
+import PlayableListSkeleton from "@/components/playable/playable-list/PlayableListSkeleton.vue";
 
-const props = withDefaults(defineProps<{ playables?: Playable[]; query?: string; searching?: boolean }>(), {
-  playables: () => [],
-  query: '',
-  searching: false,
-})
+const props = withDefaults(
+  defineProps<{ playables?: Playable[]; query?: string; searching?: boolean }>(),
+  {
+    playables: () => [],
+    query: "",
+    searching: false,
+  },
+);
 
-const { playables, query, searching } = toRefs(props)
+const { playables, query, searching } = toRefs(props);
 
 const {
   PlayableList,
@@ -58,23 +61,24 @@ const {
   {
     sortable: false,
   },
-)
+);
 
 const headingText = computed(() => {
   switch (getPlayableCollectionContentType(props.playables)) {
-    case 'episodes':
-      return 'Episodes'
-    case 'songs':
-      return 'Songs'
+    case "episodes":
+      return "Episodes";
+    case "songs":
+      return "Songs";
     default:
-      return 'Songs & Episodes'
+      return "Songs & Episodes";
   }
-})
+});
 
-const { go, url } = useRouter()
+const { go, url } = useRouter();
 
-const onPressEnter = () => selectedPlayables.value.length && playback().play(selectedPlayables.value[0])
-const goToSongResults = () => go(`${url('search.playables')}/?q=${query.value}`)
+const onPressEnter = () =>
+  selectedPlayables.value.length && playback().play(selectedPlayables.value[0]);
+const goToSongResults = () => go(`${url("search.playables")}/?q=${query.value}`);
 </script>
 
 <style lang="postcss" scoped>

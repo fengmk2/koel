@@ -41,111 +41,113 @@
 </template>
 
 <script lang="ts" setup>
-import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons'
-import { computed, ref, toRefs } from 'vue'
-import { defineAsyncComponent } from '@/utils/helpers'
-import { playlistFolderStore } from '@/stores/playlistFolderStore'
-import { playlistStore } from '@/stores/playlistStore'
-import { useDraggable, useDroppable } from '@/composables/useDragAndDrop'
-import { useContextMenu } from '@/composables/useContextMenu'
+import { faFolder, faFolderOpen } from "@fortawesome/free-solid-svg-icons";
+import { computed, ref, toRefs } from "vue";
+import { defineAsyncComponent } from "@/utils/helpers";
+import { playlistFolderStore } from "@/stores/playlistFolderStore";
+import { playlistStore } from "@/stores/playlistStore";
+import { useDraggable, useDroppable } from "@/composables/useDragAndDrop";
+import { useContextMenu } from "@/composables/useContextMenu";
 
-import PlaylistSidebarItem from './PlaylistSidebarItem.vue'
-import SidebarItem from './SidebarItem.vue'
+import PlaylistSidebarItem from "./PlaylistSidebarItem.vue";
+import SidebarItem from "./SidebarItem.vue";
 
-const props = defineProps<{ folder: PlaylistFolder }>()
+const props = defineProps<{ folder: PlaylistFolder }>();
 
-const ContextMenu = defineAsyncComponent(() => import('@/components/playlist/PlaylistFolderContextMenu.vue'))
+const ContextMenu = defineAsyncComponent(
+  () => import("@/components/playlist/PlaylistFolderContextMenu.vue"),
+);
 
-const { folder } = toRefs(props)
+const { folder } = toRefs(props);
 
-const { acceptsDrop, resolveDroppedValue } = useDroppable(['playlist'])
-const { startDragging } = useDraggable('playlist-folder')
-const { openContextMenu } = useContextMenu()
+const { acceptsDrop, resolveDroppedValue } = useDroppable(["playlist"]);
+const { startDragging } = useDraggable("playlist-folder");
+const { openContextMenu } = useContextMenu();
 
-const opened = ref(false)
-const droppable = ref(false)
-const droppableOnHatch = ref(false)
-let expandTimeout = 0
+const opened = ref(false);
+const droppable = ref(false);
+const droppableOnHatch = ref(false);
+let expandTimeout = 0;
 
-const playlistsInFolder = computed(() => playlistStore.byFolder(folder.value))
+const playlistsInFolder = computed(() => playlistStore.byFolder(folder.value));
 
-const toggle = () => (opened.value = !opened.value)
+const toggle = () => (opened.value = !opened.value);
 
-const onDragStart = (event: DragEvent) => startDragging(event, folder.value)
+const onDragStart = (event: DragEvent) => startDragging(event, folder.value);
 
 const onDragOver = (event: DragEvent) => {
   // Expand the folder after a short delay so the user can drop songs onto playlists inside.
   if (!opened.value && !expandTimeout) {
     expandTimeout = window.setTimeout(() => {
-      opened.value = true
-      expandTimeout = 0
-    }, 500)
+      opened.value = true;
+      expandTimeout = 0;
+    }, 500);
   }
 
   if (!acceptsDrop(event)) {
-    return false
+    return false;
   }
 
-  event.preventDefault()
-  droppable.value = true
-}
+  event.preventDefault();
+  droppable.value = true;
+};
 
 const onDragLeave = () => {
-  droppable.value = false
-  clearTimeout(expandTimeout)
-  expandTimeout = 0
-}
+  droppable.value = false;
+  clearTimeout(expandTimeout);
+  expandTimeout = 0;
+};
 
 const onDrop = async (event: DragEvent) => {
-  clearTimeout(expandTimeout)
-  expandTimeout = 0
-  droppable.value = false
+  clearTimeout(expandTimeout);
+  expandTimeout = 0;
+  droppable.value = false;
 
   if (!acceptsDrop(event)) {
-    return false
+    return false;
   }
 
-  event.preventDefault()
+  event.preventDefault();
 
-  const playlist = await resolveDroppedValue<Playlist>(event)
+  const playlist = await resolveDroppedValue<Playlist>(event);
   if (!playlist || playlist.folder_id === folder.value.id) {
-    return
+    return;
   }
 
-  await playlistFolderStore.addPlaylistToFolder(folder.value, playlist)
-}
+  await playlistFolderStore.addPlaylistToFolder(folder.value, playlist);
+};
 
-const onDragLeaveHatch = () => (droppableOnHatch.value = false)
+const onDragLeaveHatch = () => (droppableOnHatch.value = false);
 
 const onDragOverHatch = (event: DragEvent) => {
   if (!acceptsDrop(event)) {
-    return false
+    return false;
   }
 
-  event.preventDefault()
-  droppableOnHatch.value = true
-}
+  event.preventDefault();
+  droppableOnHatch.value = true;
+};
 
 const onDropOnHatch = async (event: DragEvent) => {
-  droppableOnHatch.value = false
-  droppable.value = false
+  droppableOnHatch.value = false;
+  droppable.value = false;
 
-  const playlist = (await resolveDroppedValue<Playlist>(event))!
+  const playlist = (await resolveDroppedValue<Playlist>(event))!;
 
   // if the playlist isn't in the folder, don't do anything. The folder will handle the drop.
   if (playlist.folder_id !== folder.value.id) {
-    return
+    return;
   }
 
   // otherwise, the user is trying to remove the playlist from the folder.
-  event.stopPropagation()
-  await playlistFolderStore.removePlaylistFromFolder(folder.value, playlist)
-}
+  event.stopPropagation();
+  await playlistFolderStore.removePlaylistFromFolder(folder.value, playlist);
+};
 
 const onContextMenu = (event: MouseEvent) =>
-  openContextMenu<'PLAYLIST_FOLDER'>(ContextMenu, event, {
+  openContextMenu<"PLAYLIST_FOLDER">(ContextMenu, event, {
     folder: folder.value,
-  })
+  });
 </script>
 
 <style lang="postcss" scoped>

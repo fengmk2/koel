@@ -5,7 +5,9 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <section class="btn-collapse-block flex md:hidden items-center border-b border-b-k-fg-5 h-k-header-height px-6">
+    <section
+      class="btn-collapse-block flex md:hidden items-center border-b border-b-k-fg-5 h-k-header-height px-6"
+    >
       <div class="bg-k-fg-5 rounded-full">
         <SideSheetButton @click.prevent="collapseSidebar">
           <Icon :icon="faTimes" fixed-width />
@@ -37,84 +39,85 @@
 </template>
 
 <script lang="ts" setup>
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { computed, ref, watch } from 'vue'
-import { eventBus } from '@/utils/eventBus'
-import { useKoelPlus } from '@/composables/useKoelPlus'
-import { useLocalStorage } from '@/composables/useLocalStorage'
-import { useRouter } from '@/composables/useRouter'
-import { usePolicies } from '@/composables/usePolicies'
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { computed, ref, watch } from "vue";
+import { eventBus } from "@/utils/eventBus";
+import { useKoelPlus } from "@/composables/useKoelPlus";
+import { useLocalStorage } from "@/composables/useLocalStorage";
+import { useRouter } from "@/composables/useRouter";
+import { usePolicies } from "@/composables/usePolicies";
 
-import BtnUpgradeToPlus from '@/components/koel-plus/BtnUpgradeToPlus.vue'
-import HomeButton from '@/components/layout/main-wrapper/sidebar/HomeButton.vue'
-import SearchForm from '@/components/ui/SearchForm.vue'
-import SideSheetButton from '@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue'
-import SidebarManageSection from './SidebarManageSection.vue'
-import SidebarPlaylistsSection from './SidebarPlaylistsSection.vue'
-import SidebarToggleButton from '@/components/layout/main-wrapper/sidebar/SidebarToggleButton.vue'
-import SidebarYourMusicSection from './SidebarYourLibrarySection.vue'
+import BtnUpgradeToPlus from "@/components/koel-plus/BtnUpgradeToPlus.vue";
+import HomeButton from "@/components/layout/main-wrapper/sidebar/HomeButton.vue";
+import SearchForm from "@/components/ui/SearchForm.vue";
+import SideSheetButton from "@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue";
+import SidebarManageSection from "./SidebarManageSection.vue";
+import SidebarPlaylistsSection from "./SidebarPlaylistsSection.vue";
+import SidebarToggleButton from "@/components/layout/main-wrapper/sidebar/SidebarToggleButton.vue";
+import SidebarYourMusicSection from "./SidebarYourLibrarySection.vue";
 
-const { onRouteChanged } = useRouter()
-const { currentUserCan } = usePolicies()
-const { isPlus } = useKoelPlus()
-const { get: lsGet, set: lsSet } = useLocalStorage()
+const { onRouteChanged } = useRouter();
+const { currentUserCan } = usePolicies();
+const { isPlus } = useKoelPlus();
+const { get: lsGet, set: lsSet } = useLocalStorage();
 
-const mobileShowing = ref(false)
-const searchFocused = ref(false)
+const mobileShowing = ref(false);
+const searchFocused = ref(false);
 
-const onSearchFocusChange = (focused: boolean) => (searchFocused.value = focused)
-const expanded = ref(!lsGet('sidebar-collapsed', false))
+const onSearchFocusChange = (focused: boolean) => (searchFocused.value = focused);
+const expanded = ref(!lsGet("sidebar-collapsed", false));
 
-watch(expanded, value => lsSet('sidebar-collapsed', !value))
+watch(expanded, (value) => lsSet("sidebar-collapsed", !value));
 
-let tmpShowingHandler: number | undefined
-const tmpShowing = ref(false)
+let tmpShowingHandler: number | undefined;
+const tmpShowing = ref(false);
 
 const onMouseEnter = () => {
   if (expanded.value) {
-    return
+    return;
   }
 
   tmpShowingHandler = window.setTimeout(() => {
     if (expanded.value) {
-      return
+      return;
     }
-    tmpShowing.value = true
-  }, 500)
-}
+    tmpShowing.value = true;
+  }, 500);
+};
 
 const onMouseLeave = (e: MouseEvent) => {
   if (!e.relatedTarget) {
-    return
+    return;
   }
 
   if (tmpShowingHandler) {
-    clearTimeout(tmpShowingHandler)
-    tmpShowingHandler = undefined
+    clearTimeout(tmpShowingHandler);
+    tmpShowingHandler = undefined;
   }
 
-  tmpShowing.value = false
-}
+  tmpShowing.value = false;
+};
 
 const showManageOptions = computed(
-  () => currentUserCan.manageSettings() || currentUserCan.manageUsers() || currentUserCan.uploadSongs(),
-)
+  () =>
+    currentUserCan.manageSettings() || currentUserCan.manageUsers() || currentUserCan.uploadSongs(),
+);
 
-const canUpgradeToPlus = computed(() => !isPlus.value && currentUserCan.manageSettings())
+const canUpgradeToPlus = computed(() => !isPlus.value && currentUserCan.manageSettings());
 
-onRouteChanged(_ => (mobileShowing.value = false))
+onRouteChanged((_) => (mobileShowing.value = false));
 
-const collapseSidebar = () => (mobileShowing.value = false)
+const collapseSidebar = () => (mobileShowing.value = false);
 
 /**
  * Listen to toggle sidebar event to show or hide the sidebar.
  * This should only be triggered on a mobile device.
  */
-eventBus.on('TOGGLE_SIDEBAR', () => (mobileShowing.value = !mobileShowing.value))
+eventBus.on("TOGGLE_SIDEBAR", () => (mobileShowing.value = !mobileShowing.value));
 </script>
 
 <style lang="postcss" scoped>
-@import '@/../css/partials/mixins.pcss';
+@import "@/../css/partials/mixins.pcss";
 
 nav {
   -ms-overflow-style: -ms-autohiding-scrollbar;

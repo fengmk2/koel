@@ -39,136 +39,186 @@
 </template>
 
 <script lang="ts" setup>
-import { isEqual } from 'lodash'
-import { faArrowDown, faArrowUp, faCheck, faEllipsis, faSort } from '@fortawesome/free-solid-svg-icons'
-import { OnClickOutside } from '@vueuse/components'
-import { computed, onBeforeUnmount, onMounted, ref, toRefs } from 'vue'
-import { useFloatingUi } from '@/composables/useFloatingUi'
-import { arrayify } from '@/utils/helpers'
-import type { getPlayableCollectionContentType } from '@/utils/typeGuards'
-import { usePlayableListColumnVisibility } from '@/composables/usePlayableListColumnVisibility'
+import { isEqual } from "lodash";
+import {
+  faArrowDown,
+  faArrowUp,
+  faCheck,
+  faEllipsis,
+  faSort,
+} from "@fortawesome/free-solid-svg-icons";
+import { OnClickOutside } from "@vueuse/components";
+import { computed, onBeforeUnmount, onMounted, ref, toRefs } from "vue";
+import { useFloatingUi } from "@/composables/useFloatingUi";
+import { arrayify } from "@/utils/helpers";
+import type { getPlayableCollectionContentType } from "@/utils/typeGuards";
+import { usePlayableListColumnVisibility } from "@/composables/usePlayableListColumnVisibility";
 
 const props = withDefaults(
   defineProps<{
-    sortable?: boolean
-    field?: MaybeArray<PlayableListSortField> // the current field(s) being sorted by
-    order?: SortOrder
-    hasCustomOrderSort?: boolean // whether to provide "custom order" sort (like for playlists)
-    contentType?: ReturnType<typeof getPlayableCollectionContentType>
-    collaborative?: boolean
+    sortable?: boolean;
+    field?: MaybeArray<PlayableListSortField>; // the current field(s) being sorted by
+    order?: SortOrder;
+    hasCustomOrderSort?: boolean; // whether to provide "custom order" sort (like for playlists)
+    contentType?: ReturnType<typeof getPlayableCollectionContentType>;
+    collaborative?: boolean;
   }>(),
   {
     sortable: true,
-    field: 'title',
-    order: 'asc',
+    field: "title",
+    order: "asc",
     hasCustomOrderSort: false,
-    contentType: 'songs',
+    contentType: "songs",
     collaborative: false,
   },
-)
+);
 
-const emit = defineEmits<{ (e: 'sort', field: MaybeArray<PlayableListSortField>): void }>()
+const emit = defineEmits<{ (e: "sort", field: MaybeArray<PlayableListSortField>): void }>();
 
 interface MenuItem {
-  column?: PlayableListColumnName
-  label: string
-  field: MaybeArray<PlayableListSortField>
-  visibilityToggleable: boolean
+  column?: PlayableListColumnName;
+  label: string;
+  field: MaybeArray<PlayableListSortField>;
+  visibilityToggleable: boolean;
 }
 
 const {
   shouldShowColumn,
   toggleColumn,
   isConfigurable: shouldShowColumnVisibilityCheckboxes,
-} = usePlayableListColumnVisibility()
+} = usePlayableListColumnVisibility();
 
-const { field, order, hasCustomOrderSort, contentType, collaborative } = toRefs(props)
+const { field, order, hasCustomOrderSort, contentType, collaborative } = toRefs(props);
 
-const button = ref<HTMLButtonElement>()
-const menu = ref<HTMLDivElement>()
+const button = ref<HTMLButtonElement>();
+const menu = ref<HTMLDivElement>();
 
 const menuItems = computed(() => {
-  const title: MenuItem = { column: 'title', label: 'Title', field: 'title', visibilityToggleable: false }
-  const artist: MenuItem = { label: 'Artist', field: 'artist_name', visibilityToggleable: false }
-  const author: MenuItem = { label: 'Author', field: 'podcast_author', visibilityToggleable: false }
+  const title: MenuItem = {
+    column: "title",
+    label: "Title",
+    field: "title",
+    visibilityToggleable: false,
+  };
+  const artist: MenuItem = { label: "Artist", field: "artist_name", visibilityToggleable: false };
+  const author: MenuItem = {
+    label: "Author",
+    field: "podcast_author",
+    visibilityToggleable: false,
+  };
 
   const artistOrAuthor: MenuItem = {
-    label: 'Artist or Author',
-    field: ['artist_name', 'podcast_author'],
+    label: "Artist or Author",
+    field: ["artist_name", "podcast_author"],
     visibilityToggleable: false,
-  }
+  };
 
-  const album: MenuItem = { column: 'album', label: 'Album', field: 'album_name', visibilityToggleable: true }
-  const track: MenuItem = { column: 'track', label: 'Track & Disc', field: 'track', visibilityToggleable: true }
-  const time: MenuItem = { column: 'duration', label: 'Time', field: 'length', visibilityToggleable: true }
-  const genre: MenuItem = { column: 'genre', label: 'Genre', field: 'genre', visibilityToggleable: true }
-  const year: MenuItem = { column: 'year', label: 'Year', field: 'year', visibilityToggleable: true }
+  const album: MenuItem = {
+    column: "album",
+    label: "Album",
+    field: "album_name",
+    visibilityToggleable: true,
+  };
+  const track: MenuItem = {
+    column: "track",
+    label: "Track & Disc",
+    field: "track",
+    visibilityToggleable: true,
+  };
+  const time: MenuItem = {
+    column: "duration",
+    label: "Time",
+    field: "length",
+    visibilityToggleable: true,
+  };
+  const genre: MenuItem = {
+    column: "genre",
+    label: "Genre",
+    field: "genre",
+    visibilityToggleable: true,
+  };
+  const year: MenuItem = {
+    column: "year",
+    label: "Year",
+    field: "year",
+    visibilityToggleable: true,
+  };
 
   const dateAdded: MenuItem = {
-    label: 'Date Added',
-    field: 'created_at',
+    label: "Date Added",
+    field: "created_at",
     visibilityToggleable: false,
-  }
+  };
 
-  const podcast: MenuItem = { column: 'album', label: 'Podcast', field: 'podcast_title', visibilityToggleable: true }
+  const podcast: MenuItem = {
+    column: "album",
+    label: "Podcast",
+    field: "podcast_title",
+    visibilityToggleable: true,
+  };
 
   const albumOrPodcast: MenuItem = {
-    column: 'album',
-    label: 'Album or Podcast',
-    field: ['album_name', 'podcast_title'],
+    column: "album",
+    label: "Album or Podcast",
+    field: ["album_name", "podcast_title"],
     visibilityToggleable: true,
-  }
+  };
 
-  const customOrder: MenuItem = { label: 'Custom Order', field: 'position', visibilityToggleable: false }
+  const customOrder: MenuItem = {
+    label: "Custom Order",
+    field: "position",
+    visibilityToggleable: false,
+  };
 
   const collaborator: MenuItem = {
-    column: 'playlist_collaborator',
-    label: 'User',
-    field: 'collaboration.user.name',
+    column: "playlist_collaborator",
+    label: "User",
+    field: "collaboration.user.name",
     visibilityToggleable: true,
-  }
+  };
 
   const contributedAt: MenuItem = {
-    column: 'playlist_added_at',
-    label: 'Contributed',
-    field: 'collaboration.added_at',
+    column: "playlist_added_at",
+    label: "Contributed",
+    field: "collaboration.added_at",
     visibilityToggleable: true,
-  }
+  };
 
-  let items: MenuItem[] = [title, album, artist, track, genre, year, time, dateAdded]
+  let items: MenuItem[] = [title, album, artist, track, genre, year, time, dateAdded];
 
-  if (contentType.value === 'episodes') {
-    items = [title, podcast, author, time, dateAdded]
-  } else if (contentType.value === 'mixed') {
-    items = [title, albumOrPodcast, artistOrAuthor, time, dateAdded]
+  if (contentType.value === "episodes") {
+    items = [title, podcast, author, time, dateAdded];
+  } else if (contentType.value === "mixed") {
+    items = [title, albumOrPodcast, artistOrAuthor, time, dateAdded];
   }
 
   if (collaborative.value) {
-    items.push(collaborator, contributedAt)
+    items.push(collaborator, contributedAt);
   }
 
   if (hasCustomOrderSort.value) {
-    items.push(customOrder)
+    items.push(customOrder);
   }
 
-  return items
-})
+  return items;
+});
 
 const { setup, teardown, trigger, hide } = useFloatingUi(button, menu, {
-  placement: 'bottom-end',
+  placement: "bottom-end",
   useArrow: false,
   autoTrigger: false,
-})
+});
 
 const sort = (field: MaybeArray<PlayableListSortField>) => {
-  emit('sort', field)
-  hide()
-}
+  emit("sort", field);
+  hide();
+};
 
-const currentlySortedBy = (field: MaybeArray<PlayableListSortField>) => isEqual(arrayify(field), arrayify(props.field))
+const currentlySortedBy = (field: MaybeArray<PlayableListSortField>) =>
+  isEqual(arrayify(field), arrayify(props.field));
 
-onMounted(() => menu.value && setup())
-onBeforeUnmount(() => teardown())
+onMounted(() => menu.value && setup());
+onBeforeUnmount(() => teardown());
 </script>
 
 <style lang="postcss" scoped>

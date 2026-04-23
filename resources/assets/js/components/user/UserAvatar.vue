@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
-import { useBranding } from '@/composables/useBranding'
+import { toRefs } from "vue";
+import { useBranding } from "@/composables/useBranding";
 
-const props = defineProps<{ user: Pick<User, 'name' | 'avatar'> }>()
-const { user } = toRefs(props)
+const props = defineProps<{ user: Pick<User, "name" | "avatar"> }>();
+const { user } = toRefs(props);
 
-const { cover: defaultCover } = useBranding()
+const { cover: defaultCover } = useBranding();
 </script>

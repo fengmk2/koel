@@ -1,13 +1,13 @@
-import type { Ref } from 'vue'
-import { isRef } from 'vue'
-import type { Placement } from '@floating-ui/dom'
-import { arrow as arrowMiddleware, autoUpdate, flip, offset } from '@floating-ui/dom'
-import { updateFloatingUi } from '@/utils/floatingUi'
+import type { Ref } from "vue";
+import { isRef } from "vue";
+import type { Placement } from "@floating-ui/dom";
+import { arrow as arrowMiddleware, autoUpdate, flip, offset } from "@floating-ui/dom";
+import { updateFloatingUi } from "@/utils/floatingUi";
 
 export interface Config {
-  placement: Placement
-  useArrow: boolean
-  autoTrigger: boolean
+  placement: Placement;
+  useArrow: boolean;
+  autoTrigger: boolean;
 }
 
 export const useFloatingUi = (
@@ -15,49 +15,51 @@ export const useFloatingUi = (
   floating: HTMLElement | Ref<HTMLElement | undefined>,
   config: Partial<Config> = {},
 ) => {
-  const extractRef = <T extends HTMLElement | Ref<HTMLElement | undefined>>(ref: T): HTMLElement => {
+  const extractRef = <T extends HTMLElement | Ref<HTMLElement | undefined>>(
+    ref: T,
+  ): HTMLElement => {
     if (isRef(ref) && !ref.value) {
-      throw new TypeError('Reference element is not defined')
+      throw new TypeError("Reference element is not defined");
     }
 
-    return isRef(ref) ? ref.value! : ref
-  }
+    return isRef(ref) ? ref.value! : ref;
+  };
 
   const mergedConfig: Config = Object.assign(
     {
-      placement: 'bottom',
+      placement: "bottom",
       useArrow: true,
       autoTrigger: true,
     },
     config,
-  )
+  );
 
-  let _cleanUp: Closure
-  let _show: Closure
-  let _hide: Closure
-  let _trigger: Closure
+  let _cleanUp: Closure;
+  let _show: Closure;
+  let _hide: Closure;
+  let _trigger: Closure;
 
   const setup = () => {
-    const referenceElement = extractRef(reference)
-    const floatingElement = extractRef(floating)
+    const referenceElement = extractRef(reference);
+    const floatingElement = extractRef(floating);
 
-    floatingElement.style.display = 'none'
+    floatingElement.style.display = "none";
 
-    const middleware = [flip(), offset(6)]
+    const middleware = [flip(), offset(6)];
 
-    let arrow: HTMLElement
+    let arrow: HTMLElement;
 
     if (mergedConfig.useArrow) {
-      arrow = document.createElement('div')
-      arrow.className = 'arrow'
-      floatingElement.appendChild(arrow)
+      arrow = document.createElement("div");
+      arrow.className = "arrow";
+      floatingElement.appendChild(arrow);
 
       middleware.push(
         arrowMiddleware({
           element: arrow,
           padding: 6,
         }),
-      )
+      );
     }
 
     const update = async () =>
@@ -69,25 +71,25 @@ export const useFloatingUi = (
           middleware,
         },
         arrow,
-      )
+      );
 
-    _cleanUp = autoUpdate(referenceElement, floatingElement, update)
+    _cleanUp = autoUpdate(referenceElement, floatingElement, update);
 
     _show = async () => {
-      floatingElement.style.display = 'block'
-      await update()
-    }
+      floatingElement.style.display = "block";
+      await update();
+    };
 
-    _hide = () => (floatingElement.style.display = 'none')
-    _trigger = () => (floatingElement.style.display === 'none' ? _show() : _hide())
+    _hide = () => (floatingElement.style.display = "none");
+    _trigger = () => (floatingElement.style.display === "none" ? _show() : _hide());
 
     if (mergedConfig.autoTrigger) {
-      referenceElement.addEventListener('mouseenter', _show)
-      referenceElement.addEventListener('focus', _show)
-      referenceElement.addEventListener('mouseleave', _hide)
-      referenceElement.addEventListener('blur', _hide)
+      referenceElement.addEventListener("mouseenter", _show);
+      referenceElement.addEventListener("focus", _show);
+      referenceElement.addEventListener("mouseleave", _hide);
+      referenceElement.addEventListener("blur", _hide);
     }
-  }
+  };
 
   return {
     setup,
@@ -95,5 +97,5 @@ export const useFloatingUi = (
     show: () => _show(),
     hide: () => _hide(),
     trigger: () => _trigger(),
-  }
-}
+  };
+};

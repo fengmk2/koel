@@ -1,10 +1,10 @@
-import type { Component } from 'vue'
-import { ModalKey } from '@/config/symbols'
-import { requireInjection } from '@/utils/helpers'
-import type { Modals } from '@/config/modals'
+import type { Component } from "vue";
+import { ModalKey } from "@/config/symbols";
+import { requireInjection } from "@/utils/helpers";
+import type { Modals } from "@/config/modals";
 
 export const useModal = () => {
-  const modalOptions = requireInjection(ModalKey)
+  const modalOptions = requireInjection(ModalKey);
 
   const openModal = <K extends keyof Modals = never>(
     modal: Component,
@@ -13,17 +13,17 @@ export const useModal = () => {
     modalOptions.value = {
       component: modal,
       props: (args[0] ?? {}) as Record<string, any>,
-    }
-  }
+    };
+  };
 
   const closeModal = () => {
     modalOptions.value = {
       component: null,
-    }
-  }
+    };
+  };
 
   return {
     openModal,
     closeModal,
-  }
-}
+  };
+};

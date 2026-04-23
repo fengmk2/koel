@@ -1,12 +1,12 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './TooltipIcon.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./TooltipIcon.vue";
 
-describe('TooltipIcon', () => {
-  const h = createHarness()
+describe("TooltipIcon", () => {
+  const h = createHarness();
 
-  it('renders correctly', () => {
-    const { html } = h.render(Component, { props: { title: 'Help text' } })
-    expect(html()).toMatchSnapshot()
-  })
-})
+  it("renders correctly", () => {
+    const { html } = h.render(Component, { props: { title: "Help text" } });
+    expect(html()).toMatchSnapshot();
+  });
+});

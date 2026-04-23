@@ -1,12 +1,12 @@
-import { describe, it, vi } from 'vite-plus/test'
-import { ref, computed } from 'vue'
-import { screen } from '@testing-library/vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import { playableStore } from '@/stores/playableStore'
+import { describe, it, vi } from "vite-plus/test";
+import { ref, computed } from "vue";
+import { screen } from "@testing-library/vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import { playableStore } from "@/stores/playableStore";
 
-const cachedSongIds = ref(new Set<string>())
+const cachedSongIds = ref(new Set<string>());
 
-vi.mock('@/composables/useOfflinePlayback', () => ({
+vi.mock("@/composables/useOfflinePlayback", () => ({
   useOfflinePlayback: () => ({
     swReady: ref(true),
     cachedSongIds,
@@ -23,30 +23,32 @@ vi.mock('@/composables/useOfflinePlayback', () => ({
     checkCacheStatus: vi.fn(),
     refreshStorageEstimate: vi.fn(),
   }),
-}))
+}));
 
-import Component from './OfflineSongsScreen.vue'
+import Component from "./OfflineSongsScreen.vue";
 
-describe('offlineSongsScreen', () => {
+describe("offlineSongsScreen", () => {
   const h = createHarness({
     beforeEach: () => {
-      cachedSongIds.value = new Set<string>()
+      cachedSongIds.value = new Set<string>();
     },
-  })
+  });
 
-  it('shows empty state when no songs are cached', () => {
-    h.render(Component)
-    screen.getByText('No songs available offline.')
-  })
+  it("shows empty state when no songs are cached", () => {
+    h.render(Component);
+    screen.getByText("No songs available offline.");
+  });
 
-  it('shows cached songs count in header', () => {
-    const songs = h.factory('song', 3)
-    songs.forEach(s => {
-      cachedSongIds.value.add(s.id)
-    })
-    h.mock(playableStore, 'byId').mockImplementation((id: string) => songs.find(song => song.id === id))
+  it("shows cached songs count in header", () => {
+    const songs = h.factory("song", 3);
+    songs.forEach((s) => {
+      cachedSongIds.value.add(s.id);
+    });
+    h.mock(playableStore, "byId").mockImplementation((id: string) =>
+      songs.find((song) => song.id === id),
+    );
 
-    h.render(Component)
-    screen.getByText('3 songs')
-  })
-})
+    h.render(Component);
+    screen.getByText("3 songs");
+  });
+});

@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import { faHome } from '@fortawesome/free-solid-svg-icons'
-import { eventBus } from '@/utils/eventBus'
-import { useRouter } from '@/composables/useRouter'
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { eventBus } from "@/utils/eventBus";
+import { useRouter } from "@/composables/useRouter";
 
-const { url } = useRouter()
-const onClick = () => eventBus.emit('TOGGLE_SIDEBAR')
+const { url } = useRouter();
+const onClick = () => eventBus.emit("TOGGLE_SIDEBAR");
 </script>

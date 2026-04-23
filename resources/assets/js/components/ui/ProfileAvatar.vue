@@ -16,11 +16,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuthorization } from '@/composables/useAuthorization'
-import { useRouter } from '@/composables/useRouter'
+import { useAuthorization } from "@/composables/useAuthorization";
+import { useRouter } from "@/composables/useRouter";
 
-import UserAvatar from '@/components/user/UserAvatar.vue'
+import UserAvatar from "@/components/user/UserAvatar.vue";
 
-const { url } = useRouter()
-const { currentUser } = useAuthorization()
+const { url } = useRouter();
+const { currentUser } = useAuthorization();
 </script>

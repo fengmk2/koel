@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import StreamableDetails from './StreamableDetails.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import StreamableDetails from "./StreamableDetails.vue";
 
-describe('streamableDetails.vue', () => {
-  const h = createHarness()
+describe("streamableDetails.vue", () => {
+  const h = createHarness();
 
   const renderComponent = (streamable: Streamable) => {
     return h.render(StreamableDetails, {
@@ -18,32 +18,32 @@ describe('streamableDetails.vue', () => {
           },
         },
       },
-    })
-  }
+    });
+  };
 
-  it('renders a song', () => {
+  it("renders a song", () => {
     const { html } = renderComponent(
-      h.factory('song', {
-        title: 'Afraid to Shoot Strangers',
-        album_name: 'Fear of the Dark',
-        artist_name: 'Iron Maiden',
-        album_cover: 'https://cover.site/fotd.jpg',
+      h.factory("song", {
+        title: "Afraid to Shoot Strangers",
+        album_name: "Fear of the Dark",
+        artist_name: "Iron Maiden",
+        album_cover: "https://cover.site/fotd.jpg",
       }),
-    )
+    );
 
-    expect(html()).toMatchSnapshot()
-  })
+    expect(html()).toMatchSnapshot();
+  });
 
-  it('renders an episode', () => {
+  it("renders an episode", () => {
     const { html } = renderComponent(
-      h.factory('episode', {
-        title: 'Brahms Piano Concerto No. 1',
-        podcast_title: 'The Sticky Notes podcast',
-        podcast_author: 'Some random dudes',
-        episode_image: 'https://cover.site/pod.jpg',
+      h.factory("episode", {
+        title: "Brahms Piano Concerto No. 1",
+        podcast_title: "The Sticky Notes podcast",
+        podcast_author: "Some random dudes",
+        episode_image: "https://cover.site/pod.jpg",
       }),
-    )
+    );
 
-    expect(html()).toMatchSnapshot()
-  })
-})
+    expect(html()).toMatchSnapshot();
+  });
+});

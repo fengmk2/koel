@@ -1,70 +1,70 @@
-import butterchurnModule from 'butterchurn'
-import butterchurnPresets from 'butterchurn-presets'
-import { audioService } from '@/services/audioService'
+import butterchurnModule from "butterchurn";
+import butterchurnPresets from "butterchurn-presets";
+import { audioService } from "@/services/audioService";
 
 // Unwrap the default export from the namespace (required for UMD module compatibility)
-const butterchurn = (butterchurnModule as any).default || butterchurnModule
+const butterchurn = (butterchurnModule as any).default || butterchurnModule;
 
 export const initVisualizer = (container: HTMLElement) => {
-  const audioContext = audioService.context
+  const audioContext = audioService.context;
 
-  const canvas = document.createElement('canvas')
-  canvas.width = container.clientWidth
-  canvas.height = container.clientHeight
-  container.appendChild(canvas)
+  const canvas = document.createElement("canvas");
+  canvas.width = container.clientWidth;
+  canvas.height = container.clientHeight;
+  container.appendChild(canvas);
 
   const visualizer = butterchurn.createVisualizer(audioContext, canvas, {
     width: canvas.width,
     height: canvas.height,
-  })
+  });
 
-  const audioNode = audioService.source
-  visualizer.connectAudio(audioNode)
+  const audioNode = audioService.source;
+  visualizer.connectAudio(audioNode);
 
-  const presets = butterchurnPresets.getPresets()
-  const presetKeys = Object.keys(presets)
+  const presets = butterchurnPresets.getPresets();
+  const presetKeys = Object.keys(presets);
 
   const loadRandomPreset = () => {
-    const randomKey = presetKeys[Math.floor(Math.random() * presetKeys.length)]
-    visualizer.loadPreset(presets[randomKey], 0.0)
-  }
+    const randomKey = presetKeys[Math.floor(Math.random() * presetKeys.length)];
+    visualizer.loadPreset(presets[randomKey], 0.0);
+  };
 
-  let currentPresetIndex = 0
+  let currentPresetIndex = 0;
 
   const cyclePreset = () => {
-    const presetKey = presetKeys[currentPresetIndex]
-    visualizer.loadPreset(presets[presetKey], 2.0)
-    currentPresetIndex = (Math.floor(Math.random() * presetKeys.length)) % presetKeys.length // Loop back to the start
-  }
+    const presetKey = presetKeys[currentPresetIndex];
+    visualizer.loadPreset(presets[presetKey], 2.0);
+    currentPresetIndex = Math.floor(Math.random() * presetKeys.length) % presetKeys.length; // Loop back to the start
+  };
 
-  loadRandomPreset()
+  loadRandomPreset();
 
-  const presetInterval = setInterval(cyclePreset, 30000)
+  const presetInterval = setInterval(cyclePreset, 30000);
 
-  visualizer.setRendererSize(canvas.width, canvas.height)
+  visualizer.setRendererSize(canvas.width, canvas.height);
 
   const render = () => {
-    visualizer.render()
-    requestAnimationFrame(render)
-  }
+    visualizer.render();
+    requestAnimationFrame(render);
+  };
 
-  render()
+  render();
 
   const handleResize = () => {
-    canvas.width = container.clientWidth
-    canvas.height = container.clientHeight
-    visualizer.setRendererSize(canvas.width, canvas.height)
-  }
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+    visualizer.setRendererSize(canvas.width, canvas.height);
+  };
 
-  window.addEventListener('resize', handleResize)
+  window.addEventListener("resize", handleResize);
 
   return () => {
-    window.removeEventListener('resize', handleResize)
+    window.removeEventListener("resize", handleResize);
 
     if (canvas.parentNode) {
-      canvas.parentNode.removeChild(canvas)
+      canvas.parentNode.removeChild(canvas);
     }
 
-    clearInterval(presetInterval)
-  }
-}
+    clearInterval(presetInterval);
+  };
+};

@@ -14,56 +14,56 @@
 </template>
 
 <script setup lang="ts">
-import { faListOl } from '@fortawesome/free-solid-svg-icons'
-import { ref } from 'vue'
-import { useDroppable } from '@/composables/useDragAndDrop'
-import { useRouter } from '@/composables/useRouter'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { queueStore } from '@/stores/queueStore'
-import { pluralize } from '@/utils/formatters'
+import { faListOl } from "@fortawesome/free-solid-svg-icons";
+import { ref } from "vue";
+import { useDroppable } from "@/composables/useDragAndDrop";
+import { useRouter } from "@/composables/useRouter";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { queueStore } from "@/stores/queueStore";
+import { pluralize } from "@/utils/formatters";
 
-import FooterButton from '@/components/layout/app-footer/FooterButton.vue'
+import FooterButton from "@/components/layout/app-footer/FooterButton.vue";
 
-const { go, isCurrentScreen, url } = useRouter()
-const { toastWarning, toastSuccess } = useMessageToaster()
+const { go, isCurrentScreen, url } = useRouter();
+const { toastWarning, toastSuccess } = useMessageToaster();
 
 const { acceptsDrop, resolveDroppedItems } = useDroppable([
-  'playables',
-  'album',
-  'artist',
-  'playlist',
-  'playlist-folder',
-  'browser-media',
-])
+  "playables",
+  "album",
+  "artist",
+  "playlist",
+  "playlist-folder",
+  "browser-media",
+]);
 
-const droppable = ref(false)
+const droppable = ref(false);
 
-const onDragEnter = (event: DragEvent) => (droppable.value = acceptsDrop(event))
+const onDragEnter = (event: DragEvent) => (droppable.value = acceptsDrop(event));
 const onDragLeave = (e: DragEvent) => {
   if ((e.currentTarget as Node)?.contains?.(e.relatedTarget as Node)) {
-    return
+    return;
   }
 
-  droppable.value = false
-}
+  droppable.value = false;
+};
 
 const onDrop = async (event: DragEvent) => {
-  droppable.value = false
+  droppable.value = false;
 
-  event.preventDefault()
-  const items = (await resolveDroppedItems(event)) || []
+  event.preventDefault();
+  const items = (await resolveDroppedItems(event)) || [];
 
   if (items.length) {
-    queueStore.queue(items)
-    toastSuccess(`Added ${pluralize(items, 'item')} to queue.`)
+    queueStore.queue(items);
+    toastSuccess(`Added ${pluralize(items, "item")} to queue.`);
   } else {
-    toastWarning('No applicable items to queue.')
+    toastWarning("No applicable items to queue.");
   }
 
-  return false
-}
+  return false;
+};
 
-const showQueue = () => go(isCurrentScreen('Queue') ? -1 : url('queue'))
+const showQueue = () => go(isCurrentScreen("Queue") ? -1 : url("queue"));
 </script>
 
 <style lang="postcss" scoped>

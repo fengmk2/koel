@@ -18,15 +18,15 @@
 </template>
 
 <script lang="ts" setup>
-import { toRef, toRefs } from 'vue'
-import { overviewStore } from '@/stores/overviewStore'
+import { toRef, toRefs } from "vue";
+import { overviewStore } from "@/stores/overviewStore";
 
-import ArtistCard from '@/components/artist/ArtistCard.vue'
-import ArtistCardSkeleton from '@/components/ui/album-artist/ArtistAlbumCardSkeleton.vue'
-import HomeScreenBlock from '@/components/screens/home/HomeScreenBlock.vue'
+import ArtistCard from "@/components/artist/ArtistCard.vue";
+import ArtistCardSkeleton from "@/components/ui/album-artist/ArtistAlbumCardSkeleton.vue";
+import HomeScreenBlock from "@/components/screens/home/HomeScreenBlock.vue";
 
-const props = withDefaults(defineProps<{ loading?: boolean }>(), { loading: false })
-const { loading } = toRefs(props)
+const props = withDefaults(defineProps<{ loading?: boolean }>(), { loading: false });
+const { loading } = toRefs(props);
 
-const artists = toRef(overviewStore.state, 'recentlyAddedArtists')
+const artists = toRef(overviewStore.state, "recentlyAddedArtists");
 </script>

@@ -32,51 +32,51 @@
 </template>
 
 <script lang="ts" setup>
-import isMobile from 'ismobilejs'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { ref } from 'vue'
-import { debounce } from 'lodash'
-import { eventBus } from '@/utils/eventBus'
-import { useRouter } from '@/composables/useRouter'
+import isMobile from "ismobilejs";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { ref } from "vue";
+import { debounce } from "lodash";
+import { eventBus } from "@/utils/eventBus";
+import { useRouter } from "@/composables/useRouter";
 
-import TextInput from '@/components/ui/form/TextInput.vue'
+import TextInput from "@/components/ui/form/TextInput.vue";
 
-const placeholder = isMobile.any ? 'Search' : 'Press F to search'
+const placeholder = isMobile.any ? "Search" : "Press F to search";
 
-const emit = defineEmits<{ (e: 'focus-change', focused: boolean): void }>()
+const emit = defineEmits<{ (e: "focus-change", focused: boolean): void }>();
 
-const { go, url } = useRouter()
+const { go, url } = useRouter();
 
-const input = ref<InstanceType<typeof TextInput>>()
-const q = ref('')
+const input = ref<InstanceType<typeof TextInput>>();
+const q = ref("");
 
 let onInput = () => {
-  const _q = q.value.trim()
-  _q && eventBus.emit('SEARCH_KEYWORDS_CHANGED', _q)
-}
+  const _q = q.value.trim();
+  _q && eventBus.emit("SEARCH_KEYWORDS_CHANGED", _q);
+};
 
 if (!window.RUNNING_UNIT_TESTS) {
-  onInput = debounce(onInput, 500)
+  onInput = debounce(onInput, 500);
 }
 
 const onSubmit = () => {
-  eventBus.emit('TOGGLE_SIDEBAR')
-  go(url('search'))
-}
+  eventBus.emit("TOGGLE_SIDEBAR");
+  go(url("search"));
+};
 
 const onFocus = () => {
-  emit('focus-change', true)
-  maybeGoToSearchScreen()
-}
+  emit("focus-change", true);
+  maybeGoToSearchScreen();
+};
 
 const onBlur = () => {
-  emit('focus-change', false)
-}
+  emit("focus-change", false);
+};
 
-const maybeGoToSearchScreen = () => isMobile.any || go(url('search'))
+const maybeGoToSearchScreen = () => isMobile.any || go(url("search"));
 
-eventBus.on('FOCUS_SEARCH_FIELD', () => {
-  input.value?.el?.focus()
-  input.value?.el?.select()
-})
+eventBus.on("FOCUS_SEARCH_FIELD", () => {
+  input.value?.el?.focus();
+  input.value?.el?.select();
+});
 </script>

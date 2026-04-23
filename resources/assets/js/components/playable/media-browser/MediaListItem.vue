@@ -34,27 +34,29 @@
 </template>
 
 <script setup lang="ts">
-import { FileMusicIcon, PlayCircleIcon } from 'lucide-vue-next'
-import { faFolder } from '@fortawesome/free-solid-svg-icons'
-import { computed, toRefs } from 'vue'
-import { isSong } from '@/utils/typeGuards'
-import { playback } from '@/services/playbackManager'
+import { FileMusicIcon, PlayCircleIcon } from "lucide-vue-next";
+import { faFolder } from "@fortawesome/free-solid-svg-icons";
+import { computed, toRefs } from "vue";
+import { isSong } from "@/utils/typeGuards";
+import { playback } from "@/services/playbackManager";
 
-import SoundBars from '@/components/ui/SoundBars.vue'
+import SoundBars from "@/components/ui/SoundBars.vue";
 
-const props = defineProps<{ item: Song | Folder }>()
+const props = defineProps<{ item: Song | Folder }>();
 const emit = defineEmits<{
-  (e: 'play-song'): void
-  (e: 'open-folder'): void
-}>()
+  (e: "play-song"): void;
+  (e: "open-folder"): void;
+}>();
 
-const { item } = toRefs(props)
+const { item } = toRefs(props);
 
-const playing = computed(() => isSong(item.value) && ['Playing', 'Paused'].includes(item.value.playback_state!))
+const playing = computed(
+  () => isSong(item.value) && ["Playing", "Paused"].includes(item.value.playback_state!),
+);
 
-const label = computed(() => (isSong(item.value) ? item.value.basename : item.value.name))
+const label = computed(() => (isSong(item.value) ? item.value.basename : item.value.name));
 
-const pausePlayback = () => playback().pause()
+const pausePlayback = () => playback().pause();
 </script>
 
 <style scoped lang="postcss">

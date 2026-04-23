@@ -31,39 +31,42 @@
         <Icon :icon="faStepForward" />
       </FooterBtn>
 
-      <RepeatModeSwitch :class="isRadio && 'pointer-events-none opacity-30 cursor-not-allowed'" class="text-base" />
+      <RepeatModeSwitch
+        :class="isRadio && 'pointer-events-none opacity-30 cursor-not-allowed'"
+        class="text-base"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { faStepBackward, faStepForward } from '@fortawesome/free-solid-svg-icons'
-import { computed, ref } from 'vue'
-import { requireInjection } from '@/utils/helpers'
-import { CurrentStreamableKey } from '@/config/symbols'
-import { playableStore } from '@/stores/playableStore'
-import { playback } from '@/services/playbackManager'
-import { radioStationStore } from '@/stores/radioStationStore'
+import { faStepBackward, faStepForward } from "@fortawesome/free-solid-svg-icons";
+import { computed, ref } from "vue";
+import { requireInjection } from "@/utils/helpers";
+import { CurrentStreamableKey } from "@/config/symbols";
+import { playableStore } from "@/stores/playableStore";
+import { playback } from "@/services/playbackManager";
+import { radioStationStore } from "@/stores/radioStationStore";
 
-import RepeatModeSwitch from '@/components/ui/RepeatModeSwitch.vue'
-import PlayButton from '@/components/ui/FooterPlayButton.vue'
-import FooterBtn from '@/components/layout/app-footer/FooterButton.vue'
-import FavoriteButton from '@/components/ui/FavoriteButton.vue'
+import RepeatModeSwitch from "@/components/ui/RepeatModeSwitch.vue";
+import PlayButton from "@/components/ui/FooterPlayButton.vue";
+import FooterBtn from "@/components/layout/app-footer/FooterButton.vue";
+import FavoriteButton from "@/components/ui/FavoriteButton.vue";
 
-const streamable = requireInjection(CurrentStreamableKey, ref())
+const streamable = requireInjection(CurrentStreamableKey, ref());
 
-const isRadio = computed(() => streamable.value?.type === 'radio-stations')
+const isRadio = computed(() => streamable.value?.type === "radio-stations");
 
-const playPrev = async () => isRadio.value || (await playback().playPrev())
-const playNext = async () => isRadio.value || (await playback().playNext())
+const playPrev = async () => isRadio.value || (await playback().playPrev());
+const playNext = async () => isRadio.value || (await playback().playNext());
 
 const toggleFavorite = () => {
   if (isRadio.value) {
-    radioStationStore.toggleFavorite(streamable.value as RadioStation)
+    radioStationStore.toggleFavorite(streamable.value as RadioStation);
   } else {
-    playableStore.toggleFavorite(streamable.value as Playable)
+    playableStore.toggleFavorite(streamable.value as Playable);
   }
-}
+};
 </script>
 
 <style lang="postcss" scoped>

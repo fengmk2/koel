@@ -1,126 +1,134 @@
-import { screen, waitFor } from '@testing-library/vue'
-import { describe, expect, it, vi } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { assertOpenModal } from '@/__tests__/assertions'
-import { preferenceStore as preferences } from '@/stores/preferenceStore'
-import { radioStationStore } from '@/stores/radioStationStore'
-import AddRadioStationForm from '@/components/radio/AddRadioStationForm.vue'
+import { screen, waitFor } from "@testing-library/vue";
+import { describe, expect, it, vi } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { assertOpenModal } from "@/__tests__/assertions";
+import { preferenceStore as preferences } from "@/stores/preferenceStore";
+import { radioStationStore } from "@/stores/radioStationStore";
+import AddRadioStationForm from "@/components/radio/AddRadioStationForm.vue";
 
-const openModalMock = vi.fn()
+const openModalMock = vi.fn();
 
-vi.mock('@/composables/useModal', () => ({
+vi.mock("@/composables/useModal", () => ({
   useModal: () => ({
     openModal: openModalMock,
   }),
-}))
+}));
 
-import Component from './RadioStationListScreen.vue'
+import Component from "./RadioStationListScreen.vue";
 
-describe('radioStationListScreen.vue', () => {
+describe("radioStationListScreen.vue", () => {
   const h = createHarness({
     beforeEach: () => {
-      openModalMock.mockClear()
-      h.mock(radioStationStore, 'fetchAll')
+      openModalMock.mockClear();
+      h.mock(radioStationStore, "fetchAll");
     },
-  })
+  });
 
   const renderComponent = async (stations?: RadioStation[]) => {
-    radioStationStore.state.stations = stations || h.factory('radio-station', 9)
+    radioStationStore.state.stations = stations || h.factory("radio-station", 9);
 
     const rendered = h.render(Component, {
       global: {
         stubs: {
-          RadioStationCard: h.stub('radio-station-card'),
+          RadioStationCard: h.stub("radio-station-card"),
         },
       },
-    })
+    });
 
-    h.visit('/radio-stations')
-    await h.tick()
+    h.visit("/radio-stations");
+    await h.tick();
 
-    return rendered
-  }
+    return rendered;
+  };
 
-  it('renders', async () => {
-    await renderComponent()
-    expect(screen.getAllByTestId('radio-station-card')).toHaveLength(9)
-  })
+  it("renders", async () => {
+    await renderComponent();
+    expect(screen.getAllByTestId("radio-station-card")).toHaveLength(9);
+  });
 
-  it('shows a message when there is no station', async () => {
-    await renderComponent([])
+  it("shows a message when there is no station", async () => {
+    await renderComponent([]);
 
-    await waitFor(() => screen.getByTestId('screen-empty-state'))
-  })
+    await waitFor(() => screen.getByTestId("screen-empty-state"));
+  });
 
-  it.each<[ViewMode]>([['list'], ['thumbnails']])('sets layout from preferences', async mode => {
-    preferences.temporary.radio_stations_view_mode = mode
+  it.each<[ViewMode]>([["list"], ["thumbnails"]])("sets layout from preferences", async (mode) => {
+    preferences.temporary.radio_stations_view_mode = mode;
 
-    await renderComponent()
+    await renderComponent();
 
-    await waitFor(() => expect(screen.getByTestId('radio-station-grid').classList.contains(`as-${mode}`)).toBe(true))
-  })
+    await waitFor(() =>
+      expect(screen.getByTestId("radio-station-grid").classList.contains(`as-${mode}`)).toBe(true),
+    );
+  });
 
-  it('switches layout', async () => {
-    await renderComponent()
-    await h.tick()
+  it("switches layout", async () => {
+    await renderComponent();
+    await h.tick();
 
-    await h.user.click(screen.getByRole('radio', { name: 'View as list' }))
-    await waitFor(() => expect(screen.getByTestId('radio-station-grid').classList.contains(`as-list`)).toBe(true))
+    await h.user.click(screen.getByRole("radio", { name: "View as list" }));
+    await waitFor(() =>
+      expect(screen.getByTestId("radio-station-grid").classList.contains(`as-list`)).toBe(true),
+    );
 
-    await h.user.click(screen.getByRole('radio', { name: 'View as thumbnails' }))
-    await waitFor(() => expect(screen.getByTestId('radio-station-grid').classList.contains(`as-thumbnails`)).toBe(true))
-  })
+    await h.user.click(screen.getByRole("radio", { name: "View as thumbnails" }));
+    await waitFor(() =>
+      expect(screen.getByTestId("radio-station-grid").classList.contains(`as-thumbnails`)).toBe(
+        true,
+      ),
+    );
+  });
 
-  it('requests the Add Radio Station form', async () => {
-    await renderComponent()
-    await h.tick()
+  it("requests the Add Radio Station form", async () => {
+    await renderComponent();
+    await h.tick();
 
-    const addButton = screen.getByRole('button', { name: 'Add a new station' })
-    await h.user.click(addButton)
+    const addButton = screen.getByRole("button", { name: "Add a new station" });
+    await h.user.click(addButton);
 
-    await assertOpenModal(openModalMock, AddRadioStationForm)
-  })
+    await assertOpenModal(openModalMock, AddRadioStationForm);
+  });
 
-  it('does not show the Add button in demo mode', async () =>
+  it("does not show the Add button in demo mode", async () =>
     await h.withDemoMode(async () => {
-      await renderComponent()
-      await h.tick()
+      await renderComponent();
+      await h.tick();
 
-      expect(screen.queryByRole('button', { name: 'Add a new station' })).toBeNull()
-    }))
+      expect(screen.queryByRole("button", { name: "Add a new station" })).toBeNull();
+    }));
 
-  it('shows the Add button in demo mode for admins', async () =>
+  it("shows the Add button in demo mode for admins", async () =>
     await h.withDemoMode(async () => {
-      h.actingAsAdmin()
-      await renderComponent()
-      await h.tick()
+      h.actingAsAdmin();
+      await renderComponent();
+      await h.tick();
 
-      screen.getByRole('button', { name: 'Add a new station' })
-    }))
+      screen.getByRole("button", { name: "Add a new station" });
+    }));
 
-  it('shows all or only favorites upon toggling the button', async () => {
+  it("shows all or only favorites upon toggling the button", async () => {
     await renderComponent([
-      ...h.factory('radio-station', 3, { favorite: true }),
-      ...h.factory('radio-station', 6, { favorite: false }),
-    ])
+      ...h.factory("radio-station", 3, { favorite: true }),
+      ...h.factory("radio-station", 6, { favorite: false }),
+    ]);
 
-    expect(screen.getAllByTestId('radio-station-card')).toHaveLength(9)
+    expect(screen.getAllByTestId("radio-station-card")).toHaveLength(9);
 
-    await h.user.click(screen.getByRole('button', { name: 'Show favorites only' }))
-    await waitFor(() => expect(screen.getAllByTestId('radio-station-card')).toHaveLength(3))
+    await h.user.click(screen.getByRole("button", { name: "Show favorites only" }));
+    await waitFor(() => expect(screen.getAllByTestId("radio-station-card")).toHaveLength(3));
 
-    await h.user.click(screen.getByRole('button', { name: 'Show all' }))
-    await waitFor(() => expect(screen.getAllByTestId('radio-station-card')).toHaveLength(9))
-  })
+    await h.user.click(screen.getByRole("button", { name: "Show all" }));
+    await waitFor(() => expect(screen.getAllByTestId("radio-station-card")).toHaveLength(9));
+  });
 
-  it('shows contextual empty state when no favorite stations', async () => {
-    await renderComponent(h.factory('radio-station', 3, { favorite: false }))
+  it("shows contextual empty state when no favorite stations", async () => {
+    await renderComponent(h.factory("radio-station", 3, { favorite: false }));
 
-    await h.user.click(screen.getByRole('button', { name: 'Show favorites only' }))
+    await h.user.click(screen.getByRole("button", { name: "Show favorites only" }));
 
     await waitFor(() => {
-      const emptyState = screen.getByTestId('screen-empty-state')
-      expect(emptyState.textContent).toContain('No favorite stations')
-    })
-  })
-})
+      const emptyState = screen.getByTestId("screen-empty-state");
+      expect(emptyState.textContent).toContain("No favorite stations");
+    });
+  });
+});

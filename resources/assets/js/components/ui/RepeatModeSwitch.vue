@@ -14,21 +14,21 @@
 </template>
 
 <script lang="ts" setup>
-import { Repeat, Repeat1 } from 'lucide-vue-next'
-import { computed, toRef } from 'vue'
-import { preferenceStore } from '@/stores/preferenceStore'
-import { playback } from '@/services/playbackManager'
+import { Repeat, Repeat1 } from "lucide-vue-next";
+import { computed, toRef } from "vue";
+import { preferenceStore } from "@/stores/preferenceStore";
+import { playback } from "@/services/playbackManager";
 
-const mode = toRef(preferenceStore.state, 'repeat_mode')
+const mode = toRef(preferenceStore.state, "repeat_mode");
 
 const readableMode = computed(() =>
   mode.value
-    .split('_')
-    .map(part => part[0].toUpperCase() + part.substring(1).toLowerCase())
-    .join(' '),
-)
+    .split("_")
+    .map((part) => part[0].toUpperCase() + part.substring(1).toLowerCase())
+    .join(" "),
+);
 
-const changeMode = () => playback().rotateRepeatMode()
+const changeMode = () => playback().rotateRepeatMode();
 </script>
 
 <style lang="postcss" scoped>
@@ -37,7 +37,7 @@ const changeMode = () => playback().rotateRepeatMode()
 }
 
 button::after {
-  content: '';
+  content: "";
   @apply absolute -inset-3;
 }
 </style>

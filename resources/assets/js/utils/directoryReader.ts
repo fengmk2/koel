@@ -1,45 +1,49 @@
 // Adapted from https://stackoverflow.com/a/53058574
-async function readEntriesPromise(directoryReader: FileSystemDirectoryReader): Promise<FileSystemEntry[]> {
+async function readEntriesPromise(
+  directoryReader: FileSystemDirectoryReader,
+): Promise<FileSystemEntry[]> {
   return await new Promise((resolve, reject): void => {
-    directoryReader.readEntries(resolve, reject)
-  })
+    directoryReader.readEntries(resolve, reject);
+  });
 }
 
-async function readAllDirectoryEntries(directoryReader: FileSystemDirectoryReader): Promise<FileSystemEntry[]> {
-  const entries: FileSystemEntry[] = []
-  let readEntries = await readEntriesPromise(directoryReader)
+async function readAllDirectoryEntries(
+  directoryReader: FileSystemDirectoryReader,
+): Promise<FileSystemEntry[]> {
+  const entries: FileSystemEntry[] = [];
+  let readEntries = await readEntriesPromise(directoryReader);
 
   while (readEntries.length > 0) {
-    entries.push(...readEntries)
-    readEntries = await readEntriesPromise(directoryReader)
+    entries.push(...readEntries);
+    readEntries = await readEntriesPromise(directoryReader);
   }
 
-  return entries
+  return entries;
 }
 
 async function getAllFileEntries(dataTransferItemList: DataTransferItemList) {
-  const fileEntries: FileSystemFileEntry[] = []
-  const queue: FileSystemEntry[] = []
+  const fileEntries: FileSystemFileEntry[] = [];
+  const queue: FileSystemEntry[] = [];
 
   for (let i = 0, length = dataTransferItemList.length; i < length; i++) {
-    queue.push(dataTransferItemList[i].webkitGetAsEntry()!)
+    queue.push(dataTransferItemList[i].webkitGetAsEntry()!);
   }
 
   while (queue.length > 0) {
-    const entry = queue.shift()
+    const entry = queue.shift();
 
     if (!entry) {
-      continue
+      continue;
     }
 
     if (entry.isFile) {
-      fileEntries.push(entry as FileSystemFileEntry)
+      fileEntries.push(entry as FileSystemFileEntry);
     } else if (entry.isDirectory) {
-      queue.push(...(await readAllDirectoryEntries(entry.createReader())))
+      queue.push(...(await readAllDirectoryEntries(entry.createReader())));
     }
   }
 
-  return fileEntries
+  return fileEntries;
 }
 
-export { getAllFileEntries }
+export { getAllFileEntries };

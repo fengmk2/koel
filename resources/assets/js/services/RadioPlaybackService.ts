@@ -1,22 +1,22 @@
-import { BasePlaybackService } from '@/services/BasePlaybackService'
-import { radioStationStore } from '@/stores/radioStationStore'
-import { use } from '@/utils/helpers'
-import { socketService } from '@/services/socketService'
+import { BasePlaybackService } from "@/services/BasePlaybackService";
+import { radioStationStore } from "@/stores/radioStationStore";
+import { use } from "@/utils/helpers";
+import { socketService } from "@/services/socketService";
 
 export class RadioPlaybackService extends BasePlaybackService {
   public async play(station: RadioStation) {
-    use(radioStationStore.current, station => (station.playback_state = 'Stopped'))
+    use(radioStationStore.current, (station) => (station.playback_state = "Stopped"));
 
-    station.playback_state = 'Playing'
-    this.media.src = radioStationStore.getSourceUrl(station)
-    await this.media.play()
+    station.playback_state = "Playing";
+    this.media.src = radioStationStore.getSourceUrl(station);
+    await this.media.play();
 
-    radioStationStore.startPolling(station)
-    socketService.broadcast('SOCKET_STREAMABLE', station)
+    radioStationStore.startPolling(station);
+    socketService.broadcast("SOCKET_STREAMABLE", station);
   }
 
   public async stop() {
-    return this.pause()
+    return this.pause();
   }
 
   protected onError(): void {
@@ -41,20 +41,20 @@ export class RadioPlaybackService extends BasePlaybackService {
   }
 
   public async pause() {
-    radioStationStore.stopPolling()
+    radioStationStore.stopPolling();
 
-    use(radioStationStore.current, station => {
-      station.playback_state = 'Paused'
+    use(radioStationStore.current, (station) => {
+      station.playback_state = "Paused";
 
       // Broadcast the updated station state.
-      socketService.broadcast('SOCKET_STREAMABLE', station)
-    })
+      socketService.broadcast("SOCKET_STREAMABLE", station);
+    });
 
     // For radio playback, we simply stop the player and reset the media source.
     if (this.media) {
-      this.media.pause()
-      this.media.currentTime = 0
-      this.media.removeAttribute('src')
+      this.media.pause();
+      this.media.currentTime = 0;
+      this.media.removeAttribute("src");
     }
   }
 
@@ -68,10 +68,10 @@ export class RadioPlaybackService extends BasePlaybackService {
 
   public async resume() {
     if (!radioStationStore.current) {
-      throw new Error('Logic exception: no current radio station.')
+      throw new Error("Logic exception: no current radio station.");
     }
 
-    return this.play(radioStationStore.current)
+    return this.play(radioStationStore.current);
   }
 
   public rewind(): void {
@@ -87,12 +87,12 @@ export class RadioPlaybackService extends BasePlaybackService {
   }
 
   async toggle() {
-    if (radioStationStore.current?.playback_state === 'Playing') {
-      await this.stop()
+    if (radioStationStore.current?.playback_state === "Playing") {
+      await this.stop();
     } else {
-      await this.play(radioStationStore.current!)
+      await this.play(radioStationStore.current!);
     }
   }
 }
 
-export const playbackService = new RadioPlaybackService()
+export const playbackService = new RadioPlaybackService();

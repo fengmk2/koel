@@ -87,6 +87,6 @@ const planeMeshParameters = [
       z: -118,
     },
   },
-]
+];
 
-export default planeMeshParameters
+export default planeMeshParameters;

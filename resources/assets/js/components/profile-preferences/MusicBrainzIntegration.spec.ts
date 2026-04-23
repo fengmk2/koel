@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { commonStore } from '@/stores/commonStore'
-import Component from './MusicBrainzIntegration.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { commonStore } from "@/stores/commonStore";
+import Component from "./MusicBrainzIntegration.vue";
 
-describe('musicBrainzIntegration.vue', () => {
-  const h = createHarness()
+describe("musicBrainzIntegration.vue", () => {
+  const h = createHarness();
 
   it.each<[boolean, boolean]>([
     [false, false],
@@ -12,17 +12,17 @@ describe('musicBrainzIntegration.vue', () => {
     [true, false],
     [true, true],
   ])(
-    'renders proper content with MusicBrainz integration status %s, current user admin status %s',
+    "renders proper content with MusicBrainz integration status %s, current user admin status %s",
     (useMusicBrainz, isAdmin) => {
-      commonStore.state.uses_musicbrainz = useMusicBrainz
+      commonStore.state.uses_musicbrainz = useMusicBrainz;
 
       if (isAdmin) {
-        h.actingAsAdmin()
+        h.actingAsAdmin();
       } else {
-        h.actingAsUser()
+        h.actingAsUser();
       }
 
-      expect(h.render(Component).html()).toMatchSnapshot()
+      expect(h.render(Component).html()).toMatchSnapshot();
     },
-  )
-})
+  );
+});

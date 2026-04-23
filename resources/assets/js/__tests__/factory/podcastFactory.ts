@@ -1,8 +1,8 @@
-import { faker } from '@faker-js/faker'
+import { faker } from "@faker-js/faker";
 
 export default (): Podcast => {
   return {
-    type: 'podcasts',
+    type: "podcasts",
     id: faker.string.uuid(),
     title: faker.lorem.sentence(),
     url: faker.internet.url(),
@@ -17,5 +17,5 @@ export default (): Podcast => {
       current_episode: null,
       progresses: {},
     },
-  }
-}
+  };
+};

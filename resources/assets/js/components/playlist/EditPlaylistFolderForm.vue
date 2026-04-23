@@ -25,38 +25,38 @@
 </template>
 
 <script lang="ts" setup>
-import { pick } from 'lodash'
-import { playlistFolderStore } from '@/stores/playlistFolderStore'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { pick } from "lodash";
+import { playlistFolderStore } from "@/stores/playlistFolderStore";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const props = defineProps<{ folder: PlaylistFolder }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ folder: PlaylistFolder }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { folder } = props
+const { folder } = props;
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
-const close = () => emit('close')
+const close = () => emit("close");
 
-const { data, isPristine, handleSubmit } = useForm<Pick<PlaylistFolder, 'name'>>({
-  initialValues: pick(folder, 'name'),
+const { data, isPristine, handleSubmit } = useForm<Pick<PlaylistFolder, "name">>({
+  initialValues: pick(folder, "name"),
   onSubmit: async ({ name }) => await playlistFolderStore.rename(folder, name),
   onSuccess: () => {
-    toastSuccess('Playlist folder renamed.')
-    close()
+    toastSuccess("Playlist folder renamed.");
+    close();
   },
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>

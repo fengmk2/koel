@@ -57,10 +57,12 @@
         </template>
 
         <Btn v-if="showAddToButton" ref="addToButton" success @click.prevent.stop="toggleAddToMenu">
-          {{ showingAddToMenu ? 'Cancel' : 'Add To…' }}
+          {{ showingAddToMenu ? "Cancel" : "Add To…" }}
         </Btn>
 
-        <Btn v-if="config.clearQueue" danger title="Clear current queue" @click.prevent="clearQueue">Clear</Btn>
+        <Btn v-if="config.clearQueue" danger title="Clear current queue" @click.prevent="clearQueue"
+          >Clear</Btn
+        >
       </BtnGroup>
 
       <BtnGroup v-if="config.refresh">
@@ -78,93 +80,106 @@
 
     <OnClickOutside @trigger="closeAddToMenu">
       <div ref="addToMenu" class="context-menu p-0 hidden">
-        <AddToMenu :config="config.addTo" :playables="selectedPlayables" @closing="closeAddToMenu" />
+        <AddToMenu
+          :config="config.addTo"
+          :playables="selectedPlayables"
+          @closing="closeAddToMenu"
+        />
       </div>
     </OnClickOutside>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { faPlay, faRandom, faRotateRight } from '@fortawesome/free-solid-svg-icons'
-import type { Ref } from 'vue'
-import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
-import { OnClickOutside } from '@vueuse/components'
-import { FilteredPlayablesKey, PlayablesKey, SelectedPlayablesKey } from '@/config/symbols'
-import { requireInjection } from '@/utils/helpers'
-import { useFloatingUi } from '@/composables/useFloatingUi'
+import { faPlay, faRandom, faRotateRight } from "@fortawesome/free-solid-svg-icons";
+import type { Ref } from "vue";
+import {
+  computed,
+  defineAsyncComponent,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  toRef,
+  watch,
+} from "vue";
+import { OnClickOutside } from "@vueuse/components";
+import { FilteredPlayablesKey, PlayablesKey, SelectedPlayablesKey } from "@/config/symbols";
+import { requireInjection } from "@/utils/helpers";
+import { useFloatingUi } from "@/composables/useFloatingUi";
 
-import AddToMenu from '@/components/playable/AddToMenu.vue'
-import Btn from '@/components/ui/form/Btn.vue'
-import BtnGroup from '@/components/ui/form/BtnGroup.vue'
+import AddToMenu from "@/components/playable/AddToMenu.vue";
+import Btn from "@/components/ui/form/Btn.vue";
+import BtnGroup from "@/components/ui/form/BtnGroup.vue";
 
-const props = defineProps<{ config: PlayableListControlsConfig }>()
+const props = defineProps<{ config: PlayableListControlsConfig }>();
 
 const emit = defineEmits<{
-  (e: 'play-all' | 'play-selected', shuffle: boolean): void
-  (e: 'filter', keywords: string): void
-  (e: 'clear-queue' | 'delete-playlist' | 'refresh'): void
-}>()
+  (e: "play-all" | "play-selected", shuffle: boolean): void;
+  (e: "filter", keywords: string): void;
+  (e: "clear-queue" | "delete-playlist" | "refresh"): void;
+}>();
 
-const ListFilter = defineAsyncComponent(() => import('@/components/ui/ListFilter.vue'))
+const ListFilter = defineAsyncComponent(() => import("@/components/ui/ListFilter.vue"));
 
-const config = toRef(props, 'config')
+const config = toRef(props, "config");
 
-const [allPlayables] = requireInjection<[Ref<Playable[]>]>(PlayablesKey)
-const [filteredPlayables] = requireInjection<[Ref<Playable[]>]>(FilteredPlayablesKey)
-const [selectedPlayables] = requireInjection<[Ref<Playable[]>]>(SelectedPlayablesKey)
+const [allPlayables] = requireInjection<[Ref<Playable[]>]>(PlayablesKey);
+const [filteredPlayables] = requireInjection<[Ref<Playable[]>]>(FilteredPlayablesKey);
+const [selectedPlayables] = requireInjection<[Ref<Playable[]>]>(SelectedPlayablesKey);
 
-const addToButton = ref<InstanceType<typeof Btn>>()
-const addToMenu = ref<HTMLDivElement>()
-const showingAddToMenu = ref(false)
-const altPressed = ref(false)
+const addToButton = ref<InstanceType<typeof Btn>>();
+const addToMenu = ref<HTMLDivElement>();
+const showingAddToMenu = ref(false);
+const altPressed = ref(false);
 
-const showAddToButton = computed(() => Boolean(selectedPlayables.value.length))
+const showAddToButton = computed(() => Boolean(selectedPlayables.value.length));
 
-const shuffle = () => emit('play-all', true)
-const shuffleSelected = () => emit('play-selected', true)
-const playAll = () => emit('play-all', false)
-const playSelected = () => emit('play-selected', false)
-const clearQueue = () => emit('clear-queue')
-const refresh = () => emit('refresh')
-const registerKeydown = (event: KeyboardEvent) => event.key === 'Alt' && (altPressed.value = true)
-const registerKeyup = (event: KeyboardEvent) => event.key === 'Alt' && (altPressed.value = false)
+const shuffle = () => emit("play-all", true);
+const shuffleSelected = () => emit("play-selected", true);
+const playAll = () => emit("play-all", false);
+const playSelected = () => emit("play-selected", false);
+const clearQueue = () => emit("clear-queue");
+const refresh = () => emit("refresh");
+const registerKeydown = (event: KeyboardEvent) => event.key === "Alt" && (altPressed.value = true);
+const registerKeyup = (event: KeyboardEvent) => event.key === "Alt" && (altPressed.value = false);
 
-let usedFloatingUi: ReturnType<typeof useFloatingUi>
+let usedFloatingUi: ReturnType<typeof useFloatingUi>;
 
 watch(
   showAddToButton,
-  async showingButton => {
-    await nextTick()
+  async (showingButton) => {
+    await nextTick();
 
     if (showingButton) {
-      usedFloatingUi = useFloatingUi(addToButton.value!.button!, addToMenu, { autoTrigger: false })
-      usedFloatingUi.setup()
+      usedFloatingUi = useFloatingUi(addToButton.value!.button!, addToMenu, { autoTrigger: false });
+      usedFloatingUi.setup();
     } else {
-      usedFloatingUi?.teardown()
+      usedFloatingUi?.teardown();
     }
   },
   { immediate: true },
-)
+);
 
 const closeAddToMenu = () => {
-  usedFloatingUi?.hide()
-  showingAddToMenu.value = false
-}
+  usedFloatingUi?.hide();
+  showingAddToMenu.value = false;
+};
 
 const toggleAddToMenu = () => {
-  showingAddToMenu.value ? usedFloatingUi?.hide() : usedFloatingUi?.show()
-  showingAddToMenu.value = !showingAddToMenu.value
-}
+  showingAddToMenu.value ? usedFloatingUi?.hide() : usedFloatingUi?.show();
+  showingAddToMenu.value = !showingAddToMenu.value;
+};
 
 onMounted(() => {
-  window.addEventListener('keydown', registerKeydown)
-  window.addEventListener('keyup', registerKeyup)
-})
+  window.addEventListener("keydown", registerKeydown);
+  window.addEventListener("keyup", registerKeyup);
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', registerKeydown)
-  window.removeEventListener('keyup', registerKeyup)
+  window.removeEventListener("keydown", registerKeydown);
+  window.removeEventListener("keyup", registerKeyup);
 
-  usedFloatingUi?.teardown()
-})
+  usedFloatingUi?.teardown();
+});
 </script>

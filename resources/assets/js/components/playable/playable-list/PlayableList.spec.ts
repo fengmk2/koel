@@ -1,7 +1,7 @@
-import { ref } from 'vue'
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { arrayify } from '@/utils/helpers'
+import { ref } from "vue";
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { arrayify } from "@/utils/helpers";
 import {
   FilteredPlayablesKey,
   PlayableListConfigKey,
@@ -9,11 +9,11 @@ import {
   PlayableListSortFieldKey,
   PlayableListSortOrderKey,
   SelectedPlayablesKey,
-} from '@/config/symbols'
-import Component from './PlayableList.vue'
+} from "@/config/symbols";
+import Component from "./PlayableList.vue";
 
-describe('playableList.vue', () => {
-  const h = createHarness()
+describe("playableList.vue", () => {
+  const h = createHarness();
 
   const renderComponent = async (
     songs: MaybeArray<Playable>,
@@ -22,18 +22,18 @@ describe('playableList.vue', () => {
       reorderable: true,
     },
     context: PlayableListContext = {
-      type: 'Album',
+      type: "Album",
     },
     selectedPlayables: Playable[] = [],
-    sortField: PlayableListSortField = 'title',
-    sortOrder: SortOrder = 'asc',
+    sortField: PlayableListSortField = "title",
+    sortOrder: SortOrder = "asc",
   ) => {
-    songs = arrayify(songs)
+    songs = arrayify(songs);
 
-    const sortFieldRef = ref(sortField)
-    const sortOrderRef = ref(sortOrder)
+    const sortFieldRef = ref(sortField);
+    const sortOrderRef = ref(sortOrder);
 
-    const rendered = h.visit('/songs').render(Component, {
+    const rendered = h.visit("/songs").render(Component, {
       global: {
         stubs: {
           VirtualScroller: h.stub(),
@@ -42,26 +42,32 @@ describe('playableList.vue', () => {
         },
         provide: {
           [<symbol>FilteredPlayablesKey]: [ref(songs)],
-          [<symbol>SelectedPlayablesKey]: [ref(selectedPlayables), (value: Playable[]) => (selectedPlayables = value)],
+          [<symbol>SelectedPlayablesKey]: [
+            ref(selectedPlayables),
+            (value: Playable[]) => (selectedPlayables = value),
+          ],
           [<symbol>PlayableListConfigKey]: [config],
           [<symbol>PlayableListContextKey]: [context],
           [<symbol>PlayableListSortFieldKey]: [
             sortFieldRef,
             (value: PlayableListSortField) => (sortFieldRef.value = value),
           ],
-          [<symbol>PlayableListSortOrderKey]: [sortOrderRef, (value: SortOrder) => (sortOrderRef.value = value)],
+          [<symbol>PlayableListSortOrderKey]: [
+            sortOrderRef,
+            (value: SortOrder) => (sortOrderRef.value = value),
+          ],
         },
       },
-    })
+    });
 
     return {
       ...rendered,
       songs,
-    }
-  }
+    };
+  };
 
-  it('renders', async () => {
-    const { html } = await renderComponent(h.factory('song', 5))
-    expect(html()).toMatchSnapshot()
-  })
-})
+  it("renders", async () => {
+    const { html } = await renderComponent(h.factory("song", 5));
+    expect(html()).toMatchSnapshot();
+  });
+});
