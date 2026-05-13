@@ -1,5 +1,8 @@
 <template>
-  <article class="w-[650px]" :class="(loading || encryptingOptions) && 'pointer-events-none opacity-70'">
+  <article
+    class="w-[650px]"
+    :class="(loading || encryptingOptions) && 'pointer-events-none opacity-70'"
+  >
     <header>
       <h1>Embed {{ typeLabel }}</h1>
     </header>
@@ -40,33 +43,33 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import { embedService } from '@/stores/embedService'
-import { themeStore } from '@/stores/themeStore'
-import { useKoelPlus } from '@/composables/useKoelPlus'
-import { copyText } from '@/utils/helpers'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { useForm } from '@/composables/useForm'
+import { computed, onMounted, ref, watch } from "vue";
+import { embedService } from "@/stores/embedService";
+import { themeStore } from "@/stores/themeStore";
+import { useKoelPlus } from "@/composables/useKoelPlus";
+import { copyText } from "@/utils/helpers";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import EmbedOptionsPanel from '@/components/embed/EmbedOptionsPanel.vue'
-import CheckBox from '@/components/ui/form/CheckBox.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import EmbedOptionsPanel from "@/components/embed/EmbedOptionsPanel.vue";
+import CheckBox from "@/components/ui/form/CheckBox.vue";
 
-const props = defineProps<{ embeddable: Embeddable }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ embeddable: Embeddable }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { embeddable } = props
+const { embeddable } = props;
 
-const { isPlus } = useKoelPlus()
-const { toastSuccess } = useMessageToaster()
-const { handleHttpError } = useErrorHandler()
+const { isPlus } = useKoelPlus();
+const { toastSuccess } = useMessageToaster();
+const { handleHttpError } = useErrorHandler();
 
-const previewIframe = ref<HTMLIFrameElement>()
-const embed = ref<Embed>()
-const showCode = ref(false)
-const loading = ref(false)
-const encryptedOptions = ref('')
+const previewIframe = ref<HTMLIFrameElement>();
+const embed = ref<Embed>();
+const showCode = ref(false);
+const loading = ref(false);
+const encryptedOptions = ref("");
 
 const {
   data: options,
@@ -75,84 +78,84 @@ const {
 } = useForm<EmbedOptions>({
   initialValues: {
     theme: isPlus.value ? themeStore.getCurrentTheme().id : themeStore.getDefaultTheme().id,
-    layout: ['songs', 'episodes'].includes(embeddable.type) ? 'compact' : 'full',
+    layout: ["songs", "episodes"].includes(embeddable.type) ? "compact" : "full",
     preview: false,
   },
-  onSubmit: async data => (encryptedOptions.value = await embedService.encryptOptions(data)),
+  onSubmit: async (data) => (encryptedOptions.value = await embedService.encryptOptions(data)),
   useOverlay: false,
-})
+});
 
-watch(options, async () => await encryptOptions(), { immediate: true })
+watch(options, async () => await encryptOptions(), { immediate: true });
 
 const embedSrc = computed(() => {
   if (!embed.value || !encryptedOptions.value) {
-    return null
+    return null;
   }
 
-  return `${window.BASE_URL}#/embed/${embed.value.id}/${encryptedOptions.value}`
-})
+  return `${window.BASE_URL}#/embed/${embed.value.id}/${encryptedOptions.value}`;
+});
 
 const code = computed(() => {
   if (!embed.value) {
-    return ''
+    return "";
   }
 
   return (
     `<iframe src="${embedSrc.value}" style="border-radius:10px;width:100%;max-width:650px;overflow:hidden;"` +
-    ` height="${options.layout === 'compact' ? '150' : 350}" frameborder="0" allow="autoplay *;encrypted-media *;"` +
+    ` height="${options.layout === "compact" ? "150" : 350}" frameborder="0" allow="autoplay *;encrypted-media *;"` +
     ' loading="lazy"></iframe>'
-  )
-})
+  );
+});
 
-watch(embedSrc, value => {
+watch(embedSrc, (value) => {
   if (!previewIframe.value?.contentWindow) {
-    return
+    return;
   }
 
-  previewIframe.value.contentWindow.location.replace(String(value))
-  previewIframe.value.contentWindow.location.reload()
-})
+  previewIframe.value.contentWindow.location.replace(String(value));
+  previewIframe.value.contentWindow.location.reload();
+});
 
-let typeLabel = ''
+let typeLabel = "";
 
 switch (embeddable.type) {
-  case 'albums':
-    typeLabel = 'Album'
-    break
-  case 'artists':
-    typeLabel = 'Artist'
-    break
-  case 'playlists':
-    typeLabel = 'Playlist'
-    break
-  case 'songs':
-    typeLabel = 'Song'
-    break
-  case 'episodes':
-    typeLabel = 'Podcast Episode'
-    break
+  case "albums":
+    typeLabel = "Album";
+    break;
+  case "artists":
+    typeLabel = "Artist";
+    break;
+  case "playlists":
+    typeLabel = "Playlist";
+    break;
+  case "songs":
+    typeLabel = "Song";
+    break;
+  case "episodes":
+    typeLabel = "Podcast Episode";
+    break;
   default:
-    throw new Error('Unknown embeddable type')
+    throw new Error("Unknown embeddable type");
 }
 
 const copyCode = async () => {
-  await copyText(code.value)
-  toastSuccess('Code copied to clipboard.')
-}
+  await copyText(code.value);
+  toastSuccess("Code copied to clipboard.");
+};
 
 const resolveEmbed = async () => {
-  loading.value = true
+  loading.value = true;
 
   try {
-    embed.value = await embedService.resolveForEmbeddable(embeddable)
+    embed.value = await embedService.resolveForEmbeddable(embeddable);
   } catch (e: unknown) {
-    handleHttpError(e)
+    handleHttpError(e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
-onMounted(async () => await resolveEmbed())
+onMounted(async () => await resolveEmbed());
 </script>
 
 <style scoped lang="postcss">

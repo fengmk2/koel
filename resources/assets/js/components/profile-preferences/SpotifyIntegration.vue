@@ -10,8 +10,8 @@
     <div v-if="useSpotify">
       <p>
         Spotify integration is enabled.
-        {{ appName }} will attempt to retrieve album arts and artist images from Spotify when a song is played, if
-        needed.
+        {{ appName }} will attempt to retrieve album arts and artist images from Spotify when a song
+        is played, if needed.
       </p>
     </div>
     <div v-else>
@@ -19,7 +19,9 @@
         Spotify integration is not enabled.
         <span v-if="currentUserCan.manageSettings()" data-testid="spotify-admin-instruction">
           Check
-          <a href="https://docs.koel.dev/service-integrations#spotify" target="_blank">Documentation</a>
+          <a href="https://docs.koel.dev/service-integrations#spotify" target="_blank"
+            >Documentation</a
+          >
           for integration instructions.
         </span>
       </p>
@@ -28,12 +30,12 @@
 </template>
 
 <script lang="ts" setup>
-import { faSpotify } from '@fortawesome/free-brands-svg-icons'
-import { useThirdPartyServices } from '@/composables/useThirdPartyServices'
-import { usePolicies } from '@/composables/usePolicies'
-import { useBranding } from '@/composables/useBranding'
+import { faSpotify } from "@fortawesome/free-brands-svg-icons";
+import { useThirdPartyServices } from "@/composables/useThirdPartyServices";
+import { usePolicies } from "@/composables/usePolicies";
+import { useBranding } from "@/composables/useBranding";
 
-const { currentUserCan } = usePolicies()
-const { useSpotify } = useThirdPartyServices()
-const { name: appName } = useBranding()
+const { currentUserCan } = usePolicies();
+const { useSpotify } = useThirdPartyServices();
+const { name: appName } = useBranding();
 </script>

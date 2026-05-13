@@ -16,24 +16,24 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onBeforeUnmount, ref, toRefs, watch } from 'vue'
-import { computePosition, flip, shift } from '@floating-ui/dom'
-import { logger } from '@/utils/logger'
-import { requireInjection } from '@/utils/helpers'
-import { ContextMenuKey } from '@/config/symbols'
+import { nextTick, onBeforeUnmount, ref, toRefs, watch } from "vue";
+import { computePosition, flip, shift } from "@floating-ui/dom";
+import { logger } from "@/utils/logger";
+import { requireInjection } from "@/utils/helpers";
+import { ContextMenuKey } from "@/config/symbols";
 
-const props = defineProps<{ extraClass?: string }>()
-const { extraClass } = toRefs(props)
+const props = defineProps<{ extraClass?: string }>();
+const { extraClass } = toRefs(props);
 
-const options = requireInjection(ContextMenuKey)
+const options = requireInjection(ContextMenuKey);
 
-const el = ref<HTMLElement>()
-const isOpen = ref(false)
-let deferredListenerTimer: ReturnType<typeof setTimeout> | undefined
+const el = ref<HTMLElement>();
+const isOpen = ref(false);
+let deferredListenerTimer: ReturnType<typeof setTimeout> | undefined;
 
 const positionAt = async (clientX: number, clientY: number) => {
   if (!el.value) {
-    return
+    return;
   }
   const virtualAnchor = {
     getBoundingClientRect: () => ({
@@ -46,375 +46,380 @@ const positionAt = async (clientX: number, clientY: number) => {
       left: clientX,
       right: clientX,
     }),
-  }
+  };
   const { x, y } = await computePosition(virtualAnchor, el.value, {
-    placement: 'bottom-start',
+    placement: "bottom-start",
     middleware: [flip(), shift({ padding: 8 })],
-    strategy: 'fixed',
-  })
-  el.value.style.left = `${x}px`
-  el.value.style.top = `${y}px`
-}
+    strategy: "fixed",
+  });
+  el.value.style.left = `${x}px`;
+  el.value.style.top = `${y}px`;
+};
 
 const positionSubmenu = async (parent: HTMLElement, submenu: HTMLElement) => {
   const { x, y } = await computePosition(parent, submenu, {
-    placement: 'right-start',
+    placement: "right-start",
     middleware: [flip(), shift({ padding: 8 })],
-    strategy: 'absolute',
-  })
+    strategy: "absolute",
+  });
   // Resolve coords relative to the offset parent (the parent <li>).
-  const offsetParent = submenu.offsetParent as HTMLElement | null
+  const offsetParent = submenu.offsetParent as HTMLElement | null;
   if (offsetParent) {
-    const parentRect = parent.getBoundingClientRect()
-    const offsetRect = offsetParent.getBoundingClientRect()
-    submenu.style.left = `${x - (parentRect.left - offsetRect.left)}px`
-    submenu.style.top = `${y - (parentRect.top - offsetRect.top)}px`
+    const parentRect = parent.getBoundingClientRect();
+    const offsetRect = offsetParent.getBoundingClientRect();
+    submenu.style.left = `${x - (parentRect.left - offsetRect.left)}px`;
+    submenu.style.top = `${y - (parentRect.top - offsetRect.top)}px`;
   } else {
-    submenu.style.left = `${x}px`
-    submenu.style.top = `${y}px`
+    submenu.style.left = `${x}px`;
+    submenu.style.top = `${y}px`;
   }
-}
+};
 
 type MenuItem = HTMLElement & {
-  eventsRegistered?: boolean
-  hideTimeout?: ReturnType<typeof setTimeout>
-}
+  eventsRegistered?: boolean;
+  hideTimeout?: ReturnType<typeof setTimeout>;
+};
 
-const HIDE_DELAY = 150
+const HIDE_DELAY = 150;
 
 const hideSubmenu = (item: MenuItem, submenu: HTMLElement) => {
-  submenu.removeAttribute('data-open')
-  submenu.removeAttribute('style')
-}
+  submenu.removeAttribute("data-open");
+  submenu.removeAttribute("style");
+};
 
 const scheduleHide = (item: MenuItem, submenu: HTMLElement) => {
-  clearTimeout(item.hideTimeout)
-  item.hideTimeout = setTimeout(() => hideSubmenu(item, submenu), HIDE_DELAY)
-}
+  clearTimeout(item.hideTimeout);
+  item.hideTimeout = setTimeout(() => hideSubmenu(item, submenu), HIDE_DELAY);
+};
 
 const cancelHide = (item: MenuItem) => {
-  clearTimeout(item.hideTimeout)
-  item.hideTimeout = undefined
-}
+  clearTimeout(item.hideTimeout);
+  item.hideTimeout = undefined;
+};
 
 const closeSiblingSubmenus = (item: MenuItem) => {
-  const parent = item.parentElement
+  const parent = item.parentElement;
 
   if (!parent) {
-    return
+    return;
   }
 
-  parent.querySelectorAll<HTMLElement>(':scope > li.has-sub').forEach((sibling: MenuItem) => {
+  parent.querySelectorAll<HTMLElement>(":scope > li.has-sub").forEach((sibling: MenuItem) => {
     if (sibling === item) {
-      return
+      return;
     }
 
-    const siblingSubmenu = sibling.querySelector<HTMLElement>('.submenu')
+    const siblingSubmenu = sibling.querySelector<HTMLElement>(".submenu");
 
     if (siblingSubmenu) {
-      cancelHide(sibling)
-      hideSubmenu(sibling, siblingSubmenu)
+      cancelHide(sibling);
+      hideSubmenu(sibling, siblingSubmenu);
     }
-  })
-}
+  });
+};
 
 const showSubmenu = async (item: MenuItem, submenu: HTMLElement) => {
-  cancelHide(item)
-  closeSiblingSubmenus(item)
+  cancelHide(item);
+  closeSiblingSubmenus(item);
 
-  submenu.removeAttribute('style')
-  submenu.setAttribute('data-open', '')
+  submenu.removeAttribute("style");
+  submenu.setAttribute("data-open", "");
 
-  await nextTick()
-  await positionSubmenu(item, submenu)
-}
+  await nextTick();
+  await positionSubmenu(item, submenu);
+};
 
 const getMenuItems = (container: HTMLElement): HTMLElement[] =>
-  Array.from(container.querySelectorAll<HTMLElement>('li:not(.separator)')).filter((li: HTMLElement) => {
-    const closestSubmenu = li.closest('.submenu')
-    return !closestSubmenu || closestSubmenu === container
-  })
+  Array.from(container.querySelectorAll<HTMLElement>("li:not(.separator)")).filter(
+    (li: HTMLElement) => {
+      const closestSubmenu = li.closest(".submenu");
+      return !closestSubmenu || closestSubmenu === container;
+    },
+  );
 
 const getFocusedItem = (): HTMLElement | null => {
-  const active = document.activeElement as HTMLElement | null
+  const active = document.activeElement as HTMLElement | null;
 
   if (!active) {
-    return null
+    return null;
   }
 
-  const li = active.closest<HTMLElement>('li')
-  return li && el.value?.contains(li) ? li : null
-}
+  const li = active.closest<HTMLElement>("li");
+  return li && el.value?.contains(li) ? li : null;
+};
 
 const getRootMenu = (): HTMLElement | null =>
-  el.value?.querySelector<HTMLElement>(':scope > ul, :scope > menu, :scope > nav') || null
+  el.value?.querySelector<HTMLElement>(":scope > ul, :scope > menu, :scope > nav") || null;
 
 const getActiveMenu = (): HTMLElement | null => {
-  const focused = getFocusedItem()
+  const focused = getFocusedItem();
 
   if (focused) {
-    return (focused.closest('.submenu[data-open]') as HTMLElement) || (focused.parentElement as HTMLElement)
+    return (
+      (focused.closest(".submenu[data-open]") as HTMLElement) ||
+      (focused.parentElement as HTMLElement)
+    );
   }
 
   // Find the deepest open submenu, or fall back to the root menu
-  const openSubmenus = el.value?.querySelectorAll<HTMLElement>('.submenu[data-open]')
+  const openSubmenus = el.value?.querySelectorAll<HTMLElement>(".submenu[data-open]");
 
   if (openSubmenus?.length) {
-    return openSubmenus[openSubmenus.length - 1]
+    return openSubmenus[openSubmenus.length - 1];
   }
 
-  return getRootMenu()
-}
+  return getRootMenu();
+};
 
-const navigateVertical = (direction: 'up' | 'down') => {
-  const menu = getActiveMenu()
+const navigateVertical = (direction: "up" | "down") => {
+  const menu = getActiveMenu();
 
   if (!menu) {
-    return
+    return;
   }
 
-  const items = getMenuItems(menu)
+  const items = getMenuItems(menu);
 
   if (!items.length) {
-    return
+    return;
   }
 
-  const focused = getFocusedItem()
-  const currentIndex = focused ? items.indexOf(focused) : -1
+  const focused = getFocusedItem();
+  const currentIndex = focused ? items.indexOf(focused) : -1;
 
-  let nextIndex: number
+  let nextIndex: number;
 
-  if (direction === 'down') {
-    nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0
+  if (direction === "down") {
+    nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
   } else {
-    nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1
+    nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
   }
 
-  items[nextIndex]?.focus()
-}
+  items[nextIndex]?.focus();
+};
 
 const openSubmenuOfFocused = async () => {
-  const focused = getFocusedItem()
+  const focused = getFocusedItem();
 
-  if (!focused?.classList.contains('has-sub')) {
-    return
+  if (!focused?.classList.contains("has-sub")) {
+    return;
   }
 
-  const submenu = focused.querySelector<HTMLElement>('.submenu')
+  const submenu = focused.querySelector<HTMLElement>(".submenu");
 
   if (!submenu) {
-    return
+    return;
   }
 
-  await showSubmenu(focused as MenuItem, submenu)
-  getMenuItems(submenu)[0]?.focus()
-}
+  await showSubmenu(focused as MenuItem, submenu);
+  getMenuItems(submenu)[0]?.focus();
+};
 
 const closeSubmenuAndFocusParent = () => {
-  const focused = getFocusedItem()
-  const submenu = focused?.closest('.submenu[data-open]') as HTMLElement | null
+  const focused = getFocusedItem();
+  const submenu = focused?.closest(".submenu[data-open]") as HTMLElement | null;
 
   if (!submenu) {
-    return
+    return;
   }
 
-  const parentItem = submenu.closest('li.has-sub') as MenuItem | null
+  const parentItem = submenu.closest("li.has-sub") as MenuItem | null;
 
   if (parentItem) {
-    hideSubmenu(parentItem, submenu)
-    parentItem.focus()
+    hideSubmenu(parentItem, submenu);
+    parentItem.focus();
   }
-}
+};
 
 const activateFocused = () => {
-  const focused = getFocusedItem()
+  const focused = getFocusedItem();
 
   if (!focused) {
-    return
+    return;
   }
 
-  if (focused.classList.contains('has-sub')) {
-    openSubmenuOfFocused()
+  if (focused.classList.contains("has-sub")) {
+    openSubmenuOfFocused();
   } else {
-    focused.click()
+    focused.click();
   }
-}
+};
 
 const onKeyDown = (event: KeyboardEvent) => {
   switch (event.key) {
-    case 'ArrowDown':
-      event.preventDefault()
-      navigateVertical('down')
-      break
+    case "ArrowDown":
+      event.preventDefault();
+      navigateVertical("down");
+      break;
 
-    case 'ArrowUp':
-      event.preventDefault()
-      navigateVertical('up')
-      break
+    case "ArrowUp":
+      event.preventDefault();
+      navigateVertical("up");
+      break;
 
-    case 'ArrowRight':
-      event.preventDefault()
-      openSubmenuOfFocused()
-      break
+    case "ArrowRight":
+      event.preventDefault();
+      openSubmenuOfFocused();
+      break;
 
-    case 'ArrowLeft':
-      event.preventDefault()
-      closeSubmenuAndFocusParent()
-      break
+    case "ArrowLeft":
+      event.preventDefault();
+      closeSubmenuAndFocusParent();
+      break;
 
-    case 'Enter':
-      event.preventDefault()
-      activateFocused()
-      break
+    case "Enter":
+      event.preventDefault();
+      activateFocused();
+      break;
 
-    case 'Escape':
-      event.preventDefault()
+    case "Escape":
+      event.preventDefault();
       // Reset injected state so the watcher path matches outside-click dismissal,
       // ensuring options.value.component is cleared for any consumers that observe it.
-      options.value = { component: null, position: { top: 0, left: 0 } }
-      break
+      options.value = { component: null, position: { top: 0, left: 0 } };
+      break;
   }
-}
+};
 
 const initSubmenus = () => {
-  el.value?.querySelectorAll<HTMLElement>('.has-sub').forEach((item: MenuItem) => {
-    const submenu = item.querySelector<HTMLElement>('.submenu')
+  el.value?.querySelectorAll<HTMLElement>(".has-sub").forEach((item: MenuItem) => {
+    const submenu = item.querySelector<HTMLElement>(".submenu");
 
     if (!submenu || item.eventsRegistered) {
-      return
+      return;
     }
 
-    item.addEventListener('mouseenter', () => showSubmenu(item, submenu))
+    item.addEventListener("mouseenter", () => showSubmenu(item, submenu));
 
-    item.addEventListener('mousemove', () => {
-      if (submenu.hasAttribute('data-open')) {
-        cancelHide(item)
+    item.addEventListener("mousemove", () => {
+      if (submenu.hasAttribute("data-open")) {
+        cancelHide(item);
       }
-    })
+    });
 
-    item.addEventListener('mouseleave', () => {
-      scheduleHide(item, submenu)
-    })
+    item.addEventListener("mouseleave", () => {
+      scheduleHide(item, submenu);
+    });
 
-    submenu.addEventListener('mouseenter', () => {
-      cancelHide(item)
-    })
+    submenu.addEventListener("mouseenter", () => {
+      cancelHide(item);
+    });
 
-    submenu.addEventListener('mouseleave', () => {
-      scheduleHide(item, submenu)
-    })
+    submenu.addEventListener("mouseleave", () => {
+      scheduleHide(item, submenu);
+    });
 
-    item.eventsRegistered = true
-  })
-}
+    item.eventsRegistered = true;
+  });
+};
 
-let observer: MutationObserver | undefined
+let observer: MutationObserver | undefined;
 
 const startObservingSubmenus = () => {
-  stopObservingSubmenus()
+  stopObservingSubmenus();
 
   if (!el.value) {
-    return
+    return;
   }
 
   observer = new MutationObserver(() => {
-    initSubmenus()
+    initSubmenus();
 
-    const active = document.activeElement as HTMLElement | null
+    const active = document.activeElement as HTMLElement | null;
 
     if (!active || !el.value?.contains(active)) {
-      el.value?.focus()
+      el.value?.focus();
     }
-  })
-  observer.observe(el.value, { childList: true, subtree: true })
+  });
+  observer.observe(el.value, { childList: true, subtree: true });
 
-  initSubmenus()
-}
+  initSubmenus();
+};
 
 const stopObservingSubmenus = () => {
-  observer?.disconnect()
-  observer = undefined
-}
+  observer?.disconnect();
+  observer = undefined;
+};
 
 const onPointerDownOutside = (event: PointerEvent) => {
   if (!el.value || !options.value.component) {
-    return
+    return;
   }
-  const target = event.target as Node | null
+  const target = event.target as Node | null;
   if (target && !el.value.contains(target)) {
-    options.value = { component: null, position: { top: 0, left: 0 } }
+    options.value = { component: null, position: { top: 0, left: 0 } };
   }
-}
+};
 
 const open = async (top = 0, left = 0) => {
   if (!el.value || isOpen.value) {
-    return
+    return;
   }
 
   // Position BEFORE showing so the menu never flashes at the user-agent default location.
-  el.value.style.left = `${left}px`
-  el.value.style.top = `${top}px`
-  el.value.showPopover()
-  isOpen.value = true
-  el.value.focus()
+  el.value.style.left = `${left}px`;
+  el.value.style.top = `${top}px`;
+  el.value.showPopover();
+  isOpen.value = true;
+  el.value.focus();
 
-  await nextTick()
+  await nextTick();
 
   try {
-    await positionAt(left, top)
+    await positionAt(left, top);
   } catch (error: unknown) {
-    logger.error(error)
+    logger.error(error);
   }
 
   // Defer attaching the outside-click listener so the gesture that opened the menu
   // (the right-click or button click) doesn't immediately dismiss it. Tracked so we
   // can clear it if the menu closes/unmounts before the timer fires.
-  clearTimeout(deferredListenerTimer)
+  clearTimeout(deferredListenerTimer);
   deferredListenerTimer = setTimeout(() => {
-    deferredListenerTimer = undefined
-    document.addEventListener('pointerdown', onPointerDownOutside)
-  }, 0)
+    deferredListenerTimer = undefined;
+    document.addEventListener("pointerdown", onPointerDownOutside);
+  }, 0);
 
-  startObservingSubmenus()
-}
+  startObservingSubmenus();
+};
 
 const close = () => {
-  stopObservingSubmenus()
-  clearTimeout(deferredListenerTimer)
-  deferredListenerTimer = undefined
-  document.removeEventListener('pointerdown', onPointerDownOutside)
+  stopObservingSubmenus();
+  clearTimeout(deferredListenerTimer);
+  deferredListenerTimer = undefined;
+  document.removeEventListener("pointerdown", onPointerDownOutside);
 
   if (isOpen.value) {
-    el.value?.hidePopover()
-    isOpen.value = false
+    el.value?.hidePopover();
+    isOpen.value = false;
   }
 
   if (el.value) {
-    el.value.style.left = '-9999px'
-    el.value.style.top = '-9999px'
+    el.value.style.left = "-9999px";
+    el.value.style.top = "-9999px";
   }
-}
+};
 
 onBeforeUnmount(() => {
   // Cancel the deferred-listener timer first so it can't fire after unmount
   // and re-register a document handler that would never be cleaned up.
-  clearTimeout(deferredListenerTimer)
-  deferredListenerTimer = undefined
+  clearTimeout(deferredListenerTimer);
+  deferredListenerTimer = undefined;
 
-  stopObservingSubmenus()
-  document.removeEventListener('pointerdown', onPointerDownOutside)
-  el.value?.querySelectorAll<HTMLElement>('.has-sub').forEach((item: MenuItem) => {
-    clearTimeout(item.hideTimeout)
-    item.hideTimeout = undefined
-    item.eventsRegistered = false
-  })
-})
+  stopObservingSubmenus();
+  document.removeEventListener("pointerdown", onPointerDownOutside);
+  el.value?.querySelectorAll<HTMLElement>(".has-sub").forEach((item: MenuItem) => {
+    clearTimeout(item.hideTimeout);
+    item.hideTimeout = undefined;
+    item.eventsRegistered = false;
+  });
+});
 
-watch(options, newOptions => {
+watch(options, (newOptions) => {
   if (newOptions.component) {
-    open(newOptions.position.top, newOptions.position.left)
+    open(newOptions.position.top, newOptions.position.left);
   } else {
-    close()
+    close();
   }
-})
+});
 </script>

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import ThemeCard from '@/components/profile-preferences/theme/ThemeCard.vue'
+import ThemeCard from "@/components/profile-preferences/theme/ThemeCard.vue";
 
-defineProps<{ themes: Theme[] }>()
+defineProps<{ themes: Theme[] }>();
 </script>

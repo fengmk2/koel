@@ -5,18 +5,25 @@
     on your mobile device.<br />
     The QR code will refresh every 10 minutes.
     <a role="button" @click.prevent="resetOneTimeToken">Refresh now</a>
-    <img v-if="oneTimeToken" :src="qrCodeUrl" alt="QR Code" class="mt-4 rounded-4" height="192" width="192" />
+    <img
+      v-if="oneTimeToken"
+      :src="qrCodeUrl"
+      alt="QR Code"
+      class="mt-4 rounded-4"
+      height="192"
+      width="192"
+    />
   </article>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
-import { useQRCode } from '@vueuse/integrations/useQRCode'
-import { authService } from '@/services/authService'
-import { base64Encode } from '@/utils/crypto'
+import { onMounted, ref, watch } from "vue";
+import { useQRCode } from "@vueuse/integrations/useQRCode";
+import { authService } from "@/services/authService";
+import { base64Encode } from "@/utils/crypto";
 
-const qrCodeData = ref('')
-const oneTimeToken = ref('')
+const qrCodeData = ref("");
+const oneTimeToken = ref("");
 
 watch(oneTimeToken, () => {
   qrCodeData.value = base64Encode(
@@ -24,25 +31,25 @@ watch(oneTimeToken, () => {
       token: oneTimeToken.value,
       host: window.BASE_URL,
     }),
-  )
-})
+  );
+});
 
 const qrCodeUrl = useQRCode(qrCodeData, {
   width: window.devicePixelRatio === 1 ? 196 : 384,
   height: window.devicePixelRatio === 1 ? 196 : 384,
-})
+});
 
-let oneTimeTokenTimeout: number | null = null
+let oneTimeTokenTimeout: number | null = null;
 
 const resetOneTimeToken = async () => {
-  oneTimeToken.value = await authService.getOneTimeToken()
+  oneTimeToken.value = await authService.getOneTimeToken();
 
   if (oneTimeTokenTimeout) {
-    window.clearTimeout(oneTimeTokenTimeout)
+    window.clearTimeout(oneTimeTokenTimeout);
   }
 
-  oneTimeTokenTimeout = window.setTimeout(resetOneTimeToken, 60 * 10 * 1000)
-}
+  oneTimeTokenTimeout = window.setTimeout(resetOneTimeToken, 60 * 10 * 1000);
+};
 
-onMounted(() => resetOneTimeToken())
+onMounted(() => resetOneTimeToken());
 </script>

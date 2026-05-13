@@ -1,25 +1,25 @@
-import vueSnapshotSerializer from 'jest-serializer-vue'
-import { expect, vi } from 'vite-plus/test'
-import './shims/popover'
+import vueSnapshotSerializer from "jest-serializer-vue";
+import { expect, vi } from "vite-plus/test";
+import "./shims/popover";
 
 declare global {
   interface Window {
-    BASE_URL: string
-    MAILER_CONFIGURED: boolean
-    SSO_PROVIDERS: SSOProvider[]
-    BRANDING: Branding
-    createLemonSqueezy?: () => Closure
-    RUNNING_UNIT_TESTS?: boolean
+    BASE_URL: string;
+    MAILER_CONFIGURED: boolean;
+    SSO_PROVIDERS: SSOProvider[];
+    BRANDING: Branding;
+    createLemonSqueezy?: () => Closure;
+    RUNNING_UNIT_TESTS?: boolean;
   }
 
   interface LemonSqueezy {
     Url: {
-      Open: () => void
-    }
+      Open: () => void;
+    };
   }
 }
 
-expect.addSnapshotSerializer(vueSnapshotSerializer)
+expect.addSnapshotSerializer(vueSnapshotSerializer);
 
 globalThis.ResizeObserver =
   globalThis.ResizeObserver ||
@@ -28,41 +28,41 @@ globalThis.ResizeObserver =
       disconnect: vi.fn(),
       observe: vi.fn(),
       unobserve: vi.fn(),
-    }
-  })
+    };
+  });
 
 globalThis.LemonSqueezy = {
   Url: {
     Open: vi.fn(),
   },
-}
+};
 
-HTMLMediaElement.prototype.load = vi.fn()
-HTMLMediaElement.prototype.play = vi.fn()
-HTMLMediaElement.prototype.pause = vi.fn()
+HTMLMediaElement.prototype.load = vi.fn();
+HTMLMediaElement.prototype.play = vi.fn();
+HTMLMediaElement.prototype.pause = vi.fn();
 
 HTMLDialogElement.prototype.show = vi.fn(function mock(this: HTMLDialogElement) {
-  this.open = true
-})
+  this.open = true;
+});
 
 HTMLDialogElement.prototype.showModal = vi.fn(function mock(this: HTMLDialogElement) {
-  this.open = true
-})
+  this.open = true;
+});
 
 HTMLDialogElement.prototype.close = vi.fn(function mock(this: HTMLDialogElement) {
-  this.open = false
-})
+  this.open = false;
+});
 
-window.BASE_URL = 'http://test/'
-window.MAILER_CONFIGURED = true
-window.SSO_PROVIDERS = []
-window.RUNNING_UNIT_TESTS = true
+window.BASE_URL = "http://test/";
+window.MAILER_CONFIGURED = true;
+window.SSO_PROVIDERS = [];
+window.RUNNING_UNIT_TESTS = true;
 
-window.createLemonSqueezy = vi.fn()
+window.createLemonSqueezy = vi.fn();
 
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: true,
     media: query,
     onchange: null,
@@ -72,12 +72,12 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
-})
+});
 
 // Mock iframe's navigation API
-const iframeContentWindowMap = new WeakMap<HTMLIFrameElement, any>()
+const iframeContentWindowMap = new WeakMap<HTMLIFrameElement, any>();
 
-Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', {
+Object.defineProperty(HTMLIFrameElement.prototype, "contentWindow", {
   configurable: true,
   get(this: HTMLIFrameElement) {
     if (!iframeContentWindowMap.has(this)) {
@@ -86,22 +86,22 @@ Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', {
           replace: vi.fn(),
           assign: vi.fn(),
           reload: vi.fn(),
-          href: '',
+          href: "",
         },
         postMessage: vi.fn(),
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
-      }
-      iframeContentWindowMap.set(this, stub)
+      };
+      iframeContentWindowMap.set(this, stub);
     }
-    return iframeContentWindowMap.get(this)
+    return iframeContentWindowMap.get(this);
   },
-})
+});
 
 window.IntersectionObserver = vi.fn().mockImplementation(function () {
   return {
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
-  }
-})
+  };
+});

@@ -10,7 +10,7 @@
       <span class="track-number flex items-center justify-center min-w-5 overflow-hidden">
         <SoundBars v-if="playable.playback_state === 'Playing'" />
         <span v-else>
-          <template v-if="isSong(playable)">{{ playable.track || '' }}</template>
+          <template v-if="isSong(playable)">{{ playable.track || "" }}</template>
           <Icon v-else :icon="faPodcast" />
         </span>
       </span>
@@ -27,29 +27,29 @@
 </template>
 
 <script lang="ts" setup>
-import { faPodcast } from '@fortawesome/free-solid-svg-icons'
-import { computed, toRefs } from 'vue'
-import { getPlayableProp } from '@/utils/helpers'
-import { isSong } from '@/utils/typeGuards'
-import { secondsToHis } from '@/utils/formatters'
+import { faPodcast } from "@fortawesome/free-solid-svg-icons";
+import { computed, toRefs } from "vue";
+import { getPlayableProp } from "@/utils/helpers";
+import { isSong } from "@/utils/typeGuards";
+import { secondsToHis } from "@/utils/formatters";
 
-import SoundBars from '@/components/ui/SoundBars.vue'
-import PlayableThumbnail from '@/components/playable/PlayableThumbnail.vue'
+import SoundBars from "@/components/ui/SoundBars.vue";
+import PlayableThumbnail from "@/components/playable/PlayableThumbnail.vue";
 
-const props = defineProps<{ item: PlayableRow }>()
+const props = defineProps<{ item: PlayableRow }>();
 
-const emit = defineEmits<{ (e: 'play', playable: Playable): void }>()
+const emit = defineEmits<{ (e: "play", playable: Playable): void }>();
 
-const { item } = toRefs(props)
+const { item } = toRefs(props);
 
-const playable = computed<Playable>(() => item.value.playable)
-const playing = computed(() => ['Playing', 'Paused'].includes(playable.value.playback_state!))
+const playable = computed<Playable>(() => item.value.playable);
+const playing = computed(() => ["Playing", "Paused"].includes(playable.value.playback_state!));
 
-const fmtLength = secondsToHis(playable.value.length)
-const artist = computed(() => getPlayableProp(playable.value, 'artist_name', 'podcast_author'))
-const album = computed(() => getPlayableProp(playable.value, 'album_name', 'podcast_title'))
+const fmtLength = secondsToHis(playable.value.length);
+const artist = computed(() => getPlayableProp(playable.value, "artist_name", "podcast_author"));
+const album = computed(() => getPlayableProp(playable.value, "album_name", "podcast_title"));
 
-const play = () => emit('play', playable.value)
+const play = () => emit("play", playable.value);
 </script>
 
 <style lang="postcss" scoped>

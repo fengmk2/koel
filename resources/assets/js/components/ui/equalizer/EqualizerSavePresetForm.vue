@@ -1,5 +1,9 @@
 <template>
-  <form class="flex gap-2 items-center w-full" @submit.prevent="handleSubmit" @keydown.esc="maybeCancel">
+  <form
+    class="flex gap-2 items-center w-full"
+    @submit.prevent="handleSubmit"
+    @keydown.esc="maybeCancel"
+  >
     <TextInput
       v-model="data.name"
       v-koel-focus
@@ -14,29 +18,29 @@
 </template>
 
 <script lang="ts" setup>
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useForm } from '@/composables/useForm'
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
 
 const emit = defineEmits<{
-  (e: 'submit', name: string): void
-  (e: 'cancel'): void
-}>()
+  (e: "submit", name: string): void;
+  (e: "cancel"): void;
+}>();
 
-const { showConfirmDialog } = useDialogBox()
+const { showConfirmDialog } = useDialogBox();
 
 const { data, isPristine, handleSubmit } = useForm<{ name: string }>({
-  initialValues: { name: '' },
+  initialValues: { name: "" },
   validator: ({ name }) => name.trim().length > 0,
-  onSubmit: async ({ name }) => emit('submit', name.trim()),
+  onSubmit: async ({ name }) => emit("submit", name.trim()),
   useOverlay: false,
-})
+});
 
 const maybeCancel = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard preset name?'))) {
-    emit('cancel')
+  if (isPristine() || (await showConfirmDialog("Discard preset name?"))) {
+    emit("cancel");
   }
-}
+};
 </script>

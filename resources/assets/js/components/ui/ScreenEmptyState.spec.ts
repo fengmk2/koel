@@ -1,20 +1,20 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './ScreenEmptyState.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./ScreenEmptyState.vue";
 
-describe('screenEmptyState.vue', () => {
-  const h = createHarness()
+describe("screenEmptyState.vue", () => {
+  const h = createHarness();
 
-  it('renders', () => {
+  it("renders", () => {
     expect(
       h
         .render(Component, {
           slots: {
             icon: '<i class="my-icon"/>',
-            default: 'Nothing here',
+            default: "Nothing here",
           },
         })
         .html(),
-    ).toMatchSnapshot()
-  })
-})
+    ).toMatchSnapshot();
+  });
+});

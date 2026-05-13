@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { commonStore } from '@/stores/commonStore'
-import Component from './SpotifyIntegration.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { commonStore } from "@/stores/commonStore";
+import Component from "./SpotifyIntegration.vue";
 
-describe('spotifyIntegration.vue', () => {
-  const h = createHarness()
+describe("spotifyIntegration.vue", () => {
+  const h = createHarness();
 
   it.each<[boolean, boolean]>([
     [false, false],
@@ -12,17 +12,17 @@ describe('spotifyIntegration.vue', () => {
     [true, false],
     [true, true],
   ])(
-    'renders proper content with Spotify integration status %s, current user admin status %s',
+    "renders proper content with Spotify integration status %s, current user admin status %s",
     (useSpotify, isAdmin) => {
-      commonStore.state.uses_spotify = useSpotify
+      commonStore.state.uses_spotify = useSpotify;
 
       if (isAdmin) {
-        h.actingAsAdmin()
+        h.actingAsAdmin();
       } else {
-        h.actingAsUser()
+        h.actingAsUser();
       }
 
-      expect(h.render(Component).html()).toMatchSnapshot()
+      expect(h.render(Component).html()).toMatchSnapshot();
     },
-  )
-})
+  );
+});

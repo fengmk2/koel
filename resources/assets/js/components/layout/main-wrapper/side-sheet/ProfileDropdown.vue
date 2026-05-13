@@ -21,61 +21,61 @@
       <ContextMenuItem data-testid="logout-btn" @click="logout">Log Out</ContextMenuItem>
       <li class="separator" />
       <ContextMenuItem data-testid="about-btn" @click="openAbout">
-        {{ shouldNotifyNewVersion ? 'New version available!' : `About ${appName}` }}
+        {{ shouldNotifyNewVersion ? "New version available!" : `About ${appName}` }}
       </ContextMenuItem>
     </ul>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { eventBus } from '@/utils/eventBus'
-import { useAuthorization } from '@/composables/useAuthorization'
-import { useRouter } from '@/composables/useRouter'
-import { useNewVersionNotification } from '@/composables/useNewVersionNotification'
-import { useBranding } from '@/composables/useBranding'
-import { useModal } from '@/composables/useModal'
-import { defineAsyncComponent } from '@/utils/helpers'
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { eventBus } from "@/utils/eventBus";
+import { useAuthorization } from "@/composables/useAuthorization";
+import { useRouter } from "@/composables/useRouter";
+import { useNewVersionNotification } from "@/composables/useNewVersionNotification";
+import { useBranding } from "@/composables/useBranding";
+import { useModal } from "@/composables/useModal";
+import { defineAsyncComponent } from "@/utils/helpers";
 
-import ContextMenuItem from '@/components/ui/context-menu/ContextMenuItem.vue'
-import UserAvatar from '@/components/user/UserAvatar.vue'
+import ContextMenuItem from "@/components/ui/context-menu/ContextMenuItem.vue";
+import UserAvatar from "@/components/user/UserAvatar.vue";
 
-const AboutKoelModal = defineAsyncComponent(() => import('@/components/meta/AboutKoelModal.vue'))
+const AboutKoelModal = defineAsyncComponent(() => import("@/components/meta/AboutKoelModal.vue"));
 
-const { go, url } = useRouter()
-const { currentUser } = useAuthorization()
-const { shouldNotifyNewVersion } = useNewVersionNotification()
-const { name: appName } = useBranding()
-const { openModal } = useModal()
+const { go, url } = useRouter();
+const { currentUser } = useAuthorization();
+const { shouldNotifyNewVersion } = useNewVersionNotification();
+const { name: appName } = useBranding();
+const { openModal } = useModal();
 
-const containerEl = ref<HTMLDivElement>()
-const open = ref(false)
+const containerEl = ref<HTMLDivElement>();
+const open = ref(false);
 
-const close = () => (open.value = false)
+const close = () => (open.value = false);
 
 const goToProfile = () => {
-  close()
-  go(url('profile'))
-}
+  close();
+  go(url("profile"));
+};
 
 const logout = () => {
-  close()
-  eventBus.emit('LOG_OUT')
-}
+  close();
+  eventBus.emit("LOG_OUT");
+};
 
 const openAbout = () => {
-  close()
-  openModal<'ABOUT_KOEL'>(AboutKoelModal)
-}
+  close();
+  openModal<"ABOUT_KOEL">(AboutKoelModal);
+};
 
 const onClickOutside = (e: MouseEvent) => {
   if (open.value && containerEl.value && !containerEl.value.contains(e.target as Node)) {
-    close()
+    close();
   }
-}
+};
 
-onMounted(() => document.addEventListener('click', onClickOutside))
-onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
+onMounted(() => document.addEventListener("click", onClickOutside));
+onBeforeUnmount(() => document.removeEventListener("click", onClickOutside));
 </script>
 
 <style lang="postcss" scoped>

@@ -1,21 +1,21 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { screen } from '@testing-library/vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import { $ } from '@/utils/$'
+import { describe, expect, it } from "vite-plus/test";
+import { screen } from "@testing-library/vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import { $ } from "@/utils/$";
 
-import Component from './BtnScrollToTop.vue'
+import Component from "./BtnScrollToTop.vue";
 
-describe('btnScrollToTop.vue', () => {
-  const h = createHarness()
+describe("btnScrollToTop.vue", () => {
+  const h = createHarness();
 
-  it('renders', () => expect(h.render(Component).html()).toMatchSnapshot())
+  it("renders", () => expect(h.render(Component).html()).toMatchSnapshot());
 
-  it('scrolls to top', async () => {
-    const mock = h.mock($, 'scrollTo')
-    h.render(Component)
+  it("scrolls to top", async () => {
+    const mock = h.mock($, "scrollTo");
+    h.render(Component);
 
-    await h.user.click(screen.getByTitle('Scroll to top'))
+    await h.user.click(screen.getByTitle("Scroll to top"));
 
-    expect(mock).toHaveBeenCalled()
-  })
-})
+    expect(mock).toHaveBeenCalled();
+  });
+});

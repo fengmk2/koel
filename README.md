@@ -50,7 +50,7 @@ building Koel.
 
 ### GitHub Sponsors
 
-* [You](https://github.com/users/phanan/sponsorship)?
+- [You](https://github.com/users/phanan/sponsorship)?
 
 ### OpenCollective
 

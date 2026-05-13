@@ -2,16 +2,16 @@ openapi: 3.0.0
 info:
   title: Koel API
   version: 5.1.0
-  description: 'The API for [Koel](https://koel.dev), the music streaming application that works.'
+  description: "The API for [Koel](https://koel.dev), the music streaming application that works."
   contact:
     name: An Phan
-    url: 'https://phanan.net'
+    url: "https://phanan.net"
     email: me@phanan.net
   license:
     name: MIT
-    url: 'https://github.com/koel/koel/blob/master/LICENSE.md'
+    url: "https://github.com/koel/koel/blob/master/LICENSE.md"
 servers:
-  - url: 'https://koel.test'
+  - url: "https://koel.test"
     description: Local
 tags:
   - name: interaction
@@ -23,15 +23,15 @@ paths:
       tags:
         - user
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
       operationId: post-user
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       description: Create a new user
       requestBody:
         content:
@@ -54,8 +54,8 @@ paths:
                 - email
                 - password
                 - is_admin
-    parameters: [ ]
-  '/api/user/{userId}':
+    parameters: []
+  "/api/user/{userId}":
     parameters:
       - schema:
           type: integer
@@ -68,16 +68,16 @@ paths:
       tags:
         - user
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
       operationId: patch-user-userId
       description: Update a user
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -92,7 +92,7 @@ paths:
                 password:
                   type: string
                   format: password
-                  description: 'If provided, will update the user''s password'
+                  description: "If provided, will update the user's password"
                 is_admin:
                   type: boolean
               required:
@@ -104,34 +104,34 @@ paths:
       tags:
         - user
       responses:
-        '204':
+        "204":
           description: No Content
       operationId: delete-user-userId
       description: Delete a user
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
   /api/me:
     get:
       summary: Get profile
       tags:
         - authentication
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
       operationId: get-me
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       description: Get the current user's profile
     post:
       summary: Log in
       tags:
         - authentication
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -143,7 +143,7 @@ paths:
                 required:
                   - token
       operationId: post-me
-      description: 'Log a user in. Upon a successful login, an API token will be returned. This token should be stored for further authenticated request (either as a Bearer token or as an `api-token` parameter).'
+      description: "Log a user in. Upon a successful login, an API token will be returned. This token should be stored for further authenticated request (either as a Bearer token or as an `api-token` parameter)."
       requestBody:
         content:
           application/json:
@@ -164,7 +164,7 @@ paths:
       tags:
         - authentication
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -177,7 +177,7 @@ paths:
       operationId: put-me
       description: Update the current user's profile
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -192,7 +192,7 @@ paths:
                 password:
                   type: string
                   format: password
-                  description: 'If provided, will update the current user''s password'
+                  description: "If provided, will update the current user's password"
               required:
                 - name
                 - email
@@ -201,20 +201,20 @@ paths:
       tags:
         - authentication
       responses:
-        '204':
+        "204":
           description: No Content
       operationId: delete-me
       description: Log the current user out
       security:
-        - Bearer Token: [ ]
-    parameters: [ ]
+        - Bearer Token: []
+    parameters: []
   /api/data:
     get:
       summary: Get application data
       tags:
         - data
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -224,20 +224,20 @@ paths:
                   albums:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Album'
+                      $ref: "#/components/schemas/Album"
                   allowDownload:
                     type: boolean
                     description: Whether the current installation of Koel allows downloading
                   artists:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Artist'
+                      $ref: "#/components/schemas/Artist"
                   cdnUrl:
                     type: string
                     format: uri
-                    description: 'The CDN URL of the application, if configured'
+                    description: "The CDN URL of the application, if configured"
                   currentUser:
-                    $ref: '#/components/schemas/User'
+                    $ref: "#/components/schemas/User"
                   currentVersion:
                     type: string
                     description: Version of the current installation of Koel
@@ -247,7 +247,7 @@ paths:
                   playlists:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Playlist'
+                      $ref: "#/components/schemas/Playlist"
                   recentlyPlayed:
                     type: array
                     description: An array containing the IDs of the most recently-played songs
@@ -264,7 +264,7 @@ paths:
                   songs:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Song'
+                      $ref: "#/components/schemas/Song"
                   supportsTranscoding:
                     type: boolean
                     description: Whether the current installation of Koel supports transcoding media
@@ -278,11 +278,11 @@ paths:
                     description: Only available if the current authenticated user is an admin
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: "#/components/schemas/User"
                   interactions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/InteractionExcerpt'
+                      $ref: "#/components/schemas/InteractionExcerpt"
                 required:
                   - albums
                   - allowDownload
@@ -300,24 +300,24 @@ paths:
                   - useiTunes
                   - interactions
       operationId: get-data
-      description: 'Retrieve a set of application data catered for the current authenticated user (songs, albums, artists, playlists, interactions, and if the user is an admin, settings as well). This call should typically be made right after the user is logged in, to populate the application''s interface with relevant information.'
+      description: "Retrieve a set of application data catered for the current authenticated user (songs, albums, artists, playlists, interactions, and if the user is an admin, settings as well). This call should typically be made right after the user is logged in, to populate the application's interface with relevant information."
       security:
-        - Bearer Token: [ ]
-    parameters: [ ]
+        - Bearer Token: []
+    parameters: []
   /api/interaction/play:
     post:
       summary: Increase play count
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Interaction'
+                $ref: "#/components/schemas/Interaction"
       operationId: post-interaction-play
-      description: 'Increase a song''s play count as the currently authenticated user. This request should be made whenever a song is played. '
+      description: "Increase a song's play count as the currently authenticated user. This request should be made whenever a song is played. "
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -331,21 +331,21 @@ paths:
                 - song
       tags:
         - interaction
-    parameters: [ ]
+    parameters: []
   /api/interaction/like:
     post:
       summary: Toggle like/unlike a song
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Interaction'
+                $ref: "#/components/schemas/Interaction"
       operationId: post-interaction-like
       description: Toggle like ("favorite") or unlike ("unfavorite") a song. The "liked" status of the song will be reversed by this operation.
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -365,18 +365,18 @@ paths:
       tags:
         - interaction
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Interaction'
+                  $ref: "#/components/schemas/Interaction"
       operationId: post-interaction-batch-like
       description: 'Like several songs at once, useful for "batch" (e.g., drag-and-drop) actions'
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -390,19 +390,19 @@ paths:
                     type: string
               required:
                 - songs
-    parameters: [ ]
+    parameters: []
   /api/interaction/batch/unlike:
     post:
       summary: Unlike multiple songs
       tags:
         - interaction
       responses:
-        '204':
+        "204":
           description: OK
       operationId: post-interaction-batch-unlike
       description: 'Unlike several songs at once, useful for "batch" (e.g., drag-and-drop) actions'
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -416,7 +416,7 @@ paths:
                     type: string
               required:
                 - songs
-  '/api/interaction/recently-played/{count}':
+  "/api/interaction/recently-played/{count}":
     parameters:
       - schema:
           type: integer
@@ -428,7 +428,7 @@ paths:
       tags:
         - interaction
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -440,40 +440,40 @@ paths:
       operationId: get-interaction-recently-played-count
       description: Get a list of songs recently played by the current authenticated user
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
   /api/playlist:
     get:
       summary: Get current user's playlists
       tags:
         - playlist
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Playlist'
+                  $ref: "#/components/schemas/Playlist"
       operationId: get-playlist
       description: Get all playlists owned by the current authenticated user
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
     post:
       summary: Create another playlist
       tags:
         - playlist
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Playlist'
+                $ref: "#/components/schemas/Playlist"
       operationId: post-playlist
       description: Create a new playlist that's owned by the current authenticated user
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -485,7 +485,7 @@ paths:
                 rules:
                   type: array
                   items:
-                    $ref: '#/components/schemas/SmartPlaylistRule'
+                    $ref: "#/components/schemas/SmartPlaylistRule"
                 songs:
                   type: array
                   description: An array of song IDs to populate the playlist. Only used if the playlist is not a smart one (i.e. `rules` are empty).
@@ -494,7 +494,7 @@ paths:
                     format: md5
               required:
                 - name
-  '/api/playlist/{playlistId}/songs':
+  "/api/playlist/{playlistId}/songs":
     parameters:
       - schema:
           type: integer
@@ -507,16 +507,16 @@ paths:
       tags:
         - playlist
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Playlist'
+                $ref: "#/components/schemas/Playlist"
       operationId: patch-playlist-playlistId
-      description: 'Update a playlist (name and, if a smart playlist, its rules)'
+      description: "Update a playlist (name and, if a smart playlist, its rules)"
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -528,21 +528,21 @@ paths:
                 rules:
                   type: array
                   items:
-                    $ref: '#/components/schemas/Playlist'
+                    $ref: "#/components/schemas/Playlist"
     delete:
-      summary: ''
+      summary: ""
       operationId: delete-playlist-playlistId
       responses:
-        '200':
+        "200":
           description: OK
       description: Delete a playlist
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
     get:
       summary: Get playlist's songs
       operationId: get-playlist-playlistId
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -553,8 +553,8 @@ paths:
                   type: string
       description: Get a playlist's songs
       security:
-        - Bearer Token: [ ]
-  '/api/playlist/{playlistId}/sync':
+        - Bearer Token: []
+  "/api/playlist/{playlistId}/sync":
     parameters:
       - schema:
           type: integer
@@ -563,12 +563,12 @@ paths:
         required: true
         description: ID of the playlist
     put:
-      summary: ''
+      summary: ""
       operationId: put-playlist-playlistId-sync
       responses:
-        '200':
+        "200":
           description: OK
-      description: 'Populate playlist''s content. Instead of adding or removing songs individually, a playlist''s content is replaced entirely with an array of song IDs.'
+      description: "Populate playlist's content. Instead of adding or removing songs individually, a playlist's content is replaced entirely with an array of song IDs."
       requestBody:
         content:
           application/json:
@@ -588,7 +588,7 @@ paths:
       tags:
         - media information
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -598,15 +598,15 @@ paths:
                   artists:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Artist'
+                      $ref: "#/components/schemas/Artist"
                   albums:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Album'
+                      $ref: "#/components/schemas/Album"
                   songs:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Song'
+                      $ref: "#/components/schemas/Song"
                 required:
                   - artists
                   - albums
@@ -614,7 +614,7 @@ paths:
       operationId: put-songs
       description: Update the information of a song or multiple songs
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -639,7 +639,7 @@ paths:
               required:
                 - songs
                 - data
-  '/api/album/{albumId}/info':
+  "/api/album/{albumId}/info":
     parameters:
       - schema:
           type: integer
@@ -652,17 +652,17 @@ paths:
       tags:
         - media information
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AlbumExtraInformation'
+                $ref: "#/components/schemas/AlbumExtraInformation"
       operationId: get-album-albumId-info
-      description: 'Get extra information (image, description etc.) about an album. Currently this information is only available if Last.fm integration is enabled. If it''s not the case, `null` will be returned.'
+      description: "Get extra information (image, description etc.) about an album. Currently this information is only available if Last.fm integration is enabled. If it's not the case, `null` will be returned."
       security:
-        - Bearer Token: [ ]
-  '/api/artist/{artistId}/info':
+        - Bearer Token: []
+  "/api/artist/{artistId}/info":
     parameters:
       - schema:
           type: integer
@@ -675,17 +675,17 @@ paths:
       tags:
         - media information
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArtistExtraInformation'
+                $ref: "#/components/schemas/ArtistExtraInformation"
       operationId: get-artist-artistId-info
-      description: 'Get extra information (image, biography etc.) about an artist. Currently this information is only available if Last.fm integration is enabled. If it''s not the case, `null` will be returned.'
+      description: "Get extra information (image, biography etc.) about an artist. Currently this information is only available if Last.fm integration is enabled. If it's not the case, `null` will be returned."
       security:
-        - Bearer Token: [ ]
-  '/api/song/{songId}/info':
+        - Bearer Token: []
+  "/api/song/{songId}/info":
     parameters:
       - schema:
           type: string
@@ -698,7 +698,7 @@ paths:
       tags:
         - media information
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -708,19 +708,19 @@ paths:
                   lyrics:
                     type: string
                   album_info:
-                    $ref: '#/components/schemas/AlbumExtraInformation'
+                    $ref: "#/components/schemas/AlbumExtraInformation"
                   artist_info:
-                    $ref: '#/components/schemas/ArtistExtraInformation'
+                    $ref: "#/components/schemas/ArtistExtraInformation"
                   youtube:
-                    $ref: '#/components/schemas/YouTubeSearchResult'
+                    $ref: "#/components/schemas/YouTubeSearchResult"
                 required:
                   - lyrics
                   - album_info
       operationId: get-song-songId-info
-      description: 'Get a song''s extra information. The response of this request is a superset of both corresponding `album/{albumId}/info` and `artist/{artistId}/info` responses, combined with the song''s lyrics and related YouTube videos, if applicable. '
+      description: "Get a song's extra information. The response of this request is a superset of both corresponding `album/{albumId}/info` and `artist/{artistId}/info` responses, combined with the song's lyrics and related YouTube videos, if applicable. "
       security:
-        - Bearer Token: [ ]
-  '/api/album/{albumId}/cover':
+        - Bearer Token: []
+  "/api/album/{albumId}/cover":
     parameters:
       - schema:
           type: integer
@@ -733,7 +733,7 @@ paths:
       tags:
         - media information
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -748,7 +748,7 @@ paths:
       operationId: put-album-albumId-cover
       description: Upload an image as an album's cover
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -756,11 +756,11 @@ paths:
               type: object
               properties:
                 cover:
-                  description: 'The cover image''s content, in [Data URI format](https://en.wikipedia.org/wiki/Data_URI_scheme)'
+                  description: "The cover image's content, in [Data URI format](https://en.wikipedia.org/wiki/Data_URI_scheme)"
                   type: string
               required:
                 - cover
-  '/api/artist/{artistId}/image':
+  "/api/artist/{artistId}/image":
     parameters:
       - schema:
           type: integer
@@ -773,7 +773,7 @@ paths:
       tags:
         - media information
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -788,7 +788,7 @@ paths:
       operationId: put-artist-artistId-image
       description: Upload an artist's image
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -797,10 +797,10 @@ paths:
               properties:
                 image:
                   type: string
-                  description: 'The image''s content, in [Data URI format](https://en.wikipedia.org/wiki/Data_URI_scheme)'
+                  description: "The image's content, in [Data URI format](https://en.wikipedia.org/wiki/Data_URI_scheme)"
               required:
                 - image
-  '/api/album/{album}/thumbnail':
+  "/api/album/{album}/thumbnail":
     parameters:
       - schema:
           type: integer
@@ -813,14 +813,14 @@ paths:
       tags:
         - media information
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type:
                   - object
-                  - 'null'
+                  - "null"
                 properties:
                   thumbnailUrl:
                     type: string
@@ -830,19 +830,19 @@ paths:
       operationId: get-album-album-thumbnail
       description: Get an album's thumbnail (a 48px-wide blurry version of the album's cover). Returns the full URL to the thumbnail or NULL if the album has no cover.
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
   /api/settings:
     put:
       summary: Save the application settings
       tags:
         - settings
       responses:
-        '204':
+        "204":
           description: No Content
       operationId: post-settings
       description: Save the application settings. Right now there's only one setting to be saved (`media_path`). The current authenticated user must be an admin.
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -860,15 +860,15 @@ paths:
       tags:
         - S3 integration
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Song'
+                $ref: "#/components/schemas/Song"
       operationId: post-os-s3-song
       description: Create a new song or update an existing one with data sent from AWS
-      security: [ ]
+      security: []
       requestBody:
         content:
           application/json:
@@ -920,10 +920,10 @@ paths:
       summary: Remove a song from S3
       operationId: delete-os-s3-song
       responses:
-        '204':
+        "204":
           description: No Content
       description: Remove a song whose information matches the data sent from AWS S3 (`bucket` and `key`)
-      security: [ ]
+      security: []
       requestBody:
         content:
           application/json:
@@ -940,18 +940,18 @@ paths:
   /api/upload:
     post:
       summary: Upload a song
-      tags: [ ]
+      tags: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SongWithAlbumAndArtist'
+                $ref: "#/components/schemas/SongWithAlbumAndArtist"
       operationId: post-upload
       description: Upload a song. The current authenticated user must be an admin.
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           multipart/form-data:
@@ -963,7 +963,7 @@ paths:
                   format: binary
               required:
                 - file
-  '/api/{songId}/scrobble':
+  "/api/{songId}/scrobble":
     parameters:
       - schema:
           type: string
@@ -976,12 +976,12 @@ paths:
       tags:
         - last.fm
       responses:
-        '204':
+        "204":
           description: No Content
       operationId: post-api-songId-scrobble
-      description: 'Create a [Last.fm scrobble entry](https://www.last.fm/api/scrobbling) for a song. Only functional if Last.fm integration has been configured and the current authenticated user has connected to Last.fm.'
+      description: "Create a [Last.fm scrobble entry](https://www.last.fm/api/scrobbling) for a song. Only functional if Last.fm integration has been configured and the current authenticated user has connected to Last.fm."
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -996,12 +996,12 @@ paths:
       tags:
         - last.fm
       responses:
-        '204':
+        "204":
           description: No Content
       operationId: post-api-lastfm-session-key
-      description: 'Set the Last.fm session key for the current authenticated user. This call should be made after the user is [connected to Last.fm](https://www.last.fm/api/authentication).'
+      description: "Set the Last.fm session key for the current authenticated user. This call should be made after the user is [connected to Last.fm](https://www.last.fm/api/authentication)."
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -1010,7 +1010,7 @@ paths:
               properties:
                 key:
                   type: string
-                  description: 'The Last.fm [session key](https://www.last.fm/api/show/auth.getSession)'
+                  description: "The Last.fm [session key](https://www.last.fm/api/show/auth.getSession)"
               required:
                 - key
   /lastfm/connect:
@@ -1018,12 +1018,12 @@ paths:
       summary: Connect to Last.fm
       tags:
         - last.fm
-      responses: { }
+      responses: {}
       operationId: get-lastfm-connect
-      description: '[Connect](https://www.last.fm/api/authentication) the current user to Last.fm. This is actually NOT an API request. The application should instead redirect the current user to this route, which will send them to Last.fm for authentication. After authentication is successful, the user will be redirected back to `/lastfm/callback?token=<Last.fm token>`.'
+      description: "[Connect](https://www.last.fm/api/authentication) the current user to Last.fm. This is actually NOT an API request. The application should instead redirect the current user to this route, which will send them to Last.fm for authentication. After authentication is successful, the user will be redirected back to `/lastfm/callback?token=<Last.fm token>`."
       security:
-        - api-token: [ ]
-  '/play/{songId}/{transcode}/{bitrate}':
+        - api-token: []
+  "/play/{songId}/{transcode}/{bitrate}":
     parameters:
       - schema:
           type: string
@@ -1045,28 +1045,28 @@ paths:
       summary: Play a song
       tags:
         - playback
-      responses: { }
+      responses: {}
       operationId: get-play-songId-transcode-bitrate
-      description: 'The GET request to play/stream a song. This is NOT an XmlHttpRequest By default Koel will serve the file as-is, unless it''s a FLAC file. If the value of `transcode` is truthy, Koel will attempt to transcode the file into `bitRate` kbps using ffmpeg.'
+      description: "The GET request to play/stream a song. This is NOT an XmlHttpRequest By default Koel will serve the file as-is, unless it's a FLAC file. If the value of `transcode` is truthy, Koel will attempt to transcode the file into `bitRate` kbps using ffmpeg."
       security:
-        - api-token: [ ]
+        - api-token: []
   /download/songs:
     get:
       summary: Download songs
       tags:
         - download
-      responses: { }
+      responses: {}
       operationId: get-download-songs
       description: Download a song or several songs. This is NOT an XmlHttpRequest. The response will be a download response of either the media file or a zip file containing multiple media files.
       security:
-        - api-token: [ ]
+        - api-token: []
       parameters:
         - schema:
             type: array
           in: query
           name: songs
           description: Array of IDs of songs to download
-  '/download/album/{albumId}':
+  "/download/album/{albumId}":
     parameters:
       - schema:
           type: integer
@@ -1078,12 +1078,12 @@ paths:
       summary: Download album
       tags:
         - download
-      responses: { }
+      responses: {}
       operationId: get-download-album-albumId
       description: Download a whole album. This is NOT an XmlHttpRequest. The response will be a download response of either one media file or a zip file containing multiple media files.
       security:
-        - api-token: [ ]
-  '/download/artist/{artistId}':
+        - api-token: []
+  "/download/artist/{artistId}":
     parameters:
       - schema:
           type: integer
@@ -1095,12 +1095,12 @@ paths:
       summary: Download artist
       tags:
         - download
-      responses: { }
+      responses: {}
       operationId: get-download-artist-artistId
       description: Download a whole artist's biography. This is NOT an XmlHttpRequest. The response will be a download response of either one media file or a zip file containing multiple media files.
       security:
-        - api-token: [ ]
-  '/download/playlist/{playlistId}':
+        - api-token: []
+  "/download/playlist/{playlistId}":
     parameters:
       - schema:
           type: integer
@@ -1112,18 +1112,18 @@ paths:
       summary: Download playlist
       tags:
         - download
-      responses: { }
+      responses: {}
       operationId: get-download-playlist-playlistId
       description: Download a whole playlist. This is NOT an XmlHttpRequest. The response will be a download response of either one media file or a zip file containing multiple media files.
       security:
-        - api-token: [ ]
+        - api-token: []
   /api/search:
     get:
-      summary: 'Search for songs, albums, and artists'
+      summary: "Search for songs, albums, and artists"
       tags:
         - search
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1155,9 +1155,9 @@ paths:
                 required:
                   - results
       operationId: get-api-search
-      description: 'Search for songs, albums, and artists, with a maximum of {count} results each.'
+      description: "Search for songs, albums, and artists, with a maximum of {count} results each."
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       parameters:
         - schema:
             type: string
@@ -1171,18 +1171,18 @@ paths:
             default: 6
           in: query
           name: count
-          description: 'The maximum number of results for songs, artists, and albums'
-    parameters: [ ]
+          description: "The maximum number of results for songs, artists, and albums"
+    parameters: []
   /api/search/songs:
     get:
       summary: Search for songs
       tags:
         - search
-      responses: { }
+      responses: {}
       operationId: get-api-search-songs
       description: Get all songs that matches a search query.
       security:
-        - Bearer Token: [ ]
+        - Bearer Token: []
       requestBody:
         content:
           application/json:
@@ -1192,7 +1192,7 @@ paths:
                 songs:
                   type: array
                   description: An array of matching songs' IDs
-                  items: { }
+                  items: {}
               required:
                 - songs
 components:
@@ -1206,7 +1206,7 @@ components:
           id: 1
           name: Phan An
           email: me@phanan.net
-          password: ''
+          password: ""
           is_admin: true
           preferences:
             last_fm_session_key: 12OcZD8_lsuGEFvxxY0k4lJihOYBZGWa
@@ -1318,7 +1318,7 @@ components:
     InteractionExcerpt:
       title: Interaction
       type: object
-      description: 'An excerpt of the Interaction model, containing only the minimal data'
+      description: "An excerpt of the Interaction model, containing only the minimal data"
       properties:
         song_id:
           type: string
@@ -1342,10 +1342,10 @@ components:
         rules:
           type:
             - array
-            - 'null'
+            - "null"
           description: An array of Rule objects if the playlist is a Smart playlist
           items:
-            $ref: '#/components/schemas/Playlist'
+            $ref: "#/components/schemas/Playlist"
         is_smart:
           type: boolean
           description: Whether the playlist is of Smart (dynamic) type
@@ -1417,9 +1417,9 @@ components:
         play_count:
           type: integer
         song:
-          $ref: '#/components/schemas/Song'
+          $ref: "#/components/schemas/Song"
         user:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
       required:
         - song_id
         - liked
@@ -1429,7 +1429,7 @@ components:
     AlbumExtraInformation:
       title: AlbumExtraInformation
       type: object
-      description: 'Extra information about an album, currently provided by Last.fm'
+      description: "Extra information about an album, currently provided by Last.fm"
       properties:
         url:
           type: string
@@ -1476,23 +1476,23 @@ components:
         - cover
       x-examples:
         Sample:
-          url: 'https://www.last.fm/music/Queen/Innuendo'
-          image: 'https://lastfm-img2.akamaized.net/i/u/300x300/b56adcd16ca6454498981a8470a3ec06.png'
+          url: "https://www.last.fm/music/Queen/Innuendo"
+          image: "https://lastfm-img2.akamaized.net/i/u/300x300/b56adcd16ca6454498981a8470a3ec06.png"
           wiki:
             summary: Innuendo is a 1991 album by English rock band Queen...
             full: Innuendo is a 1991 album by English rock band Queen. It is the band's fourteenth studio album and the last to be composed entirely of new material. It is also their final studio album to be released while lead singer Freddie Mercury was still alive.
           tracks:
             - title: Innuendo
               length: 392
-              url: 'https://www.last.fm/music/Queen/_/Innuendo'
+              url: "https://www.last.fm/music/Queen/_/Innuendo"
             - title: I'm Going Slightly Mad
               length: 247
-              url: 'https://www.last.fm/music/Queen/_/I%27m+Going+Slightly+Mad'
-          cover: 'https://koel.yourdomain.net/img/covers/5a771ec82a5d72.25096250.png'
+              url: "https://www.last.fm/music/Queen/_/I%27m+Going+Slightly+Mad"
+          cover: "https://koel.yourdomain.net/img/covers/5a771ec82a5d72.25096250.png"
     ArtistExtraInformation:
       title: ArtistExtraInformation
       type: object
-      description: 'Extra information about an artist, currently provided by Last.fm'
+      description: "Extra information about an artist, currently provided by Last.fm"
       properties:
         url:
           type: string
@@ -1518,11 +1518,11 @@ components:
         - bio
       x-examples:
         Sample:
-          url: 'https://www.last.fm/music/Queen'
-          image: 'https://koel.yourdomain.net/img/artists/5a772708e7de19.84120679.png'
+          url: "https://www.last.fm/music/Queen"
+          image: "https://koel.yourdomain.net/img/artists/5a772708e7de19.84120679.png"
           bio:
             summary: Queen were an English rock band originally consisting of four members...
-            full: 'Queen were an English rock band originally consisting of four members: vocalist Freddie Mercury, guitarist Brian May, bass guitarist John Deacon, and drummer Roger Taylor.'
+            full: "Queen were an English rock band originally consisting of four members: vocalist Freddie Mercury, guitarist Brian May, bass guitarist John Deacon, and drummer Roger Taylor."
     YouTubeSearchResult:
       title: YouTubeSearchResult
       type: object
@@ -1670,21 +1670,21 @@ components:
                 kind: youtube#video
                 videoId: t99KH0TR-J4
               snippet:
-                publishedAt: '2013-10-15T14:24:31.000Z'
+                publishedAt: "2013-10-15T14:24:31.000Z"
                 channelId: UCiMhD4jzUqG-IgPzUmmytRQ
                 title: Queen - The Show Must Go On (Official Video)
-                description: 'Subscribe to the Official Queen Channel Here http://bit.ly/Subscribe2Queen Taken from Innuendo, 1991. Queen - The Show Must Go On (promo video, 1991) ...'
+                description: "Subscribe to the Official Queen Channel Here http://bit.ly/Subscribe2Queen Taken from Innuendo, 1991. Queen - The Show Must Go On (promo video, 1991) ..."
                 thumbnails:
                   default:
-                    url: 'https://i.ytimg.com/vi/t99KH0TR-J4/default.jpg'
+                    url: "https://i.ytimg.com/vi/t99KH0TR-J4/default.jpg"
                     width: 120
                     height: 90
                   medium:
-                    url: 'https://i.ytimg.com/vi/t99KH0TR-J4/mqdefault.jpg'
+                    url: "https://i.ytimg.com/vi/t99KH0TR-J4/mqdefault.jpg"
                     width: 320
                     height: 180
                   high:
-                    url: 'https://i.ytimg.com/vi/t99KH0TR-J4/hqdefault.jpg'
+                    url: "https://i.ytimg.com/vi/t99KH0TR-J4/hqdefault.jpg"
                     width: 480
                     height: 360
                 channelTitle: Queen Official
@@ -1693,7 +1693,7 @@ components:
       title: SongWithAlbumAndArtist
       type: object
       description: A Song model with loaded album and artist information
-      x-examples: { }
+      x-examples: {}
       properties:
         id:
           type: string
@@ -1713,9 +1713,9 @@ components:
           format: float
           description: The duration of the song in seconds
         album:
-          $ref: '#/components/schemas/Album'
+          $ref: "#/components/schemas/Album"
         artist:
-          $ref: '#/components/schemas/Artist'
+          $ref: "#/components/schemas/Artist"
       required:
         - id
         - artist_id

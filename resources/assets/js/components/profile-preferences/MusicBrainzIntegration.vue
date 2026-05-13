@@ -10,8 +10,8 @@
     <div v-if="useMusicBrainz">
       <p>
         MusicBrainz integration is enabled.
-        {{ appName }} will attempt to retrieve album and artist information from MusicBrainz (and Wikipedia) when a song
-        is played, if needed.
+        {{ appName }} will attempt to retrieve album and artist information from MusicBrainz (and
+        Wikipedia) when a song is played, if needed.
       </p>
     </div>
     <div v-else>
@@ -19,7 +19,9 @@
         MusicBrainz integration is not enabled.
         <span v-if="currentUserCan.manageSettings()" data-testid="spotify-admin-instruction">
           Check
-          <a href="https://docs.koel.dev/service-integrations#musicbrainz-wikipedia" target="_blank">Documentation</a>
+          <a href="https://docs.koel.dev/service-integrations#musicbrainz-wikipedia" target="_blank"
+            >Documentation</a
+          >
           for integration instructions.
         </span>
       </p>
@@ -28,13 +30,13 @@
 </template>
 
 <script lang="ts" setup>
-import musicbrainzLogo from '@/../img/logos/musicbrainz.svg'
+import musicbrainzLogo from "@/../img/logos/musicbrainz.svg";
 
-import { useThirdPartyServices } from '@/composables/useThirdPartyServices'
-import { usePolicies } from '@/composables/usePolicies'
-import { useBranding } from '@/composables/useBranding'
+import { useThirdPartyServices } from "@/composables/useThirdPartyServices";
+import { usePolicies } from "@/composables/usePolicies";
+import { useBranding } from "@/composables/useBranding";
 
-const { currentUserCan } = usePolicies()
-const { useMusicBrainz } = useThirdPartyServices()
-const { name: appName } = useBranding()
+const { currentUserCan } = usePolicies();
+const { useMusicBrainz } = useThirdPartyServices();
+const { name: appName } = useBranding();
 </script>

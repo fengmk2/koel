@@ -12,11 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import { faStepForward } from '@fortawesome/free-solid-svg-icons'
-import { toRefs } from 'vue'
+import { faStepForward } from "@fortawesome/free-solid-svg-icons";
+import { toRefs } from "vue";
 
-const props = defineProps<{ playable?: Playable | null }>()
-const emit = defineEmits<{ (e: 'clicked'): void }>()
+const props = defineProps<{ playable?: Playable | null }>();
+const emit = defineEmits<{ (e: "clicked"): void }>();
 
-const { playable } = toRefs(props)
+const { playable } = toRefs(props);
 </script>

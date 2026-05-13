@@ -25,43 +25,43 @@
 </template>
 
 <script setup lang="ts">
-import { getPlayableProp } from '@/utils/helpers'
-import { useBranding } from '@/composables/useBranding'
+import { getPlayableProp } from "@/utils/helpers";
+import { useBranding } from "@/composables/useBranding";
 
-import Thumbnail from '@/components/embed/widget/EmbedWidgetThumbnail.vue'
-import PreviewBadge from '@/components/embed/widget/PreviewBadge.vue'
+import Thumbnail from "@/components/embed/widget/EmbedWidgetThumbnail.vue";
+import PreviewBadge from "@/components/embed/widget/PreviewBadge.vue";
 
-const props = defineProps<{ embed: WidgetReadyEmbed; options: EmbedOptions }>()
-const { embed, options } = props
+const props = defineProps<{ embed: WidgetReadyEmbed; options: EmbedOptions }>();
+const { embed, options } = props;
 
-const { logo } = useBranding()
+const { logo } = useBranding();
 
-let heading: string
-let subheading: string
+let heading: string;
+let subheading: string;
 
 const setAttributes = (_heading: string, _subheading: string) => {
-  heading = _heading
-  subheading = _subheading
-}
+  heading = _heading;
+  subheading = _subheading;
+};
 
 switch (embed.embeddable_type) {
-  case 'album':
-    const album = embed.embeddable as Album
-    setAttributes(album.name, `Album by ${album.artist_name}`)
-    break
-  case 'artist':
-    setAttributes((embed.embeddable as Artist).name, 'Artist')
-    break
-  case 'playable':
-    const playable = embed.embeddable as Playable
+  case "album":
+    const album = embed.embeddable as Album;
+    setAttributes(album.name, `Album by ${album.artist_name}`);
+    break;
+  case "artist":
+    setAttributes((embed.embeddable as Artist).name, "Artist");
+    break;
+  case "playable":
+    const playable = embed.embeddable as Playable;
     setAttributes(
-      getPlayableProp(playable, 'title', 'title'),
-      getPlayableProp(playable, 'artist_name', 'podcast_title'),
-    )
-    break
-  case 'playlist':
-    const playlist = embed.embeddable as Playlist
-    setAttributes(playlist.name, playlist.description || 'Playlist')
-    break
+      getPlayableProp(playable, "title", "title"),
+      getPlayableProp(playable, "artist_name", "podcast_title"),
+    );
+    break;
+  case "playlist":
+    const playlist = embed.embeddable as Playlist;
+    setAttributes(playlist.name, playlist.description || "Playlist");
+    break;
 }
 </script>
