@@ -21,83 +21,88 @@
  * augmented.
  */
 
-type ToggleState = 'open' | 'closed'
+type ToggleState = "open" | "closed";
 
-if (typeof globalThis.ToggleEvent === 'undefined') {
+if (typeof globalThis.ToggleEvent === "undefined") {
   class ToggleEventShim extends Event {
-    oldState: ToggleState
-    newState: ToggleState
+    oldState: ToggleState;
+    newState: ToggleState;
 
-    constructor(type: string, init: EventInit & { oldState?: ToggleState; newState?: ToggleState } = {}) {
-      super(type, init)
-      this.oldState = init.oldState ?? 'closed'
-      this.newState = init.newState ?? 'closed'
+    constructor(
+      type: string,
+      init: EventInit & { oldState?: ToggleState; newState?: ToggleState } = {},
+    ) {
+      super(type, init);
+      this.oldState = init.oldState ?? "closed";
+      this.newState = init.newState ?? "closed";
     }
   }
 
-  ;(globalThis as unknown as { ToggleEvent: typeof ToggleEventShim }).ToggleEvent = ToggleEventShim
+  (globalThis as unknown as { ToggleEvent: typeof ToggleEventShim }).ToggleEvent = ToggleEventShim;
 }
 
 const popoverApiMissing =
-  !('showPopover' in HTMLElement.prototype) ||
-  !('hidePopover' in HTMLElement.prototype) ||
-  !('togglePopover' in HTMLElement.prototype)
+  !("showPopover" in HTMLElement.prototype) ||
+  !("hidePopover" in HTMLElement.prototype) ||
+  !("togglePopover" in HTMLElement.prototype);
 
 if (popoverApiMissing) {
-  const popoverOpen = new WeakMap<HTMLElement, boolean>()
+  const popoverOpen = new WeakMap<HTMLElement, boolean>();
 
-  const invalidState = (message: string) => new DOMException(message, 'InvalidStateError')
+  const invalidState = (message: string) => new DOMException(message, "InvalidStateError");
 
-  Object.defineProperty(HTMLElement.prototype, 'popover', {
+  Object.defineProperty(HTMLElement.prototype, "popover", {
     configurable: true,
     get(this: HTMLElement) {
-      return this.getAttribute('popover')
+      return this.getAttribute("popover");
     },
     set(this: HTMLElement, value: string | null) {
-      value === null ? this.removeAttribute('popover') : this.setAttribute('popover', String(value))
+      value === null
+        ? this.removeAttribute("popover")
+        : this.setAttribute("popover", String(value));
     },
-  })
+  });
 
   HTMLElement.prototype.showPopover = function (this: HTMLElement) {
-    if (!this.hasAttribute('popover')) {
-      throw invalidState('Element does not have a popover attribute')
+    if (!this.hasAttribute("popover")) {
+      throw invalidState("Element does not have a popover attribute");
     }
 
     if (popoverOpen.get(this)) {
-      throw invalidState('Popover is already showing')
+      throw invalidState("Popover is already showing");
     }
 
-    const beforeEvent = new ToggleEvent('beforetoggle', {
+    const beforeEvent = new ToggleEvent("beforetoggle", {
       cancelable: true,
-      oldState: 'closed',
-      newState: 'open',
-    })
-    this.dispatchEvent(beforeEvent)
+      oldState: "closed",
+      newState: "open",
+    });
+    this.dispatchEvent(beforeEvent);
 
     if (beforeEvent.defaultPrevented) {
-      return
+      return;
     }
 
-    popoverOpen.set(this, true)
-    this.dispatchEvent(new ToggleEvent('toggle', { oldState: 'closed', newState: 'open' }))
-  }
+    popoverOpen.set(this, true);
+    this.dispatchEvent(new ToggleEvent("toggle", { oldState: "closed", newState: "open" }));
+  };
 
   HTMLElement.prototype.hidePopover = function (this: HTMLElement) {
-    if (!this.hasAttribute('popover')) {
-      throw invalidState('Element does not have a popover attribute')
+    if (!this.hasAttribute("popover")) {
+      throw invalidState("Element does not have a popover attribute");
     }
 
     if (!popoverOpen.get(this)) {
-      throw invalidState('Popover is not showing')
+      throw invalidState("Popover is not showing");
     }
 
     // beforetoggle for hide is non-cancelable per the HTML spec.
-    this.dispatchEvent(new ToggleEvent('beforetoggle', { oldState: 'open', newState: 'closed' }))
-    popoverOpen.set(this, false)
-    this.dispatchEvent(new ToggleEvent('toggle', { oldState: 'open', newState: 'closed' }))
-  }
+    this.dispatchEvent(new ToggleEvent("beforetoggle", { oldState: "open", newState: "closed" }));
+    popoverOpen.set(this, false);
+    this.dispatchEvent(new ToggleEvent("toggle", { oldState: "open", newState: "closed" }));
+  };
 
   HTMLElement.prototype.togglePopover = function (this: HTMLElement) {
-    popoverOpen.get(this) ? this.hidePopover() : this.showPopover()
-  }
+    popoverOpen.get(this) ? this.hidePopover() : this.showPopover();
+  };
 }

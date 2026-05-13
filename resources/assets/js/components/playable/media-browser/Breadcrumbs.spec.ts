@@ -1,17 +1,17 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './Breadcrumbs.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./Breadcrumbs.vue";
 
-describe('breadcrumbs.vue', () => {
-  const h = createHarness()
+describe("breadcrumbs.vue", () => {
+  const h = createHarness();
 
-  it.each([[''], ['/var'], ['/var/media/'], ['/var/media/deep/nested/path']])('renders', path => {
+  it.each([[""], ["/var"], ["/var/media/"], ["/var/media/deep/nested/path"]])("renders", (path) => {
     const { html } = h.render(Component, {
       props: {
         path,
       },
-    })
+    });
 
-    expect(html()).toMatchSnapshot()
-  })
-})
+    expect(html()).toMatchSnapshot();
+  });
+});

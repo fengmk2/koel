@@ -9,5 +9,5 @@
 </template>
 
 <script lang="ts" setup>
-const value = defineModel<boolean>()
+const value = defineModel<boolean>();
 </script>

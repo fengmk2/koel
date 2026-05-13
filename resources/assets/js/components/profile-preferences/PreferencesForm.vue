@@ -15,7 +15,8 @@
     <FormRow v-if="isPlus">
       <label class="pref-row">
         <span
-          >Show other users' public songs, albums, artists, and radio stations in your library (reload required)</span
+          >Show other users' public songs, albums, artists, and radio stations in your library
+          (reload required)</span
         >
         <CheckBox v-model="preferences.include_public_media" name="include_public_media" />
       </label>
@@ -70,7 +71,9 @@
       <div class="pref-row">
         <span class="flex-1">
           <span class="flex items-center gap-3">
-            <label id="crossfade-label" for="crossfade-slider" class="shrink-0">Crossfade songs</label>
+            <label id="crossfade-label" for="crossfade-slider" class="shrink-0"
+              >Crossfade songs</label
+            >
             <input
               id="crossfade-slider"
               v-model.number="preferences.crossfade_duration"
@@ -82,7 +85,7 @@
               class="crossfade-slider flex-1 min-w-32 max-w-96"
             />
             <span class="text-k-fg-50 shrink-0">
-              {{ crossfadeEnabled ? `${preferences.crossfade_duration}s` : 'Off' }}
+              {{ crossfadeEnabled ? `${preferences.crossfade_duration}s` : "Off" }}
             </span>
           </span>
         </span>
@@ -98,40 +101,40 @@
 </template>
 
 <script lang="ts" setup>
-import isMobile from 'ismobilejs'
-import { computed, toRef } from 'vue'
-import { commonStore } from '@/stores/commonStore'
-import { preferenceStore as preferences } from '@/stores/preferenceStore'
-import { useKoelPlus } from '@/composables/useKoelPlus'
-import { usePolicies } from '@/composables/usePolicies'
+import isMobile from "ismobilejs";
+import { computed, toRef } from "vue";
+import { commonStore } from "@/stores/commonStore";
+import { preferenceStore as preferences } from "@/stores/preferenceStore";
+import { useKoelPlus } from "@/composables/useKoelPlus";
+import { usePolicies } from "@/composables/usePolicies";
 
-import CheckBox from '@/components/ui/form/CheckBox.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import CheckBox from "@/components/ui/form/CheckBox.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const onMobile = isMobile.any
-const { isPlus } = useKoelPlus()
-const { currentUserCan } = usePolicies()
-const canUpload = currentUserCan.uploadSongs()
+const onMobile = isMobile.any;
+const { isPlus } = useKoelPlus();
+const { currentUserCan } = usePolicies();
+const canUpload = currentUserCan.uploadSongs();
 
-const showTranscodingOption = toRef(commonStore.state, 'supports_transcoding')
+const showTranscodingOption = toRef(commonStore.state, "supports_transcoding");
 
-const crossfadeEnabled = computed(() => preferences.crossfade_duration > 0)
+const crossfadeEnabled = computed(() => preferences.crossfade_duration > 0);
 
 const toggleCrossfade = (enabled: boolean) => {
-  preferences.crossfade_duration = enabled ? 7 : 0
-}
+  preferences.crossfade_duration = enabled ? 7 : 0;
+};
 
 const continuousPlaybackLabel = computed(() => {
-  const types = ['playlist', 'album', 'artist', 'genre', 'podcast']
+  const types = ["playlist", "album", "artist", "genre", "podcast"];
 
   if (commonStore.state.uses_media_browser) {
-    types.push('folder')
+    types.push("folder");
   }
 
-  types[types.length - 1] = `or ${types[types.length - 1]}`
+  types[types.length - 1] = `or ${types[types.length - 1]}`;
 
-  return `Playing a song or episode triggers continuous playback of the entire ${types.join(', ')}`
-})
+  return `Playing a song or episode triggers continuous playback of the entire ${types.join(", ")}`;
+});
 </script>
 
 <style lang="postcss" scoped>

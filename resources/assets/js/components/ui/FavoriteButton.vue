@@ -11,19 +11,19 @@
 </template>
 
 <script setup lang="ts">
-import { faStar } from '@fortawesome/free-solid-svg-icons'
-import { faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons'
-import { computed } from 'vue'
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faEmptyStar } from "@fortawesome/free-regular-svg-icons";
+import { computed } from "vue";
 
-const props = defineProps<{ favorite: boolean }>()
-const emit = defineEmits<{ (e: 'toggle'): void }>()
+const props = defineProps<{ favorite: boolean }>();
+const emit = defineEmits<{ (e: "toggle"): void }>();
 
-const title = computed(() => (props.favorite ? 'Undo Favorite' : 'Favorite'))
+const title = computed(() => (props.favorite ? "Undo Favorite" : "Favorite"));
 </script>
 
 <style lang="postcss" scoped>
 button::after {
-  content: '';
+  content: "";
   @apply absolute -inset-3;
 }
 </style>

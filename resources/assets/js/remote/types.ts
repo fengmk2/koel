@@ -1,4 +1,4 @@
 export interface RemoteState {
-  streamable: Streamable | null
-  volume: number
+  streamable: Streamable | null;
+  volume: number;
 }

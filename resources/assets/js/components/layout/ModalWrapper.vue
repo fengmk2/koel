@@ -10,33 +10,34 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { requireInjection } from '@/utils/helpers'
-import { ModalKey } from '@/config/symbols'
+import { computed, ref, watch } from "vue";
+import { requireInjection } from "@/utils/helpers";
+import { ModalKey } from "@/config/symbols";
 
-const dialog = ref<HTMLDialogElement>()
-const options = requireInjection(ModalKey)
+const dialog = ref<HTMLDialogElement>();
+const options = requireInjection(ModalKey);
 
-const toggleCssClass = (...classes: string[]) => classes.forEach(c => dialog.value?.classList.toggle(c))
+const toggleCssClass = (...classes: string[]) =>
+  classes.forEach((c) => dialog.value?.classList.toggle(c));
 
 const props = computed(() => ({
   ...(options.value.props || {}),
   toggleCssClass:
-    options.value.props && 'toggleCssClass' in options.value.props
+    options.value.props && "toggleCssClass" in options.value.props
       ? options.value.props.toggleCssClass
       : toggleCssClass,
-}))
+}));
 
 const close = () => {
   options.value = {
     component: null,
-  }
-}
+  };
+};
 
 watch(
   () => options.value.component,
-  component => (component ? dialog.value?.showModal() : dialog.value?.close()),
-)
+  (component) => (component ? dialog.value?.showModal() : dialog.value?.close()),
+);
 </script>
 
 <style lang="postcss" scoped>

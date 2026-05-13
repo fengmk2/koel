@@ -13,26 +13,26 @@
 </template>
 
 <script lang="ts" setup>
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { nextTick, ref, watch } from 'vue'
-import { useAuthorization } from '@/composables/useAuthorization'
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { nextTick, ref, watch } from "vue";
+import { useAuthorization } from "@/composables/useAuthorization";
 
-import AiChatMessage from '@/components/ai/AiChatMessage.vue'
+import AiChatMessage from "@/components/ai/AiChatMessage.vue";
 
-const { currentUser } = useAuthorization()
+const { currentUser } = useAuthorization();
 
 const props = defineProps<{
-  messages: AiChatMessage[]
-  loading?: boolean
-}>()
+  messages: AiChatMessage[];
+  loading?: boolean;
+}>();
 
-const anchorEl = ref<HTMLDivElement>()
+const anchorEl = ref<HTMLDivElement>();
 
 const scrollToBottom = async () => {
-  await nextTick()
-  anchorEl.value?.scrollIntoView({ behavior: 'smooth' })
-}
+  await nextTick();
+  anchorEl.value?.scrollIntoView({ behavior: "smooth" });
+};
 
-watch(() => props.messages.length, scrollToBottom)
-watch(() => props.loading, scrollToBottom)
+watch(() => props.messages.length, scrollToBottom);
+watch(() => props.loading, scrollToBottom);
 </script>

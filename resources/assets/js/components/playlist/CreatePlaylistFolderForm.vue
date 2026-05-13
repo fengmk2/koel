@@ -6,7 +6,13 @@
 
     <main>
       <FormRow>
-        <TextInput v-model="data.name" v-koel-focus name="name" placeholder="Folder name" required />
+        <TextInput
+          v-model="data.name"
+          v-koel-focus
+          name="name"
+          placeholder="Folder name"
+          required
+        />
       </FormRow>
     </main>
 
@@ -18,36 +24,36 @@
 </template>
 
 <script lang="ts" setup>
-import { playlistFolderStore } from '@/stores/playlistFolderStore'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useForm } from '@/composables/useForm'
+import { playlistFolderStore } from "@/stores/playlistFolderStore";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const emit = defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { toastSuccess } = useMessageToaster()
-const { showConfirmDialog } = useDialogBox()
+const { toastSuccess } = useMessageToaster();
+const { showConfirmDialog } = useDialogBox();
 
-const close = () => emit('close')
+const close = () => emit("close");
 
-const { data, isPristine, handleSubmit } = useForm<Pick<PlaylistFolder, 'name'>>({
+const { data, isPristine, handleSubmit } = useForm<Pick<PlaylistFolder, "name">>({
   initialValues: {
-    name: '',
+    name: "",
   },
   onSubmit: async ({ name }) => await playlistFolderStore.store(name),
   onSuccess: (folder: PlaylistFolder) => {
-    close()
-    toastSuccess(`Playlist folder "${folder.name}" created.`)
+    close();
+    toastSuccess(`Playlist folder "${folder.name}" created.`);
   },
-})
+});
 
 const maybeClose = async () => {
-  if (isPristine() || (await showConfirmDialog('Discard all changes?'))) {
-    close()
+  if (isPristine() || (await showConfirmDialog("Discard all changes?"))) {
+    close();
   }
-}
+};
 </script>

@@ -1,17 +1,17 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './YouTubeSidebarItem.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./YouTubeSidebarItem.vue";
 
-describe('youTubeSidebarItem.vue', () => {
-  const h = createHarness()
+describe("youTubeSidebarItem.vue", () => {
+  const h = createHarness();
 
-  it('renders', async () => {
+  it("renders", async () => {
     const { html } = h.render(Component, {
       slots: {
-        default: 'Another One Bites the Dust',
+        default: "Another One Bites the Dust",
       },
-    })
+    });
 
-    expect(html()).toMatchSnapshot()
-  })
-})
+    expect(html()).toMatchSnapshot();
+  });
+});

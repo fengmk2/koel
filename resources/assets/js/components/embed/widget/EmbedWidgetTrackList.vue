@@ -9,24 +9,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive } from "vue";
 
-import VirtualScroller from '@/components/ui/VirtualScroller.vue'
-import TrackItem from '@/components/embed/widget/EmbedWidgetTrackItem.vue'
+import VirtualScroller from "@/components/ui/VirtualScroller.vue";
+import TrackItem from "@/components/embed/widget/EmbedWidgetTrackItem.vue";
 
-const props = defineProps<{ playables: Playable[] }>()
-const emit = defineEmits<{ (e: 'play', playable: Playable): void }>()
+const props = defineProps<{ playables: Playable[] }>();
+const emit = defineEmits<{ (e: "play", playable: Playable): void }>();
 
-const { playables } = props
+const { playables } = props;
 
 const rows = computed(() => {
-  return playables.map<PlayableRow>(playable =>
+  return playables.map<PlayableRow>((playable) =>
     reactive({
       playable,
       selected: false,
     }),
-  )
-})
+  );
+});
 </script>
 
 <style scoped lang="postcss">

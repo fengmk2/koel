@@ -19,18 +19,18 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { toRefs } from "vue";
 
-import ExcerptResultBlock from '@/components/screens/search/ExcerptResultBlock.vue'
-import RadioStationCardSkeleton from '@/components/radio/RadioStationCardSkeleton.vue'
-import RadioStationCard from '@/components/radio/RadioStationCard.vue'
+import ExcerptResultBlock from "@/components/screens/search/ExcerptResultBlock.vue";
+import RadioStationCardSkeleton from "@/components/radio/RadioStationCardSkeleton.vue";
+import RadioStationCard from "@/components/radio/RadioStationCard.vue";
 
 const props = withDefaults(defineProps<{ stations?: RadioStation[]; searching?: boolean }>(), {
   stations: () => [],
   searching: false,
-})
+});
 
-const { stations, searching } = toRefs(props)
+const { stations, searching } = toRefs(props);
 </script>
 
 <style lang="postcss" scoped>

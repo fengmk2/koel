@@ -6,15 +6,15 @@
 </template>
 
 <script lang="ts" setup>
-import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { ref } from 'vue'
-import { eventBus } from '@/utils/eventBus'
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { ref } from "vue";
+import { eventBus } from "@/utils/eventBus";
 
-import SideSheetButton from '@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue'
+import SideSheetButton from "@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue";
 
-const sidebarExpanded = ref(false)
+const sidebarExpanded = ref(false);
 
-eventBus.on('TOGGLE_SIDEBAR', () => (sidebarExpanded.value = !sidebarExpanded.value))
+eventBus.on("TOGGLE_SIDEBAR", () => (sidebarExpanded.value = !sidebarExpanded.value));
 
-const toggleSidebar = () => eventBus.emit('TOGGLE_SIDEBAR')
+const toggleSidebar = () => eventBus.emit("TOGGLE_SIDEBAR");
 </script>

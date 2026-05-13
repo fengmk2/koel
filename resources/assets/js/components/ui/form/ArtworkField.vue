@@ -7,7 +7,7 @@
         type="button"
         @click.prevent="removeOrRevert"
       >
-        {{ hasCustomArtwork ? 'Revert' : 'Remove' }}
+        {{ hasCustomArtwork ? "Revert" : "Remove" }}
       </button>
     </span>
     <FileInput accept="image/*" name="cover" @change="onImageInputChange">
@@ -17,45 +17,45 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useFileReader } from '@/composables/useFileReader'
-import { useImageFileInput } from '@/composables/useImageFileInput'
+import { computed } from "vue";
+import { useFileReader } from "@/composables/useFileReader";
+import { useImageFileInput } from "@/composables/useImageFileInput";
 
-import FileInput from '@/components/ui/form/FileInput.vue'
+import FileInput from "@/components/ui/form/FileInput.vue";
 
-const model = defineModel<string | null | undefined>()
-const defaultValue = model.value
+const model = defineModel<string | null | undefined>();
+const defaultValue = model.value;
 
-const hasCustomArtwork = computed(() => defaultValue && model.value !== defaultValue)
+const hasCustomArtwork = computed(() => defaultValue && model.value !== defaultValue);
 
-const removeOrRevert = () => (model.value = hasCustomArtwork.value ? defaultValue : '')
+const removeOrRevert = () => (model.value = hasCustomArtwork.value ? defaultValue : "");
 
 const { onImageInputChange } = useImageFileInput({
-  onImageDataUrl: dataUrl => (model.value = dataUrl),
-})
+  onImageDataUrl: (dataUrl) => (model.value = dataUrl),
+});
 
 const onPaste = (event: ClipboardEvent) => {
-  const clipboardData = event.clipboardData
+  const clipboardData = event.clipboardData;
 
   if (!clipboardData) {
-    return
+    return;
   }
 
   const file =
-    Array.from(clipboardData.files || []).find((f: File) => f.type.startsWith('image/')) ||
+    Array.from(clipboardData.files || []).find((f: File) => f.type.startsWith("image/")) ||
     Array.from(clipboardData.items || [])
-      .filter((item: DataTransferItem) => item.kind === 'file')
+      .filter((item: DataTransferItem) => item.kind === "file")
       .map((item: DataTransferItem) => item.getAsFile())
-      .find((f: File | null): f is File => f !== null && f.type.startsWith('image/'))
+      .find((f: File | null): f is File => f !== null && f.type.startsWith("image/"));
 
   if (!file) {
-    return
+    return;
   }
 
-  event.preventDefault()
+  event.preventDefault();
 
   // Create a fresh FileReader per paste to avoid accumulating listeners on a shared instance.
-  const { readAsDataUrl } = useFileReader()
-  readAsDataUrl(file, dataUrl => (model.value = dataUrl))
-}
+  const { readAsDataUrl } = useFileReader();
+  readAsDataUrl(file, (dataUrl) => (model.value = dataUrl));
+};
 </script>

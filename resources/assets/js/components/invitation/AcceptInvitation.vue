@@ -17,13 +17,21 @@
 
       <FormRow>
         <template #label>Your name</template>
-        <TextInput v-model="name" v-koel-focus data-testid="name" placeholder="Erm… Bruce Dickinson?" required />
+        <TextInput
+          v-model="name"
+          v-koel-focus
+          data-testid="name"
+          placeholder="Erm… Bruce Dickinson?"
+          required
+        />
       </FormRow>
 
       <FormRow>
         <template #label>Password</template>
         <PasswordField v-model="password" data-testid="password" required />
-        <template #help>Min. 10 characters. Should be a mix of characters, numbers, and symbols.</template>
+        <template #help
+          >Min. 10 characters. Should be a mix of characters, numbers, and symbols.</template
+        >
       </FormRow>
 
       <FormRow>
@@ -34,43 +42,43 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { invitationService } from '@/services/invitationService'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { useRouter } from '@/composables/useRouter'
+import { onMounted, ref } from "vue";
+import { invitationService } from "@/services/invitationService";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { useRouter } from "@/composables/useRouter";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import PasswordField from '@/components/ui/form/PasswordField.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
-import FormRow from '@/components/ui/form/FormRow.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import PasswordField from "@/components/ui/form/PasswordField.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
+import FormRow from "@/components/ui/form/FormRow.vue";
 
-const { getRouteParam } = useRouter()
-const { handleHttpError } = useErrorHandler('dialog')
+const { getRouteParam } = useRouter();
+const { handleHttpError } = useErrorHandler("dialog");
 
-const name = ref('')
-const password = ref('')
-const userProspect = ref<User>()
-const loading = ref(false)
+const name = ref("");
+const password = ref("");
+const userProspect = ref<User>();
+const loading = ref(false);
 
-const token = String(getRouteParam('token')!)
+const token = String(getRouteParam("token")!);
 
 const submit = async () => {
   try {
-    loading.value = true
-    await invitationService.accept(token, name.value, password.value)
-    window.location.href = '/'
+    loading.value = true;
+    await invitationService.accept(token, name.value, password.value);
+    window.location.href = "/";
   } catch (error: unknown) {
-    handleHttpError(error)
+    handleHttpError(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(async () => {
   try {
-    userProspect.value = await invitationService.getUserProspect(token)
+    userProspect.value = await invitationService.getUserProspect(token);
   } catch (error: unknown) {
-    handleHttpError(error, { 404: 'Invalid or expired invite.' })
+    handleHttpError(error, { 404: "Invalid or expired invite." });
   }
-})
+});
 </script>
