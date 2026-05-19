@@ -47,26 +47,26 @@
 </template>
 
 <script lang="ts" setup>
-import { faCompactDisc, faFeather } from '@fortawesome/free-solid-svg-icons'
-import { MicVocalIcon } from 'lucide-vue-next'
-import { faYoutube } from '@fortawesome/free-brands-svg-icons'
-import { computed } from 'vue'
-import { useThirdPartyServices } from '@/composables/useThirdPartyServices'
+import { faCompactDisc, faFeather } from "@fortawesome/free-solid-svg-icons";
+import { MicVocalIcon } from "lucide-vue-next";
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { computed } from "vue";
+import { useThirdPartyServices } from "@/composables/useThirdPartyServices";
 
-import SideSheetButton from '@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue'
+import SideSheetButton from "@/components/layout/main-wrapper/side-sheet/SideSheetButton.vue";
 
 const props = withDefaults(defineProps<{ modelValue?: SideSheetTab | null }>(), {
   modelValue: null,
-})
+});
 
-const emit = defineEmits<{ (e: 'update:modelValue', value: SideSheetTab | null): void }>()
+const emit = defineEmits<{ (e: "update:modelValue", value: SideSheetTab | null): void }>();
 
-const { useYouTube } = useThirdPartyServices()
+const { useYouTube } = useThirdPartyServices();
 
 const value = computed({
   get: () => props.modelValue,
-  set: value => emit('update:modelValue', value),
-})
+  set: (value) => emit("update:modelValue", value),
+});
 
-const toggleTab = (tab: SideSheetTab) => (value.value = value.value === tab ? null : tab)
+const toggleTab = (tab: SideSheetTab) => (value.value = value.value === tab ? null : tab);
 </script>

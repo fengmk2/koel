@@ -22,7 +22,10 @@
 
     <!-- Chat mode -->
     <template v-else>
-      <section v-koel-overflow-fade class="py-6 flex-1 flex flex-col w-full max-w-4xl overflow-auto mx-auto">
+      <section
+        v-koel-overflow-fade
+        class="py-6 flex-1 flex flex-col w-full max-w-4xl overflow-auto mx-auto"
+      >
         <AiChatHistory :messages :loading class="flex-1" />
       </section>
 
@@ -40,68 +43,68 @@
 </template>
 
 <script lang="ts" setup>
-import { XIcon } from 'lucide-vue-next'
-import { nextTick, ref } from 'vue'
-import { playback } from '@/services/playbackManager'
-import { queueStore } from '@/stores/queueStore'
-import { useAiChat } from '@/composables/useAiChat'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { useRouter } from '@/composables/useRouter'
-import { useErrorHandler } from '@/composables/useErrorHandler'
+import { XIcon } from "lucide-vue-next";
+import { nextTick, ref } from "vue";
+import { playback } from "@/services/playbackManager";
+import { queueStore } from "@/stores/queueStore";
+import { useAiChat } from "@/composables/useAiChat";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { useRouter } from "@/composables/useRouter";
+import { useErrorHandler } from "@/composables/useErrorHandler";
 
-import AiChatHistory from '@/components/ai/AiChatHistory.vue'
-import AiPromptBox from '@/components/ai/AiPromptBox.vue'
-import AiSamplePrompts from '@/components/ai/AiSamplePrompts.vue'
+import AiChatHistory from "@/components/ai/AiChatHistory.vue";
+import AiPromptBox from "@/components/ai/AiPromptBox.vue";
+import AiSamplePrompts from "@/components/ai/AiSamplePrompts.vue";
 
-const { toastSuccess } = useMessageToaster()
-const { go, onScreenActivated, url } = useRouter()
-const { handleHttpError } = useErrorHandler()
-const { messages, loading, hasMessages, sendPrompt } = useAiChat()
+const { toastSuccess } = useMessageToaster();
+const { go, onScreenActivated, url } = useRouter();
+const { handleHttpError } = useErrorHandler();
+const { messages, loading, hasMessages, sendPrompt } = useAiChat();
 
-const promptBoxEl = ref<InstanceType<typeof AiPromptBox>>()
+const promptBoxEl = ref<InstanceType<typeof AiPromptBox>>();
 
-const goBack = () => go(-1)
+const goBack = () => go(-1);
 
-onScreenActivated('AI', async () => {
-  await nextTick()
-  promptBoxEl.value?.focus()
-})
+onScreenActivated("AI", async () => {
+  await nextTick();
+  promptBoxEl.value?.focus();
+});
 
-const selectSamplePrompt = (text: string) => promptBoxEl.value?.fill(text)
+const selectSamplePrompt = (text: string) => promptBoxEl.value?.fill(text);
 
 const handleSubmit = async (text: string) => {
   try {
-    const result = await sendPrompt(text)
+    const result = await sendPrompt(text);
 
     if (!result) {
-      return
+      return;
     }
 
-    if (result.action === 'create_smart_playlist') {
-      toastSuccess(`Playlist "${result.resource.name}" created.`)
-    } else if (result.action === 'add_radio_station') {
-      toastSuccess(`Station "${result.resource.name}" added.`)
-    } else if (result.action === 'play_radio_station') {
-      await playback('radio').play(result.resource)
-    } else if (result.action === 'play_songs') {
+    if (result.action === "create_smart_playlist") {
+      toastSuccess(`Playlist "${result.resource.name}" created.`);
+    } else if (result.action === "add_radio_station") {
+      toastSuccess(`Station "${result.resource.name}" added.`);
+    } else if (result.action === "play_radio_station") {
+      await playback("radio").play(result.resource);
+    } else if (result.action === "play_songs") {
       if (result.queue) {
-        queueStore.queue(result.resource)
+        queueStore.queue(result.resource);
       } else {
-        await playback().queueAndPlay(result.resource)
+        await playback().queueAndPlay(result.resource);
       }
     }
   } catch (e: unknown) {
-    handleHttpError(e)
+    handleHttpError(e);
   } finally {
-    await nextTick()
-    promptBoxEl.value?.focus()
+    await nextTick();
+    promptBoxEl.value?.focus();
   }
-}
+};
 </script>
 
 <style lang="postcss" scoped>
 .ai-screen::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background: #000;

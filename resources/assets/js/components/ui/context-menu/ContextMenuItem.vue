@@ -26,23 +26,23 @@
 </template>
 
 <script setup lang="ts">
-import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
-import { ref, useSlots } from 'vue'
+import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { ref, useSlots } from "vue";
 
-const emit = defineEmits<{ (e: 'click'): void }>()
+const emit = defineEmits<{ (e: "click"): void }>();
 
-const el = ref<HTMLLIElement>()
+const el = ref<HTMLLIElement>();
 
-const focus = async () => el.value?.focus()
+const focus = async () => el.value?.focus();
 
-const slots = useSlots()
+const slots = useSlots();
 
-const hasIconSlot = Boolean(slots.icon)
-const hasSubMenuItems = Boolean(slots.subMenuItems)
+const hasIconSlot = Boolean(slots.icon);
+const hasSubMenuItems = Boolean(slots.subMenuItems);
 
-let cssClasses = hasIconSlot ? 'flex items-center gap-3' : ''
+let cssClasses = hasIconSlot ? "flex items-center gap-3" : "";
 
 if (hasSubMenuItems) {
-  cssClasses += ' has-sub'
+  cssClasses += " has-sub";
 }
 </script>

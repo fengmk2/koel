@@ -33,7 +33,9 @@
     </div>
     <SelectBox v-else v-model="selected" @update:model-value="onSelectChange">
       <option :value="null" />
-      <option v-for="folder in folders" :key="folder.id" :value="folder.id">{{ folder.name }}</option>
+      <option v-for="folder in folders" :key="folder.id" :value="folder.id">
+        {{ folder.name }}
+      </option>
       <option v-if="folderName" :value="PENDING_FOLDER">{{ folderName }} (new)</option>
       <option :value="NEW_FOLDER">+ New Folder</option>
     </SelectBox>
@@ -41,55 +43,57 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, ref, toRef, watch } from 'vue'
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { playlistFolderStore } from '@/stores/playlistFolderStore'
+import { nextTick, ref, toRef, watch } from "vue";
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { playlistFolderStore } from "@/stores/playlistFolderStore";
 
-import SelectBox from '@/components/ui/form/SelectBox.vue'
+import SelectBox from "@/components/ui/form/SelectBox.vue";
 
-const NEW_FOLDER = '__new__'
-const PENDING_FOLDER = '__pending__'
+const NEW_FOLDER = "__new__";
+const PENDING_FOLDER = "__pending__";
 
-const folderId = defineModel<PlaylistFolder['id'] | null | undefined>('folderId', { required: true })
-const folderName = defineModel<string | null>('folderName', { default: null })
+const folderId = defineModel<PlaylistFolder["id"] | null | undefined>("folderId", {
+  required: true,
+});
+const folderName = defineModel<string | null>("folderName", { default: null });
 
-const folders = toRef(playlistFolderStore.state, 'folders')
-const entering = ref(false)
-const inputName = ref('')
-const newFolderInput = ref<HTMLInputElement>()
-const selected = ref(folderName.value ? PENDING_FOLDER : folderId.value)
+const folders = toRef(playlistFolderStore.state, "folders");
+const entering = ref(false);
+const inputName = ref("");
+const newFolderInput = ref<HTMLInputElement>();
+const selected = ref(folderName.value ? PENDING_FOLDER : folderId.value);
 
 watch([folderId, folderName], ([id, name]) => {
-  selected.value = name ? PENDING_FOLDER : id
-})
+  selected.value = name ? PENDING_FOLDER : id;
+});
 
 const onSelectChange = () => {
   if (selected.value === NEW_FOLDER || selected.value === PENDING_FOLDER) {
-    entering.value = true
-    inputName.value = folderName.value ?? ''
-    nextTick(() => newFolderInput.value?.focus())
+    entering.value = true;
+    inputName.value = folderName.value ?? "";
+    nextTick(() => newFolderInput.value?.focus());
   } else {
-    folderId.value = selected.value
-    folderName.value = null
+    folderId.value = selected.value;
+    folderName.value = null;
   }
-}
+};
 
 const confirm = () => {
-  const name = inputName.value.trim()
+  const name = inputName.value.trim();
 
   if (!name) {
-    return
+    return;
   }
 
-  folderName.value = name
-  folderId.value = null
-  selected.value = PENDING_FOLDER
-  entering.value = false
-}
+  folderName.value = name;
+  folderId.value = null;
+  selected.value = PENDING_FOLDER;
+  entering.value = false;
+};
 
 const cancel = () => {
-  entering.value = false
-  inputName.value = ''
-  selected.value = folderName.value ? PENDING_FOLDER : folderId.value
-}
+  entering.value = false;
+  inputName.value = "";
+  selected.value = folderName.value ? PENDING_FOLDER : folderId.value;
+};
 </script>

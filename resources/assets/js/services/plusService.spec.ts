@@ -1,16 +1,16 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { http } from '@/services/http'
-import { plusService as service } from './plusService'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { http } from "@/services/http";
+import { plusService as service } from "./plusService";
 
-describe('plusService', () => {
-  const h = createHarness()
+describe("plusService", () => {
+  const h = createHarness();
 
-  it('activates license', async () => {
-    const postMock = h.mock(http, 'post').mockResolvedValue({})
+  it("activates license", async () => {
+    const postMock = h.mock(http, "post").mockResolvedValue({});
 
-    await service.activateLicense('abc123')
+    await service.activateLicense("abc123");
 
-    expect(postMock).toHaveBeenCalledWith('licenses/activate', { key: 'abc123' })
-  })
-})
+    expect(postMock).toHaveBeenCalledWith("licenses/activate", { key: "abc123" });
+  });
+});

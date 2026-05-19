@@ -1,20 +1,20 @@
-import { describe, expect, it, vi } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { useFileReader } from './useFileReader'
+import { describe, expect, it, vi } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { useFileReader } from "./useFileReader";
 
-describe('useFileReader', () => {
-  createHarness()
+describe("useFileReader", () => {
+  createHarness();
 
-  it('reads a file as data URL', async () => {
-    const { readAsDataUrl } = useFileReader()
-    const callback = vi.fn()
+  it("reads a file as data URL", async () => {
+    const { readAsDataUrl } = useFileReader();
+    const callback = vi.fn();
 
-    const file = new File(['hello'], 'test.txt', { type: 'text/plain' })
-    readAsDataUrl(file, callback)
+    const file = new File(["hello"], "test.txt", { type: "text/plain" });
+    readAsDataUrl(file, callback);
 
     await vi.waitFor(() => {
-      expect(callback).toHaveBeenCalledOnce()
-      expect(callback.mock.calls[0][0]).toContain('data:')
-    })
-  })
-})
+      expect(callback).toHaveBeenCalledOnce();
+      expect(callback.mock.calls[0][0]).toContain("data:");
+    });
+  });
+});

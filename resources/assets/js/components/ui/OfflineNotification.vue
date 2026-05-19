@@ -11,19 +11,19 @@
 </template>
 
 <script lang="ts" setup>
-import { WifiOff } from 'lucide-vue-next'
-import { ref, watch } from 'vue'
-import { useNetworkStatus } from '@/composables/useNetworkStatus'
+import { WifiOff } from "lucide-vue-next";
+import { ref, watch } from "vue";
+import { useNetworkStatus } from "@/composables/useNetworkStatus";
 
-const { online } = useNetworkStatus()
-const dismissed = ref(false)
+const { online } = useNetworkStatus();
+const dismissed = ref(false);
 
 // Re-show the notification each time we go offline
-watch(online, isOnline => {
+watch(online, (isOnline) => {
   if (!isOnline) {
-    dismissed.value = false
+    dismissed.value = false;
   }
-})
+});
 </script>
 
 <style lang="postcss" scoped>

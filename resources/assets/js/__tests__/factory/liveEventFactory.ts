@@ -1,8 +1,8 @@
-import { faker } from '@faker-js/faker'
+import { faker } from "@faker-js/faker";
 
 export default (): LiveEvent => {
   return {
-    type: 'live-events',
+    type: "live-events",
     id: faker.string.ulid(),
     name: faker.word.words(),
     dates: {
@@ -16,5 +16,5 @@ export default (): LiveEvent => {
       url: faker.internet.url(),
       city: faker.location.city(),
     },
-  }
-}
+  };
+};

@@ -8,14 +8,14 @@
 </template>
 
 <script lang="ts" setup>
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
-import { computed } from 'vue'
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { computed } from "vue";
 
-const props = withDefaults(defineProps<{ modelValue?: boolean }>(), { modelValue: false })
-const emit = defineEmits<{ (e: 'update:modelValue', value: boolean): void }>()
+const props = withDefaults(defineProps<{ modelValue?: boolean }>(), { modelValue: false });
+const emit = defineEmits<{ (e: "update:modelValue", value: boolean): void }>();
 
 const value = computed({
   get: () => props.modelValue,
-  set: value => emit('update:modelValue', value),
-})
+  set: (value) => emit("update:modelValue", value),
+});
 </script>

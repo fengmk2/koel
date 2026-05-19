@@ -1,12 +1,14 @@
 <template>
-  <Btn size="small" variant="highlight" rounded @click.prevent="goToRecentlyPlayedScreen"> View All </Btn>
+  <Btn size="small" variant="highlight" rounded @click.prevent="goToRecentlyPlayedScreen">
+    View All
+  </Btn>
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from '@/composables/useRouter'
+import { useRouter } from "@/composables/useRouter";
 
-import Btn from '@/components/ui/form/Btn.vue'
+import Btn from "@/components/ui/form/Btn.vue";
 
-const { go, url } = useRouter()
-const goToRecentlyPlayedScreen = () => go(url('recently-played'))
+const { go, url } = useRouter();
+const goToRecentlyPlayedScreen = () => go(url("recently-played"));
 </script>

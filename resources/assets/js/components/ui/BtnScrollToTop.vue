@@ -14,26 +14,26 @@
 </template>
 
 <script lang="ts" setup>
-import { faCircleUp } from '@fortawesome/free-solid-svg-icons'
-import { onMounted, ref } from 'vue'
-import { $ } from '@/utils/$'
+import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
+import { onMounted, ref } from "vue";
+import { $ } from "@/utils/$";
 
-const el = ref<HTMLElement>()
-const showing = ref(false)
+const el = ref<HTMLElement>();
+const showing = ref(false);
 
 const scrollToTop = () => {
   if (!el.value?.parentElement) {
-    return
+    return;
   }
 
-  $.scrollTo(el.value.parentElement, 0, 500, () => (showing.value = false))
-}
+  $.scrollTo(el.value.parentElement, 0, 500, () => (showing.value = false));
+};
 
 onMounted(() => {
-  el.value?.parentElement?.addEventListener('scroll', event => {
-    showing.value = (event.target as HTMLElement).scrollTop > 64
-  })
-})
+  el.value?.parentElement?.addEventListener("scroll", (event) => {
+    showing.value = (event.target as HTMLElement).scrollTop > 64;
+  });
+});
 </script>
 
 <style lang="postcss" scoped>
