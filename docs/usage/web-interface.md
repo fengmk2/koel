@@ -34,14 +34,14 @@ like the artist or album's information when [configured](../service-integrations
 
 On any screen with a song list (a "song-list screen") you can:
 
-* Sort the list by clicking on the column headers
-* Filter the list by typing in the filter box (marked with <InterfaceIcon :src="filterIcon" alt="Filter" />)
-* Select a song by clicking on it. To select multiple songs, hold down <kbd>Shift</kbd> or <kbd>Ctrl/Cmd</kbd> while
+- Sort the list by clicking on the column headers
+- Filter the list by typing in the filter box (marked with <InterfaceIcon :src="filterIcon" alt="Filter" />)
+- Select a song by clicking on it. To select multiple songs, hold down <kbd>Shift</kbd> or <kbd>Ctrl/Cmd</kbd> while
   clicking.
-* Drag and drop one or more songs to reorder them when applicable
-* Drag and drop one or more songs to applicable menu items to the left to perform actions like adding to a playlist,
+- Drag and drop one or more songs to reorder them when applicable
+- Drag and drop one or more songs to applicable menu items to the left to perform actions like adding to a playlist,
   queueing, or marking them as favorite
-* Right-click on a song to bring up a context menu with options to play, queue, mark as favorite, add to a playlist, and
+- Right-click on a song to bring up a context menu with options to play, queue, mark as favorite, add to a playlist, and
   more
 
 To search globally for songs, artists, and albums, see [Instant Search](./search).
@@ -63,14 +63,14 @@ rewind/fast-forward the song by clicking and dragging the progress bar.
 
 From the same area, you can also:
 
-* click the rotating cover art to navigate to the Queue screen and scroll to the currently playing song
-* <InterfaceIcon :src="heartIcon" alt="Heart" /> like/unlike the current song
-* <InterfaceIcon :src="repeatIcon" alt="Repeat" /> switch between repeat modes
-* <InterfaceIcon :src="queueIcon" alt="Queue" /> toggle the Queue screen
-* <InterfaceIcon :src="boltIcon" alt="Bolt" /> show the visualizer
-* <InterfaceIcon :src="audioLinesIcon" alt="Equalizer" /> show the equalizer
-* <InterfaceIcon :src="volumeIcon" alt="Volume" /> control the volume
-* <InterfaceIcon :src="expandIcon" alt="Expand" /> toggle full-screen mode
+- click the rotating cover art to navigate to the Queue screen and scroll to the currently playing song
+- <InterfaceIcon :src="heartIcon" alt="Heart" /> like/unlike the current song
+- <InterfaceIcon :src="repeatIcon" alt="Repeat" /> switch between repeat modes
+- <InterfaceIcon :src="queueIcon" alt="Queue" /> toggle the Queue screen
+- <InterfaceIcon :src="boltIcon" alt="Bolt" /> show the visualizer
+- <InterfaceIcon :src="audioLinesIcon" alt="Equalizer" /> show the equalizer
+- <InterfaceIcon :src="volumeIcon" alt="Volume" /> control the volume
+- <InterfaceIcon :src="expandIcon" alt="Expand" /> toggle full-screen mode
 
 Right-clicking the footer area brings up the context menu for the currently playing song.
 
@@ -130,24 +130,24 @@ Note that these shortcuts are only triggered when the focus is not on an input f
 the music track)
 or a textarea.
 
-* <kbd>h</kbd> shows the Home screen
-* <kbd>q</kbd> toggles the Queue screen
-* <kbd>f</kbd> puts the focus into the search box and opens the [instant search](search.md) screen
-* <kbd>Enter</kbd> plays a song. If multiple songs are being selected, <kbd>Enter</kbd> adds them to the bottom of the
+- <kbd>h</kbd> shows the Home screen
+- <kbd>q</kbd> toggles the Queue screen
+- <kbd>f</kbd> puts the focus into the search box and opens the [instant search](search.md) screen
+- <kbd>Enter</kbd> plays a song. If multiple songs are being selected, <kbd>Enter</kbd> adds them to the bottom of the
   queue, <kbd>Shift</kbd>+<kbd>Enter</kbd> queues them to top. Adding a <kbd>Cmd</kbd> or <kbd>Ctrl</kbd> into the combo
   plays the first selected song right away.
-* <kbd>Space</kbd> toggles playback
-* <kbd>j</kbd> plays the next song in queue
-* <kbd>k</kbd> plays the previous song in queue
-* <kbd>l</kbd> marks/unmarks the current song as favorite
-* <kbd>r</kbd> circles through repeat modes (no repeat, repeat all, repeat one)
-* <kbd>→</kbd> seeks forward 10 seconds
-* <kbd>←</kbd> seeks backward 10 seconds
-* <kbd>↑</kbd> increases volume by 10%
-* <kbd>↓</kbd> decreases volume by 10%
-* <kbd>m</kbd> mutes/unmutes
-* <kbd>Cmd/Ctrl</kbd>+<kbd>a</kbd> selects all songs in the current song-list screen when the list is focused
-* <kbd>Delete</kbd> removes selected song(s) from the current queue/playlist
+- <kbd>Space</kbd> toggles playback
+- <kbd>j</kbd> plays the next song in queue
+- <kbd>k</kbd> plays the previous song in queue
+- <kbd>l</kbd> marks/unmarks the current song as favorite
+- <kbd>r</kbd> circles through repeat modes (no repeat, repeat all, repeat one)
+- <kbd>→</kbd> seeks forward 10 seconds
+- <kbd>←</kbd> seeks backward 10 seconds
+- <kbd>↑</kbd> increases volume by 10%
+- <kbd>↓</kbd> decreases volume by 10%
+- <kbd>m</kbd> mutes/unmutes
+- <kbd>Cmd/Ctrl</kbd>+<kbd>a</kbd> selects all songs in the current song-list screen when the list is focused
+- <kbd>Delete</kbd> removes selected song(s) from the current queue/playlist
 
 With a browser that supports [MediaSession](https://developer.mozilla.org/en-US/docs/Web/API/MediaSession) — basically,
 all modern browsers — you can control Koel using hardware media keys without even having Koel _or the browser_ focused.

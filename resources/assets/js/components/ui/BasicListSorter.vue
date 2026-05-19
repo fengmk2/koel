@@ -8,7 +8,12 @@
       <span class="mr-2">{{ currentLabel }}</span>
       <Icon :icon="order === 'asc' ? faArrowUp : faArrowDown" />
     </button>
-    <Popover ref="popover" :anchor="button" placement="bottom-end" class="context-menu normal-case tracking-normal">
+    <Popover
+      ref="popover"
+      :anchor="button"
+      placement="bottom-end"
+      class="context-menu normal-case tracking-normal"
+    >
       <menu>
         <li
           v-for="item in items"
@@ -30,43 +35,46 @@
 </template>
 
 <script generic="T extends SortField" lang="ts" setup>
-import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
-import { computed, ref, toRefs } from 'vue'
+import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { computed, ref, toRefs } from "vue";
 
-import Popover from '@/components/ui/Popover.vue'
+import Popover from "@/components/ui/Popover.vue";
 
 const props = defineProps<{
-  items: BasicListSorterDropDownItem<T>[]
-  field?: T
-  order?: SortOrder
-}>()
+  items: BasicListSorterDropDownItem<T>[];
+  field?: T;
+  order?: SortOrder;
+}>();
 
-const emit = defineEmits<{ (e: 'sort', field: T, order: SortOrder): void }>()
+const emit = defineEmits<{ (e: "sort", field: T, order: SortOrder): void }>();
 
-const { field: currentField, order: currentOrder, items } = toRefs(props)
+const { field: currentField, order: currentOrder, items } = toRefs(props);
 
-const button = ref<HTMLButtonElement>()
-const popover = ref<InstanceType<typeof Popover>>()
+const button = ref<HTMLButtonElement>();
+const popover = ref<InstanceType<typeof Popover>>();
 
 const currentLabel = computed(() => {
-  return items.value.find((item: BasicListSorterDropDownItem<T>) => item.field === currentField.value)?.label
-})
+  return items.value.find(
+    (item: BasicListSorterDropDownItem<T>) => item.field === currentField.value,
+  )?.label;
+});
 
 const sort = (field: T) => {
   if (field === currentField.value) {
     // if clicking the same field, toggle the order
-    emit('sort', field, currentOrder.value === 'asc' ? 'desc' : 'asc')
+    emit("sort", field, currentOrder.value === "asc" ? "desc" : "asc");
   } else {
     // otherwise, we do ascending order by default
-    emit('sort', field, 'asc')
+    emit("sort", field, "asc");
   }
 
-  popover.value?.hide()
-}
+  popover.value?.hide();
+};
 
-const isCurrentField = (field: T) => field === currentField.value
+const isCurrentField = (field: T) => field === currentField.value;
 
 const title = computed(
-  () => `Sorting by ${currentLabel.value}, ${currentOrder.value === 'asc' ? 'ascending' : 'descending'}`,
-)
+  () =>
+    `Sorting by ${currentLabel.value}, ${currentOrder.value === "asc" ? "ascending" : "descending"}`,
+);
 </script>

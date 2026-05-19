@@ -1,54 +1,54 @@
-import { playlistStore } from '@/stores/playlistStore'
-import { eventBus } from '@/utils/eventBus'
-import { getPlayableCollectionContentType } from '@/utils/typeGuards'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { useMessageToaster } from '@/composables/useMessageToaster'
+import { playlistStore } from "@/stores/playlistStore";
+import { eventBus } from "@/utils/eventBus";
+import { getPlayableCollectionContentType } from "@/utils/typeGuards";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { useMessageToaster } from "@/composables/useMessageToaster";
 
 export const usePlaylistContentManagement = () => {
-  const { handleHttpError } = useErrorHandler('dialog')
-  const { toastSuccess } = useMessageToaster()
+  const { handleHttpError } = useErrorHandler("dialog");
+  const { toastSuccess } = useMessageToaster();
 
   const inflect = (playables: Playable[]) => {
     switch (getPlayableCollectionContentType(playables)) {
-      case 'songs':
-        return playables.length === 1 ? 'Song' : 'Songs'
-      case 'episodes':
-        return playables.length === 1 ? 'Episode' : 'Episodes'
+      case "songs":
+        return playables.length === 1 ? "Song" : "Songs";
+      case "episodes":
+        return playables.length === 1 ? "Episode" : "Episodes";
       default:
-        return playables.length === 1 ? 'Item' : 'Items'
+        return playables.length === 1 ? "Item" : "Items";
     }
-  }
+  };
 
   const addToPlaylist = async (playlist: Playlist, playables: Playable[]) => {
     if (playlist.is_smart || playables.length === 0) {
-      return
+      return;
     }
 
     try {
-      await playlistStore.addContent(playlist, playables)
-      eventBus.emit('PLAYLIST_UPDATED', playlist)
-      toastSuccess(`${inflect(playables)} added into "${playlist.name}."`)
+      await playlistStore.addContent(playlist, playables);
+      eventBus.emit("PLAYLIST_UPDATED", playlist);
+      toastSuccess(`${inflect(playables)} added into "${playlist.name}."`);
     } catch (error: unknown) {
-      handleHttpError(error)
+      handleHttpError(error);
     }
-  }
+  };
 
   const removeFromPlaylist = async (playlist: Playlist, playables: Playable[]) => {
     if (playlist.is_smart) {
-      return
+      return;
     }
 
     try {
-      await playlistStore.removeContent(playlist, playables)
-      eventBus.emit('PLAYLIST_CONTENT_REMOVED', playlist, playables)
-      toastSuccess(`${inflect(playables)} removed from "${playlist.name}."`)
+      await playlistStore.removeContent(playlist, playables);
+      eventBus.emit("PLAYLIST_CONTENT_REMOVED", playlist, playables);
+      toastSuccess(`${inflect(playables)} removed from "${playlist.name}."`);
     } catch (error: unknown) {
-      handleHttpError(error)
+      handleHttpError(error);
     }
-  }
+  };
 
   return {
     addToPlaylist,
     removeFromPlaylist,
-  }
-}
+  };
+};

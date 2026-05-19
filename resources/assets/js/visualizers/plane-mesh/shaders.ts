@@ -31,6 +31,6 @@ const shaders = {
           gl_FragColor = vec4((64.0 - abs(x)) / 32.0, (32.0 - abs(y)) / 32.0, (abs(x + y) / 2.0) / 32.0, 1.0);
         }
     `,
-}
+};
 
-export default shaders
+export default shaders;

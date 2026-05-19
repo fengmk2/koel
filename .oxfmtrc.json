@@ -3,8 +3,5 @@
   "singleQuote": true,
   "arrowParens": "avoid",
   "printWidth": 120,
-  "ignorePatterns": [
-    "resources/assets/css/vendor/**",
-    "resources/assets/js/visualizers/**"
-  ]
+  "ignorePatterns": ["resources/assets/css/vendor/**", "resources/assets/js/visualizers/**"]
 }

@@ -8,31 +8,31 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
-import noUiSlider from 'nouislider'
+import { computed, onMounted, ref } from "vue";
+import noUiSlider from "nouislider";
 
 const props = withDefaults(
   defineProps<{
-    type?: 'preamp' | 'gain'
-    modelValue?: number
+    type?: "preamp" | "gain";
+    modelValue?: number;
   }>(),
   {
-    type: 'gain',
+    type: "gain",
     modelValue: 0,
   },
-)
+);
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: number): void
-  (e: 'commit')
-}>()
+  (e: "update:modelValue", value: number): void;
+  (e: "commit");
+}>();
 
-const sliderEl = ref<EqualizerBandElement>()
+const sliderEl = ref<EqualizerBandElement>();
 
 const value = computed({
   get: () => props.modelValue,
-  set: value => emit('update:modelValue', value),
-})
+  set: (value) => emit("update:modelValue", value),
+});
 
 /**
  * Since watching the value and updating the slider UI proves to be not performant,
@@ -40,9 +40,9 @@ const value = computed({
  * parent component (Equalizer) can call it when resetting the preset.
  */
 const updateSliderValue = (val: number) => {
-  sliderEl.value?.noUiSlider.set(val)
-  value.value = val
-}
+  sliderEl.value?.noUiSlider.set(val);
+  value.value = val;
+};
 
 onMounted(() => {
   noUiSlider.create(sliderEl.value!, {
@@ -50,20 +50,20 @@ onMounted(() => {
     // the first element is the preamp. The rest are gains.
     start: value.value,
     range: { min: -20, max: 20 },
-    orientation: 'vertical',
-    direction: 'rtl',
-  })
+    orientation: "vertical",
+    direction: "rtl",
+  });
 
-  sliderEl.value!.noUiSlider.on('slide', (values, handle) => {
-    emit('update:modelValue', Number.parseFloat(values[handle]))
-  })
+  sliderEl.value!.noUiSlider.on("slide", (values, handle) => {
+    emit("update:modelValue", Number.parseFloat(values[handle]));
+  });
 
-  sliderEl.value!.noUiSlider.on('change', () => emit('commit'))
-})
+  sliderEl.value!.noUiSlider.on("change", () => emit("commit"));
+});
 
 defineExpose({
   updateSliderValue,
-})
+});
 </script>
 
 <style lang="postcss">
@@ -77,7 +77,7 @@ article {
       box-shadow: none;
 
       &::after {
-        content: ' ';
+        content: " ";
         position: absolute;
         width: 1px;
         height: 100%;
@@ -99,7 +99,7 @@ article {
       width: 16px;
 
       &::after {
-        content: ' ';
+        content: " ";
         position: absolute;
         width: 1px;
         height: 100%;
@@ -142,7 +142,7 @@ article {
         transform: translate(-50%, -50%);
 
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           left: 50%;
           top: 50%;

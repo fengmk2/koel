@@ -14,16 +14,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
+import { ref } from "vue";
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 
-import TextInput from '@/components/ui/form/TextInput.vue'
+import TextInput from "@/components/ui/form/TextInput.vue";
 
 // we don't want the wrapping div to inherit the fallthrough attrs
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
-const value = defineModel<string>()
-const type = ref<'password' | 'text'>('password')
+const value = defineModel<string>();
+const type = ref<"password" | "text">("password");
 
-const toggleReveal = () => (type.value = type.value === 'password' ? 'text' : 'password')
+const toggleReveal = () => (type.value = type.value === "password" ? "text" : "password");
 </script>

@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker'
+import { faker } from "@faker-js/faker";
 
 export default (): YouTubeVideo => ({
   id: {
@@ -13,4 +13,4 @@ export default (): YouTubeVideo => ({
       },
     },
   },
-})
+});

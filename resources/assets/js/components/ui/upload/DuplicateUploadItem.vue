@@ -14,22 +14,22 @@
 </template>
 
 <script setup lang="ts">
-import { useDialogBox } from '@/composables/useDialogBox'
-import { uploadService } from '@/services/uploadService'
+import { useDialogBox } from "@/composables/useDialogBox";
+import { uploadService } from "@/services/uploadService";
 
-import Btn from '@/components/ui/form/Btn.vue'
+import Btn from "@/components/ui/form/Btn.vue";
 
-import type { DuplicateUpload } from '@/services/uploadService'
+import type { DuplicateUpload } from "@/services/uploadService";
 
-const props = defineProps<{ upload: DuplicateUpload }>()
+const props = defineProps<{ upload: DuplicateUpload }>();
 
-const { showConfirmDialog } = useDialogBox()
+const { showConfirmDialog } = useDialogBox();
 
-const keep = () => uploadService.keepDuplicate(props.upload.id)
+const keep = () => uploadService.keepDuplicate(props.upload.id);
 
 const confirmDiscard = async () => {
-  if (await showConfirmDialog('Discard this duplicate upload?')) {
-    uploadService.discardDuplicate(props.upload.id)
+  if (await showConfirmDialog("Discard this duplicate upload?")) {
+    uploadService.discardDuplicate(props.upload.id);
   }
-}
+};
 </script>

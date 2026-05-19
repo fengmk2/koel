@@ -68,16 +68,12 @@ In order to use S3 for streaming, you'll also need to set up a cross-origin reso
 
 ```json
 [
-    {
-        "AllowedHeaders": [],
-        "AllowedMethods": [
-            "GET"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": []
-    }
+  {
+    "AllowedHeaders": [],
+    "AllowedMethods": ["GET"],
+    "AllowedOrigins": ["*"],
+    "ExposeHeaders": []
+  }
 ]
 ```
 
@@ -131,13 +127,13 @@ AWS_BUCKET=koel
 Koel Plus also supports using Dropbox as a storage driver, although the setup is a bit different.
 
 1. First, [create a new Dropbox app](https://www.dropbox.com/developers/apps/create) with the "App folder" access type and set up sufficient permissions to read and write files.
-    <CaptionedImage :src="dropboxCreateApp" alt="Create a Dropbox app">Create a Dropbox app</CaptionedImage>
-    <CaptionedImage :src="dropboxAppSettings" alt="Dropbox app permissions">Set sufficient app permissions</CaptionedImage>
+   <CaptionedImage :src="dropboxCreateApp" alt="Create a Dropbox app">Create a Dropbox app</CaptionedImage>
+   <CaptionedImage :src="dropboxAppSettings" alt="Dropbox app permissions">Set sufficient app permissions</CaptionedImage>
 2. Under your Dropbox app's Settings tab, make a note of the "App key" and "App secret" values. Now, from the root folder of your Koel installation, run the following command:
-    ```bash
-    php artisan koel:storage:dropbox
-    ```
-    You'll be prompted to enter the "App key" and "App secret" values obtained earlier.
+   ```bash
+   php artisan koel:storage:dropbox
+   ```
+   You'll be prompted to enter the "App key" and "App secret" values obtained earlier.
 3. Koel will generate a URL for you to visit and authorize the Dropbox app. Afterward, you'll receive an access code.
 4. Enter the access code back into the command line's prompt. Koel will then finalize the setup automatically and start using Dropbox as its storage.
 

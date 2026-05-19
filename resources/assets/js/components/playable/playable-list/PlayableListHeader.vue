@@ -1,5 +1,8 @@
 <template>
-  <div :class="config.sortable ? 'sortable' : 'unsortable'" class="song-list-header flex z-[2] bg-k-fg-3 pl-5">
+  <div
+    :class="config.sortable ? 'sortable' : 'unsortable'"
+    class="song-list-header flex z-[2] bg-k-fg-3 pl-5"
+  >
     <span
       v-if="shouldShowColumn('track')"
       class="track-number"
@@ -10,15 +13,37 @@
     >
       #
       <template v-if="config.sortable">
-        <Icon v-if="sortField === 'track' && sortOrder === 'asc'" :icon="faCaretUp" class="text-k-highlight" />
-        <Icon v-if="sortField === 'track' && sortOrder === 'desc'" :icon="faCaretDown" class="text-k-highlight" />
+        <Icon
+          v-if="sortField === 'track' && sortOrder === 'asc'"
+          :icon="faCaretUp"
+          class="text-k-highlight"
+        />
+        <Icon
+          v-if="sortField === 'track' && sortOrder === 'desc'"
+          :icon="faCaretDown"
+          class="text-k-highlight"
+        />
       </template>
     </span>
-    <span class="title-artist" data-testid="header-title" role="button" title="Sort by title" @click="sort('title')">
+    <span
+      class="title-artist"
+      data-testid="header-title"
+      role="button"
+      title="Sort by title"
+      @click="sort('title')"
+    >
       Title
       <template v-if="config.sortable">
-        <Icon v-if="sortField === 'title' && sortOrder === 'asc'" :icon="faCaretUp" class="text-k-highlight" />
-        <Icon v-if="sortField === 'title' && sortOrder === 'desc'" :icon="faCaretDown" class="text-k-highlight" />
+        <Icon
+          v-if="sortField === 'title' && sortOrder === 'asc'"
+          :icon="faCaretUp"
+          class="text-k-highlight"
+        />
+        <Icon
+          v-if="sortField === 'title' && sortOrder === 'desc'"
+          :icon="faCaretDown"
+          class="text-k-highlight"
+        />
       </template>
     </span>
     <span
@@ -42,8 +67,16 @@
       <template v-else>Album <span class="opacity-50">/</span> Podcast</template>
 
       <span v-if="config.sortable" class="ml-2">
-        <Icon v-if="sortingByAlbumOrPodcast && sortOrder === 'asc'" :icon="faCaretUp" class="text-k-highlight" />
-        <Icon v-if="sortingByAlbumOrPodcast && sortOrder === 'desc'" :icon="faCaretDown" class="text-k-highlight" />
+        <Icon
+          v-if="sortingByAlbumOrPodcast && sortOrder === 'asc'"
+          :icon="faCaretUp"
+          class="text-k-highlight"
+        />
+        <Icon
+          v-if="sortingByAlbumOrPodcast && sortOrder === 'desc'"
+          :icon="faCaretDown"
+          class="text-k-highlight"
+        />
       </span>
     </span>
     <template v-if="config.collaborative">
@@ -102,8 +135,16 @@
     >
       Genre
       <template v-if="config.sortable">
-        <Icon v-if="sortField === 'genre' && sortOrder === 'asc'" :icon="faCaretUp" class="text-k-highlight" />
-        <Icon v-if="sortField === 'genre' && sortOrder === 'desc'" :icon="faCaretDown" class="text-k-highlight" />
+        <Icon
+          v-if="sortField === 'genre' && sortOrder === 'asc'"
+          :icon="faCaretUp"
+          class="text-k-highlight"
+        />
+        <Icon
+          v-if="sortField === 'genre' && sortOrder === 'desc'"
+          :icon="faCaretDown"
+          class="text-k-highlight"
+        />
       </template>
     </span>
     <span
@@ -116,8 +157,16 @@
     >
       Year
       <template v-if="config.sortable">
-        <Icon v-if="sortField === 'year' && sortOrder === 'asc'" :icon="faCaretUp" class="text-k-highlight" />
-        <Icon v-if="sortField === 'year' && sortOrder === 'desc'" :icon="faCaretDown" class="text-k-highlight" />
+        <Icon
+          v-if="sortField === 'year' && sortOrder === 'asc'"
+          :icon="faCaretUp"
+          class="text-k-highlight"
+        />
+        <Icon
+          v-if="sortField === 'year' && sortOrder === 'desc'"
+          :icon="faCaretDown"
+          class="text-k-highlight"
+        />
       </template>
     </span>
     <span
@@ -130,8 +179,16 @@
     >
       Time
       <template v-if="config.sortable">
-        <Icon v-if="sortField === 'length' && sortOrder === 'asc'" :icon="faCaretUp" class="text-k-highlight" />
-        <Icon v-if="sortField === 'length' && sortOrder === 'desc'" :icon="faCaretDown" class="text-k-highlight" />
+        <Icon
+          v-if="sortField === 'length' && sortOrder === 'asc'"
+          :icon="faCaretUp"
+          class="text-k-highlight"
+        />
+        <Icon
+          v-if="sortField === 'length' && sortOrder === 'desc'"
+          :icon="faCaretDown"
+          class="text-k-highlight"
+        />
       </template>
     </span>
     <span class="extra">
@@ -149,50 +206,55 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import { computed } from 'vue'
-import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
-import { arrayify, requireInjection } from '@/utils/helpers'
-import { PlayableListConfigKey, PlayableListSortFieldKey, PlayableListSortOrderKey } from '@/config/symbols'
-import type { getPlayableCollectionContentType } from '@/utils/typeGuards'
-import { usePlayableListColumnVisibility } from '@/composables/usePlayableListColumnVisibility'
+import type { Ref } from "vue";
+import { computed } from "vue";
+import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import { arrayify, requireInjection } from "@/utils/helpers";
+import {
+  PlayableListConfigKey,
+  PlayableListSortFieldKey,
+  PlayableListSortOrderKey,
+} from "@/config/symbols";
+import type { getPlayableCollectionContentType } from "@/utils/typeGuards";
+import { usePlayableListColumnVisibility } from "@/composables/usePlayableListColumnVisibility";
 
-import PlayableListHeaderActionMenu from '@/components/playable/playable-list/PlayableListHeaderActionMenu.vue'
+import PlayableListHeaderActionMenu from "@/components/playable/playable-list/PlayableListHeaderActionMenu.vue";
 
 withDefaults(
   defineProps<{
-    contentType?: ReturnType<typeof getPlayableCollectionContentType>
+    contentType?: ReturnType<typeof getPlayableCollectionContentType>;
   }>(),
   {
-    contentType: 'songs',
+    contentType: "songs",
   },
-)
+);
 
 const emit = defineEmits<{
-  (e: 'sort', field: MaybeArray<PlayableListSortField>, order: SortOrder): void
-}>()
+  (e: "sort", field: MaybeArray<PlayableListSortField>, order: SortOrder): void;
+}>();
 
-const { shouldShowColumn } = usePlayableListColumnVisibility()
+const { shouldShowColumn } = usePlayableListColumnVisibility();
 
 const [sortField, setSortField] =
-  requireInjection<[Ref<MaybeArray<PlayableListSortField>>, Closure]>(PlayableListSortFieldKey)
-const [sortOrder, setSortOrder] = requireInjection<[Ref<SortOrder>, Closure]>(PlayableListSortOrderKey)
-const [config] = requireInjection<[Partial<PlayableListConfig>]>(PlayableListConfigKey, [{}])
+  requireInjection<[Ref<MaybeArray<PlayableListSortField>>, Closure]>(PlayableListSortFieldKey);
+const [sortOrder, setSortOrder] =
+  requireInjection<[Ref<SortOrder>, Closure]>(PlayableListSortOrderKey);
+const [config] = requireInjection<[Partial<PlayableListConfig>]>(PlayableListConfigKey, [{}]);
 
 const sort = (field: MaybeArray<PlayableListSortField>) => {
   // there are certain circumstances where sorting is simply disallowed, e.g. in Queue
   if (!config.sortable) {
-    return
+    return;
   }
 
-  setSortField(field)
-  setSortOrder(sortOrder.value === 'asc' ? 'desc' : 'asc')
+  setSortField(field);
+  setSortOrder(sortOrder.value === "asc" ? "desc" : "asc");
 
-  emit('sort', field, sortOrder.value)
-}
+  emit("sort", field, sortOrder.value);
+};
 
 const sortingByAlbumOrPodcast = computed(() => {
-  const sortFields = arrayify(sortField.value)
-  return sortFields[0] === 'album_name' || sortFields[0] === 'podcast_title'
-})
+  const sortFields = arrayify(sortField.value);
+  return sortFields[0] === "album_name" || sortFields[0] === "podcast_title";
+});
 </script>
