@@ -15,20 +15,20 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ref } from 'vue'
-import { computed, ref } from 'vue'
-import { requireInjection } from '@/utils/helpers'
-import { CurrentStreamableKey } from '@/config/symbols'
-import { useBranding } from '@/composables/useBranding'
-import { radioStationStore } from '@/stores/radioStationStore'
+import type { Ref } from "vue";
+import { computed, ref } from "vue";
+import { requireInjection } from "@/utils/helpers";
+import { CurrentStreamableKey } from "@/config/symbols";
+import { useBranding } from "@/composables/useBranding";
+import { radioStationStore } from "@/stores/radioStationStore";
 
-const station = requireInjection<Ref<RadioStation | undefined>>(CurrentStreamableKey, ref())
-const nowPlaying = radioStationStore.nowPlaying
+const station = requireInjection<Ref<RadioStation | undefined>>(CurrentStreamableKey, ref());
+const nowPlaying = radioStationStore.nowPlaying;
 
-const { cover: defaultCover } = useBranding()
+const { cover: defaultCover } = useBranding();
 
-const cover = computed(() => (station.value ? station.value.logo : defaultCover))
-const coverBackgroundImage = computed(() => `url(${cover.value ?? defaultCover})`)
+const cover = computed(() => (station.value ? station.value.logo : defaultCover));
+const coverBackgroundImage = computed(() => `url(${cover.value ?? defaultCover})`);
 </script>
 
 <style lang="postcss" scoped>

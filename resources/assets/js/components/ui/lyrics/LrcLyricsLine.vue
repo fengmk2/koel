@@ -9,9 +9,9 @@
 
 <script lang="ts" setup>
 defineProps<{
-  line: LrcLine
-  isActive: boolean
-}>()
+  line: LrcLine;
+  isActive: boolean;
+}>();
 </script>
 
 <style lang="postcss" scoped>

@@ -1,0 +1,18 @@
+blockExoticSubdeps: false
+
+minimumReleaseAge: 60
+minimumReleaseAgeExclude:
+  - vite-plus
+  - "@voidzero-dev/*"
+  - "@oxc-project/*"
+  - "@oxlint/*"
+  - oxlint
+  - oxfmt
+  - oxlint-tsgolint
+
+overrides:
+  form-data@<2.5.4: ">=2.5.4"
+  "@rolldown/pluginutils": 1.0.0-rc.9
+  "@voidzero-dev/vite-plus-core": "https://pkg.pr.new/voidzero-dev/vite-plus/@voidzero-dev/vite-plus-core@1703"
+  "@voidzero-dev/vite-plus-test": "https://pkg.pr.new/voidzero-dev/vite-plus/@voidzero-dev/vite-plus-test@1703"
+  "@voidzero-dev/vite-plus-prompts": "https://pkg.pr.new/voidzero-dev/vite-plus/@voidzero-dev/vite-plus-prompts@1703"

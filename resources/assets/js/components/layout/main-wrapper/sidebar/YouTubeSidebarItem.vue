@@ -8,10 +8,10 @@
 </template>
 
 <script lang="ts" setup>
-import { faYoutube } from '@fortawesome/free-brands-svg-icons'
-import { useRouter } from '@/composables/useRouter'
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { useRouter } from "@/composables/useRouter";
 
-import SidebarItem from './SidebarItem.vue'
+import SidebarItem from "./SidebarItem.vue";
 
-const { url } = useRouter()
+const { url } = useRouter();
 </script>

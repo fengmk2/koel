@@ -1,14 +1,14 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { screen } from '@testing-library/vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './CheckBox.vue'
+import { describe, expect, it } from "vite-plus/test";
+import { screen } from "@testing-library/vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./CheckBox.vue";
 
-describe('checkBox.vue', () => {
-  const h = createHarness()
+describe("checkBox.vue", () => {
+  const h = createHarness();
 
-  it('renders unchecked state', () => expect(h.render(Component).html()).toMatchSnapshot())
+  it("renders unchecked state", () => expect(h.render(Component).html()).toMatchSnapshot());
 
-  it('renders checked state', () =>
+  it("renders checked state", () =>
     expect(
       h
         .render(Component, {
@@ -17,13 +17,13 @@ describe('checkBox.vue', () => {
           },
         })
         .html(),
-    ).toMatchSnapshot())
+    ).toMatchSnapshot());
 
-  it('emits the input event', async () => {
-    const { emitted } = h.render(Component)
+  it("emits the input event", async () => {
+    const { emitted } = h.render(Component);
 
-    await h.trigger(screen.getByRole('checkbox'), 'click')
+    await h.trigger(screen.getByRole("checkbox"), "click");
 
-    expect(emitted()['update:modelValue']).toBeTruthy()
-  })
-})
+    expect(emitted()["update:modelValue"]).toBeTruthy();
+  });
+});

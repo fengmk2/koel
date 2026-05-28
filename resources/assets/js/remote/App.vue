@@ -23,71 +23,76 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, onMounted, provide, reactive, ref } from 'vue'
-import { authService } from '@/services/authService'
-import { socketService } from '@/services/socketService'
-import { preferenceStore } from '@/stores/preferenceStore'
-import { userStore } from '@/stores/userStore'
-import { isSong } from '@/utils/typeGuards'
-import { logger } from '@/utils/logger'
-import type { RemoteState } from '@/remote/types'
+import { computed, defineAsyncComponent, onMounted, provide, reactive, ref } from "vue";
+import { authService } from "@/services/authService";
+import { socketService } from "@/services/socketService";
+import { preferenceStore } from "@/stores/preferenceStore";
+import { userStore } from "@/stores/userStore";
+import { isSong } from "@/utils/typeGuards";
+import { logger } from "@/utils/logger";
+import type { RemoteState } from "@/remote/types";
 
-const StreamableDetails = defineAsyncComponent(() => import('@/remote/components/StreamableDetails.vue'))
-const Scanner = defineAsyncComponent(() => import('@/remote/components/Scanner.vue'))
-const RemoteFooter = defineAsyncComponent(() => import('@/remote/components/RemoteFooter.vue'))
-const AlbumArtOverlay = defineAsyncComponent(() => import('@/components/ui/AlbumArtOverlay.vue'))
-const LoginForm = defineAsyncComponent(() => import('@/components/auth/LoginForm.vue'))
+const StreamableDetails = defineAsyncComponent(
+  () => import("@/remote/components/StreamableDetails.vue"),
+);
+const Scanner = defineAsyncComponent(() => import("@/remote/components/Scanner.vue"));
+const RemoteFooter = defineAsyncComponent(() => import("@/remote/components/RemoteFooter.vue"));
+const AlbumArtOverlay = defineAsyncComponent(() => import("@/components/ui/AlbumArtOverlay.vue"));
+const LoginForm = defineAsyncComponent(() => import("@/components/auth/LoginForm.vue"));
 
-const authenticated = ref(false)
-const connected = ref(false)
+const authenticated = ref(false);
+const connected = ref(false);
 
 const state = reactive<RemoteState>({
   streamable: null,
   volume: 0,
-})
+});
 
-provide('state', state)
+provide("state", state);
 
 const showAlbumArtOverlay = computed(() => {
-  return preferenceStore.show_album_art_overlay && state.streamable && isSong(state.streamable)
-})
+  return preferenceStore.show_album_art_overlay && state.streamable && isSong(state.streamable);
+});
 
 const inStandaloneMode = ref(
-  (window.navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches,
-)
+  (window.navigator as any).standalone || window.matchMedia("(display-mode: standalone)").matches,
+);
 
 const init = async () => {
   try {
-    userStore.init((await authService.getProfile()) as CurrentUser)
-    await socketService.init()
+    userStore.init((await authService.getProfile()) as CurrentUser);
+    await socketService.init();
 
     socketService
-      .listen('SOCKET_STREAMABLE', playable => (state.streamable = playable))
-      .listen('SOCKET_PLAYBACK_STOPPED', () => state.streamable && (state.streamable.playback_state = 'Stopped'))
-      .listen('SOCKET_VOLUME_CHANGED', (volume: number) => (state.volume = volume))
-      .listen('SOCKET_STATUS', (data: { streamable?: Streamable; volume: number }) => {
-        state.volume = data.volume || 0
-        state.streamable = data.streamable || null
-        connected.value = true
-      })
+      .listen("SOCKET_STREAMABLE", (playable) => (state.streamable = playable))
+      .listen(
+        "SOCKET_PLAYBACK_STOPPED",
+        () => state.streamable && (state.streamable.playback_state = "Stopped"),
+      )
+      .listen("SOCKET_VOLUME_CHANGED", (volume: number) => (state.volume = volume))
+      .listen("SOCKET_STATUS", (data: { streamable?: Streamable; volume: number }) => {
+        state.volume = data.volume || 0;
+        state.streamable = data.streamable || null;
+        connected.value = true;
+      });
   } catch (error: unknown) {
-    logger.error(error)
-    authenticated.value = false
+    logger.error(error);
+    authenticated.value = false;
   }
-}
+};
 
 const onUserLoggedIn = async () => {
-  authenticated.value = true
-  await init()
-}
+  authenticated.value = true;
+  await init();
+};
 
 onMounted(async () => {
   // The app has just been initialized, check if we can get the user data with an already existing token
   if (authService.hasApiToken()) {
-    authenticated.value = true
-    await init()
+    authenticated.value = true;
+    await init();
   }
-})
+});
 </script>
 
 <style lang="postcss" scoped>

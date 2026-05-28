@@ -8,8 +8,8 @@
 
 <script lang="ts" setup>
 const randomWidth = () => {
-  const min = 20
-  const max = 50
-  return `${Math.floor(Math.random() * (max - min + 1)) + min}%`
-}
+  const min = 20;
+  const max = 50;
+  return `${Math.floor(Math.random() * (max - min + 1)) + min}%`;
+};
 </script>

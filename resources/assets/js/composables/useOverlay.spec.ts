@@ -1,28 +1,28 @@
-import { describe, expect, it, vi } from 'vite-plus/test'
+import { describe, expect, it, vi } from "vite-plus/test";
 
-const showMock = vi.fn()
-const hideMock = vi.fn()
+const showMock = vi.fn();
+const hideMock = vi.fn();
 
-vi.mock('@/utils/helpers', async importOriginal => ({
-  ...(await importOriginal<typeof import('@/utils/helpers')>()),
+vi.mock("@/utils/helpers", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/utils/helpers")>()),
   requireInjection: () => ({
     value: {
       show: showMock,
       hide: hideMock,
     },
   }),
-}))
+}));
 
-import { useOverlay } from './useOverlay'
+import { useOverlay } from "./useOverlay";
 
-describe('useOverlay', () => {
-  it('exposes show and hide methods', () => {
-    const { showOverlay, hideOverlay } = useOverlay()
+describe("useOverlay", () => {
+  it("exposes show and hide methods", () => {
+    const { showOverlay, hideOverlay } = useOverlay();
 
-    showOverlay({ message: 'Loading...' })
-    expect(showMock).toHaveBeenCalledWith({ message: 'Loading...' })
+    showOverlay({ message: "Loading..." });
+    expect(showMock).toHaveBeenCalledWith({ message: "Loading..." });
 
-    hideOverlay()
-    expect(hideMock).toHaveBeenCalled()
-  })
-})
+    hideOverlay();
+    expect(hideMock).toHaveBeenCalled();
+  });
+});

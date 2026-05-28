@@ -1,42 +1,42 @@
-import type { Ref } from 'vue'
-import { onBeforeUnmount, ref, watch } from 'vue'
+import type { Ref } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 
-import ToTopButton from '@/components/ui/BtnScrollToTop.vue'
+import ToTopButton from "@/components/ui/BtnScrollToTop.vue";
 
 export const useInfiniteScroll = (container: Ref<HTMLElement | undefined>, loadMore: Closure) => {
-  const sentinel = ref<HTMLElement>()
-  let observer: IntersectionObserver | undefined
+  const sentinel = ref<HTMLElement>();
+  let observer: IntersectionObserver | undefined;
 
   watch(
     sentinel,
     (el, _, onCleanup) => {
       if (!el) {
-        return
+        return;
       }
 
       observer = new IntersectionObserver(
-        entries => {
+        (entries) => {
           if (entries[0].isIntersecting) {
-            loadMore()
+            loadMore();
           }
         },
         {
           root: container.value,
-          rootMargin: '100px',
+          rootMargin: "100px",
         },
-      )
+      );
 
-      observer.observe(el)
+      observer.observe(el);
 
-      onCleanup(() => observer?.disconnect())
+      onCleanup(() => observer?.disconnect());
     },
-    { flush: 'post' },
-  )
+    { flush: "post" },
+  );
 
-  onBeforeUnmount(() => observer?.disconnect())
+  onBeforeUnmount(() => observer?.disconnect());
 
   return {
     ToTopButton,
     sentinel,
-  }
-}
+  };
+};

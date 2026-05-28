@@ -12,79 +12,87 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
-import { embedService } from '@/stores/embedService'
-import { useRouter } from '@/composables/useRouter'
-import { themeStore } from '@/stores/themeStore'
+import { computed, defineAsyncComponent, onMounted, ref } from "vue";
+import { embedService } from "@/stores/embedService";
+import { useRouter } from "@/composables/useRouter";
+import { themeStore } from "@/stores/themeStore";
 
 withDefaults(defineProps<{ preview?: boolean }>(), {
   preview: false,
-})
+});
 
-const AudioPlayer = defineAsyncComponent(() => import('@/components/embed/widget/audio-player/EmbedAudioPlayer.vue'))
-const Banner = defineAsyncComponent(() => import('@/components/embed/widget/EmbedWidgetBanner.vue'))
-const TrackList = defineAsyncComponent(() => import('@/components/embed/widget/EmbedWidgetTrackList.vue'))
-const ErrorMessage = defineAsyncComponent(() => import('@/components/embed/widget/EmbedWidgetErrorMessage.vue'))
+const AudioPlayer = defineAsyncComponent(
+  () => import("@/components/embed/widget/audio-player/EmbedAudioPlayer.vue"),
+);
+const Banner = defineAsyncComponent(
+  () => import("@/components/embed/widget/EmbedWidgetBanner.vue"),
+);
+const TrackList = defineAsyncComponent(
+  () => import("@/components/embed/widget/EmbedWidgetTrackList.vue"),
+);
+const ErrorMessage = defineAsyncComponent(
+  () => import("@/components/embed/widget/EmbedWidgetErrorMessage.vue"),
+);
 
-const { getRouteParam } = useRouter()
+const { getRouteParam } = useRouter();
 
-const player = ref<InstanceType<typeof AudioPlayer>>()
-const embed = ref<WidgetReadyEmbed>()
+const player = ref<InstanceType<typeof AudioPlayer>>();
+const embed = ref<WidgetReadyEmbed>();
 
 const options = ref<EmbedOptions>({
   theme: themeStore.getDefaultTheme().id,
-  layout: 'full',
+  layout: "full",
   preview: false,
-})
+});
 
 const showTrackList = computed(() => {
   if (!embed.value) {
-    return false
+    return false;
   }
 
-  return options.value.layout !== 'compact'
-})
+  return options.value.layout !== "compact";
+});
 
 const onItemPlayRequested = (playable: Playable) => {
   switch (playable.playback_state) {
-    case 'Playing':
-      player.value?.pause()
-      break
-    case 'Paused':
-      player.value?.resume()
-      break
+    case "Playing":
+      player.value?.pause();
+      break;
+    case "Paused":
+      player.value?.resume();
+      break;
     default:
-      player.value?.play(playable)
-      break
+      player.value?.play(playable);
+      break;
   }
-}
+};
 
-const error = ref<unknown>(null)
-const loading = ref(false)
+const error = ref<unknown>(null);
+const loading = ref(false);
 
 const getPayload = async (id: string, encryptedOptions: string) => {
-  loading.value = true
+  loading.value = true;
 
   try {
-    const payload = await embedService.getWidgetPayload(id, encryptedOptions)
+    const payload = await embedService.getWidgetPayload(id, encryptedOptions);
 
-    options.value = payload.options
-    embed.value = payload.embed
+    options.value = payload.options;
+    embed.value = payload.embed;
 
     // if the payload's theme is null, the theme is not custom. Resort to the built-in themes.
-    themeStore.init(payload.theme || options.value.theme)
+    themeStore.init(payload.theme || options.value.theme);
   } catch (e: unknown) {
-    error.value = e
-    return
+    error.value = e;
+    return;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(async () => {
-  await getPayload(getRouteParam('id'), getRouteParam('options'))
+  await getPayload(getRouteParam("id"), getRouteParam("options"));
 
   // reload after every 24 hours to refresh the signed urls
-  setInterval(() => getPayload(getRouteParam('id'), getRouteParam('options')), 24 * 60 * 60 * 1000)
-})
+  setInterval(() => getPayload(getRouteParam("id"), getRouteParam("options")), 24 * 60 * 60 * 1000);
+});
 </script>

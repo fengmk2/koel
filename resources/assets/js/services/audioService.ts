@@ -1,12 +1,12 @@
-import { equalizerStore } from '@/stores/equalizerStore'
-import { frequencies } from '@/config/audio'
+import { equalizerStore } from "@/stores/equalizerStore";
+import { frequencies } from "@/config/audio";
 
-export const dbToGain = (db: number) => 10 ** (db / 20) || 0
+export const dbToGain = (db: number) => 10 ** (db / 20) || 0;
 
 export interface Band {
-  label: string
-  node: BiquadFilterNode
-  db: number
+  label: string;
+  node: BiquadFilterNode;
+  db: number;
 }
 
 export const audioService = {
@@ -21,73 +21,73 @@ export const audioService = {
   bands: [] as Band[],
 
   init(mediaElement: HTMLMediaElement) {
-    this.element = mediaElement
+    this.element = mediaElement;
 
-    this.context = new AudioContext()
-    this.preampGainNode = this.context.createGain()
-    this.source = this.context.createMediaElementSource(this.element)
-    this.analyzer = this.context.createAnalyser()
+    this.context = new AudioContext();
+    this.preampGainNode = this.context.createGain();
+    this.source = this.context.createMediaElementSource(this.element);
+    this.analyzer = this.context.createAnalyser();
 
-    this.source.connect(this.preampGainNode)
+    this.source.connect(this.preampGainNode);
 
-    const config = equalizerStore.getConfig()
+    const config = equalizerStore.getConfig();
 
-    this.changePreampGain(config.preamp)
+    this.changePreampGain(config.preamp);
 
-    let prevFilter: BiquadFilterNode
+    let prevFilter: BiquadFilterNode;
 
     // Create 10 bands with the frequencies similar to those of Winamp and connect them together.
     frequencies.forEach((frequency, i) => {
-      const filter = this.context.createBiquadFilter()
+      const filter = this.context.createBiquadFilter();
 
       if (i === 0) {
-        filter.type = 'lowshelf'
+        filter.type = "lowshelf";
       } else if (i === frequencies.length - 1) {
-        filter.type = 'highshelf'
+        filter.type = "highshelf";
       } else {
-        filter.type = 'peaking'
+        filter.type = "peaking";
       }
 
-      filter.Q.setTargetAtTime(1, this.context.currentTime, 0.01)
-      filter.frequency.setTargetAtTime(frequency, this.context.currentTime, 0.01)
-      filter.gain.value = dbToGain(config.gains[i])
+      filter.Q.setTargetAtTime(1, this.context.currentTime, 0.01);
+      filter.frequency.setTargetAtTime(frequency, this.context.currentTime, 0.01);
+      filter.gain.value = dbToGain(config.gains[i]);
 
-      prevFilter ? prevFilter.connect(filter) : this.preampGainNode.connect(filter)
-      prevFilter = filter
+      prevFilter ? prevFilter.connect(filter) : this.preampGainNode.connect(filter);
+      prevFilter = filter;
 
       this.bands.push({
         node: filter,
-        label: String(frequency).replace('000', 'K'),
+        label: String(frequency).replace("000", "K"),
         db: config.gains[i],
-      })
-    })
+      });
+    });
 
-    prevFilter!.connect(this.analyzer)
+    prevFilter!.connect(this.analyzer);
 
     // connect the analyzer node last, so that changes to the equalizer affect the visualizer as well
-    this.analyzer.connect(this.context.destination)
+    this.analyzer.connect(this.context.destination);
 
-    this.unlockAudioContext()
+    this.unlockAudioContext();
   },
 
   reconnectSource(newElement: HTMLMediaElement) {
     try {
-      this.source.disconnect()
+      this.source.disconnect();
     } catch {
       // may already be disconnected
     }
 
-    this.element = newElement
-    this.source = this.context.createMediaElementSource(newElement)
-    this.source.connect(this.preampGainNode)
+    this.element = newElement;
+    this.source = this.context.createMediaElementSource(newElement);
+    this.source.connect(this.preampGainNode);
   },
 
   changePreampGain(db: number) {
-    this.preampGainNode.gain.value = dbToGain(db)
+    this.preampGainNode.gain.value = dbToGain(db);
   },
 
   changeFilterGain(node: BiquadFilterNode, db: number) {
-    node.gain.value = dbToGain(db)
+    node.gain.value = dbToGain(db);
   },
 
   /**
@@ -95,25 +95,25 @@ export const audioService = {
    * first user interaction.
    */
   unlockAudioContext() {
-    ;['touchend', 'touchstart', 'click'].forEach(event => {
+    ["touchend", "touchstart", "click"].forEach((event) => {
       document.addEventListener(
         event,
         () => {
           if (this.unlocked) {
-            return
+            return;
           }
 
-          const source = this.context.createBufferSource()
-          source.buffer = this.context.createBuffer(1, 1, 22050)
-          source.connect(this.context.destination)
-          source.start(0)
+          const source = this.context.createBufferSource();
+          source.buffer = this.context.createBuffer(1, 1, 22050);
+          source.connect(this.context.destination);
+          source.start(0);
 
-          this.unlocked = true
+          this.unlocked = true;
         },
         {
           once: true,
         },
-      )
-    })
+      );
+    });
   },
-}
+};

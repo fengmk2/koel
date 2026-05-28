@@ -107,4 +107,4 @@ export default {
     float i_frame = mod(v_frame + dist * 20.0, 360.0);
     gl_FragColor = vec4(hsl2rgb((i_frame) / 360.0, 1.0, .5), 1.0);
   }`,
-}
+};
