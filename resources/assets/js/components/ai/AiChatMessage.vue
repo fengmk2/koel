@@ -1,5 +1,8 @@
 <template>
-  <div class="flex items-end gap-2" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
+  <div
+    class="flex items-end gap-2"
+    :class="message.role === 'user' ? 'justify-end' : 'justify-start'"
+  >
     <div class="relative group">
       <div
         class="rounded-3xl px-5 py-3 text-lg ai-message"
@@ -23,34 +26,36 @@
 </template>
 
 <script lang="ts" setup>
-import DOMPurify from 'dompurify'
-import { marked } from 'marked'
-import { computed, onBeforeUnmount, ref } from 'vue'
-import { CopyIcon, ClipboardCheckIcon } from 'lucide-vue-next'
-import { copyText } from '@/utils/helpers'
+import DOMPurify from "dompurify";
+import { marked } from "marked";
+import { computed, onBeforeUnmount, ref } from "vue";
+import { CopyIcon, ClipboardCheckIcon } from "lucide-vue-next";
+import { copyText } from "@/utils/helpers";
 
-import UserAvatar from '@/components/user/UserAvatar.vue'
+import UserAvatar from "@/components/user/UserAvatar.vue";
 
 const props = defineProps<{
-  message: AiChatMessage
-  user: Pick<User, 'name' | 'avatar'>
-}>()
+  message: AiChatMessage;
+  user: Pick<User, "name" | "avatar">;
+}>();
 
-const renderedHtml = computed(() => DOMPurify.sanitize(marked.parse(props.message.content) as string))
+const renderedHtml = computed(() =>
+  DOMPurify.sanitize(marked.parse(props.message.content) as string),
+);
 
-const copied = ref(false)
-let copiedTimeout = 0
+const copied = ref(false);
+let copiedTimeout = 0;
 
 const copy = async () => {
-  await copyText(props.message.content)
-  copied.value = true
-  clearTimeout(copiedTimeout)
-  copiedTimeout = window.setTimeout(() => (copied.value = false), 2000)
-}
+  await copyText(props.message.content);
+  copied.value = true;
+  clearTimeout(copiedTimeout);
+  copiedTimeout = window.setTimeout(() => (copied.value = false), 2000);
+};
 
 onBeforeUnmount(() => {
-  clearTimeout(copiedTimeout)
-})
+  clearTimeout(copiedTimeout);
+});
 </script>
 
 <style lang="postcss" scoped>

@@ -20,7 +20,11 @@
         >
           Preferences
         </TabButton>
-        <TabButton :selected="currentTab === 'themes'" aria-controls="profilePaneThemes" @click="currentTab = 'themes'">
+        <TabButton
+          :selected="currentTab === 'themes'"
+          aria-controls="profilePaneThemes"
+          @click="currentTab = 'themes'"
+        >
           Themes
         </TabButton>
         <TabButton
@@ -37,13 +41,21 @@
         >
           Offline
         </TabButton>
-        <TabButton :selected="currentTab === 'qr'" aria-controls="profilePaneQr" @click="currentTab = 'qr'">
+        <TabButton
+          :selected="currentTab === 'qr'"
+          aria-controls="profilePaneQr"
+          @click="currentTab = 'qr'"
+        >
           <QrCodeIcon :size="16" />
         </TabButton>
       </TabList>
 
       <TabPanelContainer>
-        <TabPanel v-show="currentTab === 'profile'" id="profilePaneProfile" aria-labelledby="profilePaneProfile">
+        <TabPanel
+          v-show="currentTab === 'profile'"
+          id="profilePaneProfile"
+          aria-labelledby="profilePaneProfile"
+        >
           <ProfileForm />
         </TabPanel>
 
@@ -55,7 +67,11 @@
           <PreferencesForm />
         </TabPanel>
 
-        <TabPanel v-if="currentTab === 'themes'" id="profilePaneThemes" aria-labelledby="profilePaneThemes">
+        <TabPanel
+          v-if="currentTab === 'themes'"
+          id="profilePaneThemes"
+          aria-labelledby="profilePaneThemes"
+        >
           <ThemeList />
         </TabPanel>
 
@@ -67,7 +83,11 @@
           <Integrations />
         </TabPanel>
 
-        <TabPanel v-if="currentTab === 'offline'" id="profilePaneOffline" aria-labelledby="profilePaneOffline">
+        <TabPanel
+          v-if="currentTab === 'offline'"
+          id="profilePaneOffline"
+          aria-labelledby="profilePaneOffline"
+        >
           <OfflineStorage />
         </TabPanel>
 
@@ -80,31 +100,44 @@
 </template>
 
 <script lang="ts" setup>
-import { QrCodeIcon } from 'lucide-vue-next'
-import { ref, watch } from 'vue'
-import { useLocalStorage } from '@/composables/useLocalStorage'
-import { defineAsyncComponent } from '@/utils/helpers'
+import { QrCodeIcon } from "lucide-vue-next";
+import { ref, watch } from "vue";
+import { useLocalStorage } from "@/composables/useLocalStorage";
+import { defineAsyncComponent } from "@/utils/helpers";
 
-import ScreenHeader from '@/components/ui/ScreenHeader.vue'
-import ScreenBase from '@/components/screens/ScreenBase.vue'
-import TabButton from '@/components/ui/tabs/TabButton.vue'
-import TabList from '@/components/ui/tabs/TabList.vue'
-import TabPanelContainer from '@/components/ui/tabs/TabPanelContainer.vue'
-import TabPanel from '@/components/ui/tabs/TabPanel.vue'
-import Tabs from '@/components/ui/tabs/Tabs.vue'
+import ScreenHeader from "@/components/ui/ScreenHeader.vue";
+import ScreenBase from "@/components/screens/ScreenBase.vue";
+import TabButton from "@/components/ui/tabs/TabButton.vue";
+import TabList from "@/components/ui/tabs/TabList.vue";
+import TabPanelContainer from "@/components/ui/tabs/TabPanelContainer.vue";
+import TabPanel from "@/components/ui/tabs/TabPanel.vue";
+import Tabs from "@/components/ui/tabs/Tabs.vue";
 
-const ProfileForm = defineAsyncComponent(() => import('@/components/profile-preferences/ProfileForm.vue'))
-const PreferencesForm = defineAsyncComponent(() => import('@/components/profile-preferences/PreferencesForm.vue'))
-const ThemeList = defineAsyncComponent(() => import('@/components/profile-preferences/theme/ThemePreferences.vue'))
-const Integrations = defineAsyncComponent(() => import('@/components/profile-preferences/Integrations.vue'))
-const OfflineStorage = defineAsyncComponent(() => import('@/components/profile-preferences/OfflineStorage.vue'))
-const QRLogin = defineAsyncComponent(() => import('@/components/profile-preferences/QRLogin.vue'))
+const ProfileForm = defineAsyncComponent(
+  () => import("@/components/profile-preferences/ProfileForm.vue"),
+);
+const PreferencesForm = defineAsyncComponent(
+  () => import("@/components/profile-preferences/PreferencesForm.vue"),
+);
+const ThemeList = defineAsyncComponent(
+  () => import("@/components/profile-preferences/theme/ThemePreferences.vue"),
+);
+const Integrations = defineAsyncComponent(
+  () => import("@/components/profile-preferences/Integrations.vue"),
+);
+const OfflineStorage = defineAsyncComponent(
+  () => import("@/components/profile-preferences/OfflineStorage.vue"),
+);
+const QRLogin = defineAsyncComponent(() => import("@/components/profile-preferences/QRLogin.vue"));
 
-const { get, set } = useLocalStorage()
+const { get, set } = useLocalStorage();
 
 const currentTab = ref(
-  get<'profile' | 'preferences' | 'themes' | 'integrations' | 'offline' | 'qr'>('profileScreenTab', 'profile'),
-)
+  get<"profile" | "preferences" | "themes" | "integrations" | "offline" | "qr">(
+    "profileScreenTab",
+    "profile",
+  ),
+);
 
-watch(currentTab, tab => set('profileScreenTab', tab))
+watch(currentTab, (tab) => set("profileScreenTab", tab));
 </script>

@@ -1,30 +1,30 @@
-import { describe, expect, it } from 'vite-plus/test'
-import { createHarness } from '@/__tests__/TestHarness'
-import { http } from '@/services/http'
-import { settingStore } from '@/stores/settingStore'
+import { describe, expect, it } from "vite-plus/test";
+import { createHarness } from "@/__tests__/TestHarness";
+import { http } from "@/services/http";
+import { settingStore } from "@/stores/settingStore";
 
-describe('settingStore', () => {
-  const h = createHarness()
+describe("settingStore", () => {
+  const h = createHarness();
 
-  it('initializes the store', () => {
-    settingStore.init({ media_path: '/media/path' })
-    expect(settingStore.state.media_path).toEqual('/media/path')
-  })
+  it("initializes the store", () => {
+    settingStore.init({ media_path: "/media/path" });
+    expect(settingStore.state.media_path).toEqual("/media/path");
+  });
 
-  it('updates the media path', async () => {
-    const putMock = h.mock(http, 'put')
-    await settingStore.updateMediaPath('/dev/null')
+  it("updates the media path", async () => {
+    const putMock = h.mock(http, "put");
+    await settingStore.updateMediaPath("/dev/null");
 
-    expect(putMock).toHaveBeenCalledWith('settings/media-path', { path: '/dev/null' })
-    expect(settingStore.state.media_path).toEqual('/dev/null')
-  })
+    expect(putMock).toHaveBeenCalledWith("settings/media-path", { path: "/dev/null" });
+    expect(settingStore.state.media_path).toEqual("/dev/null");
+  });
 
-  it('updates branding', async () => {
-    const putMock = h.mock(http, 'put')
+  it("updates branding", async () => {
+    const putMock = h.mock(http, "put");
     await settingStore.updateBranding({
-      name: 'Koel',
-    })
+      name: "Koel",
+    });
 
-    expect(putMock).toHaveBeenCalledWith('settings/branding', { name: 'Koel' })
-  })
-})
+    expect(putMock).toHaveBeenCalledWith("settings/branding", { name: "Koel" });
+  });
+});

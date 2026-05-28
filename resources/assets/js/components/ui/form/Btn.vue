@@ -21,20 +21,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-type Variant = 'success' | 'destructive' | 'highlight' | 'ghost'
-type Size = 'small' | 'large'
+type Variant = "success" | "destructive" | "highlight" | "ghost";
+type Size = "small" | "large";
 
-withDefaults(defineProps<{ tag?: 'button' | 'a'; variant?: Variant; size?: Size }>(), {
-  tag: 'button',
-})
+withDefaults(defineProps<{ tag?: "button" | "a"; variant?: Variant; size?: Size }>(), {
+  tag: "button",
+});
 
-const button = ref<HTMLButtonElement | HTMLAnchorElement>()
+const button = ref<HTMLButtonElement | HTMLAnchorElement>();
 
 defineExpose({
   button,
-})
+});
 </script>
 
 <style lang="postcss" scoped>
@@ -53,27 +53,27 @@ a {
     box-shadow: inset 0 10px 10px -10px rgba(0, 0, 0, 0.6);
   }
 
-  &[data-size='large'] {
+  &[data-size="large"] {
     @apply px-6 py-3;
   }
 
-  &[data-size='small'] {
+  &[data-size="small"] {
     @apply text-[0.9rem] px-3 py-1;
   }
 
-  &[data-variant='success'] {
+  &[data-variant="success"] {
     @apply bg-k-success text-white;
   }
 
-  &[data-variant='ghost'] {
+  &[data-variant="ghost"] {
     @apply bg-transparent text-k-fg hover:text-k-fg-80 active:text-k-fg-70;
   }
 
-  &[data-variant='destructive'] {
+  &[data-variant="destructive"] {
     @apply bg-k-danger text-white;
   }
 
-  &[data-variant='highlight'] {
+  &[data-variant="highlight"] {
     @apply bg-k-highlight text-k-highlight-fg;
   }
 
@@ -92,15 +92,15 @@ a {
   &[bordered] {
     @apply border-k-fg-20 bg-transparent;
 
-    &[data-variant='success'] {
+    &[data-variant="success"] {
       @apply border-k-success;
     }
 
-    &[data-variant='destructive'] {
+    &[data-variant="destructive"] {
       @apply border-k-danger;
     }
 
-    &[data-variant='highlight'] {
+    &[data-variant="highlight"] {
       @apply border-k-highlight;
     }
   }

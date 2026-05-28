@@ -1,5 +1,4 @@
-export const skyboxFrag
-  = `
+export const skyboxFrag = `
 #define A 0.15
 #define B 0.50
 #define C 0.10
@@ -38,4 +37,4 @@ void main( void ){
 
   gl_FragColor = vec4( color, 1. );
 }
-`
+`;

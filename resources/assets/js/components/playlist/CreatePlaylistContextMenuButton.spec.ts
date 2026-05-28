@@ -1,13 +1,13 @@
-import { describe, it } from 'vite-plus/test'
-import { screen } from '@testing-library/vue'
-import { createHarness } from '@/__tests__/TestHarness'
-import Component from './CreatePlaylistContextMenuButton.vue'
+import { describe, it } from "vite-plus/test";
+import { screen } from "@testing-library/vue";
+import { createHarness } from "@/__tests__/TestHarness";
+import Component from "./CreatePlaylistContextMenuButton.vue";
 
-describe('createPlaylistContextMenuButton.vue', () => {
-  const h = createHarness()
+describe("createPlaylistContextMenuButton.vue", () => {
+  const h = createHarness();
 
-  it('renders button with correct title', () => {
-    h.render(Component)
-    screen.getByTitle('Create a new playlist or folder')
-  })
-})
+  it("renders button with correct title", () => {
+    h.render(Component);
+    screen.getByTitle("Create a new playlist or folder");
+  });
+});

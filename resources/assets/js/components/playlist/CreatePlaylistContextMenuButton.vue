@@ -10,20 +10,22 @@
 </template>
 
 <script lang="ts" setup>
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
-import { useContextMenu } from '@/composables/useContextMenu'
-import { defineAsyncComponent } from '@/utils/helpers'
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { useContextMenu } from "@/composables/useContextMenu";
+import { defineAsyncComponent } from "@/utils/helpers";
 
-const ContextMenu = defineAsyncComponent(() => import('@/components/playlist/CreatePlaylistContextMenu.vue'))
+const ContextMenu = defineAsyncComponent(
+  () => import("@/components/playlist/CreatePlaylistContextMenu.vue"),
+);
 
-const { openContextMenu } = useContextMenu()
+const { openContextMenu } = useContextMenu();
 
 const requestContextMenu = (e: MouseEvent) => {
-  const { bottom, right } = (e.currentTarget as HTMLButtonElement).getBoundingClientRect()
+  const { bottom, right } = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
 
   openContextMenu(ContextMenu, {
     top: bottom,
     left: right,
-  })
-}
+  });
+};
 </script>

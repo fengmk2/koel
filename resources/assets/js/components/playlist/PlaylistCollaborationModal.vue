@@ -1,5 +1,10 @@
 <template>
-  <div class="collaboration-modal max-w-[640px]" tabindex="0" data-testid="playlist-collaboration" @keydown.esc="close">
+  <div
+    class="collaboration-modal max-w-[640px]"
+    tabindex="0"
+    data-testid="playlist-collaboration"
+    @keydown.esc="close"
+  >
     <header>
       <h1>Playlist Collaboration</h1>
     </header>
@@ -7,8 +12,8 @@
     <main>
       <p>
         Collaborative playlists allow multiple users to contribute. <br />
-        Note: Songs added to a collaborative playlist are made accessible to all users, and you cannot mark a song as
-        private if it’s still part of a collaborative playlist.
+        Note: Songs added to a collaborative playlist are made accessible to all users, and you
+        cannot mark a song as private if it’s still part of a collaborative playlist.
       </p>
 
       <section class="space-y-5">
@@ -29,23 +34,23 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useAuthorization } from '@/composables/useAuthorization'
+import { computed } from "vue";
+import { useAuthorization } from "@/composables/useAuthorization";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import InviteCollaborators from '@/components/playlist/InvitePlaylistCollaborators.vue'
-import CollaboratorList from '@/components/playlist/PlaylistCollaboratorList.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import InviteCollaborators from "@/components/playlist/InvitePlaylistCollaborators.vue";
+import CollaboratorList from "@/components/playlist/PlaylistCollaboratorList.vue";
 
-const props = defineProps<{ playlist: Playlist }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const props = defineProps<{ playlist: Playlist }>();
+const emit = defineEmits<{ (e: "close"): void }>();
 
-const { playlist } = props
+const { playlist } = props;
 
-const { currentUser } = useAuthorization()
+const { currentUser } = useAuthorization();
 
-const canManageCollaborators = computed(() => currentUser.value?.id === playlist.owner_id)
+const canManageCollaborators = computed(() => currentUser.value?.id === playlist.owner_id);
 
-const close = () => emit('close')
+const close = () => emit("close");
 </script>
 
 <style lang="postcss" scoped>

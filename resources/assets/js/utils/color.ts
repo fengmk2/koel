@@ -7,18 +7,18 @@
  * (hex, rgb/rgba, hsl/hsla, oklch, named colors) and normalize it to rgb().
  */
 export const isDarkColor = (cssColor: string) => {
-  const probe = document.createElement('div')
-  probe.style.color = cssColor
-  document.body.appendChild(probe)
-  const computed = window.getComputedStyle(probe).color
-  document.body.removeChild(probe)
+  const probe = document.createElement("div");
+  probe.style.color = cssColor;
+  document.body.appendChild(probe);
+  const computed = window.getComputedStyle(probe).color;
+  document.body.removeChild(probe);
 
-  const channels = computed.match(/\d+(?:\.\d+)?/g)
+  const channels = computed.match(/\d+(?:\.\d+)?/g);
 
   if (!channels || channels.length < 3) {
-    return true
+    return true;
   }
 
-  const [red, green, blue] = channels.map(Number)
-  return (red * 299 + green * 587 + blue * 114) / 1000 < 128
-}
+  const [red, green, blue] = channels.map(Number);
+  return (red * 299 + green * 587 + blue * 114) / 1000 < 128;
+};

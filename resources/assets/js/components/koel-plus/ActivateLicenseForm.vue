@@ -14,26 +14,28 @@
 </template>
 
 <script lang="ts" setup>
-import { plusService } from '@/services/plusService'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useErrorHandler } from '@/composables/useErrorHandler'
-import { forceReloadWindow } from '@/utils/helpers'
-import { useForm } from '@/composables/useForm'
+import { plusService } from "@/services/plusService";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useErrorHandler } from "@/composables/useErrorHandler";
+import { forceReloadWindow } from "@/utils/helpers";
+import { useForm } from "@/composables/useForm";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import TextInput from '@/components/ui/form/TextInput.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import TextInput from "@/components/ui/form/TextInput.vue";
 
-const { showSuccessDialog } = useDialogBox()
+const { showSuccessDialog } = useDialogBox();
 
 const { data, loading, handleSubmit } = useForm<{ licenseKey: string }>({
   initialValues: {
-    licenseKey: '',
+    licenseKey: "",
   },
   onSubmit: async ({ licenseKey }) => await plusService.activateLicense(licenseKey),
   onSuccess: async () => {
-    await showSuccessDialog('Thanks for purchasing Koel Plus! Koel will now refresh to activate the changes.')
-    forceReloadWindow()
+    await showSuccessDialog(
+      "Thanks for purchasing Koel Plus! Koel will now refresh to activate the changes.",
+    );
+    forceReloadWindow();
   },
-  onError: (error: unknown) => useErrorHandler('dialog').handleHttpError(error),
-})
+  onError: (error: unknown) => useErrorHandler("dialog").handleHttpError(error),
+});
 </script>
