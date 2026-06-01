@@ -27,17 +27,17 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useQRCode } from '@vueuse/integrations/useQRCode'
-import { authService } from '@/services/authService'
-import { base64Encode } from '@/utils/crypto'
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useQRCode } from "@vueuse/integrations/useQRCode";
+import { authService } from "@/services/authService";
+import { base64Encode } from "@/utils/crypto";
 
-const MAX_CYCLES = 5
-const REFRESH_INTERVAL_MS = 60 * 1000
+const MAX_CYCLES = 5;
+const REFRESH_INTERVAL_MS = 60 * 1000;
 
-const qrCodeData = ref('')
-const oneTimeToken = ref('')
-const paused = ref(false)
+const qrCodeData = ref("");
+const oneTimeToken = ref("");
+const paused = ref(false);
 
 watch(oneTimeToken, () => {
   qrCodeData.value = base64Encode(
@@ -45,64 +45,64 @@ watch(oneTimeToken, () => {
       token: oneTimeToken.value,
       host: window.KOEL.base_url,
     }),
-  )
-})
+  );
+});
 
 const qrCodeUrl = useQRCode(qrCodeData, {
   width: window.devicePixelRatio === 1 ? 196 : 384,
   height: window.devicePixelRatio === 1 ? 196 : 384,
-})
+});
 
-let refreshTimeout: number | null = null
-let cycleCount = 0
-let isUnmounted = false
+let refreshTimeout: number | null = null;
+let cycleCount = 0;
+let isUnmounted = false;
 
 const clearRefreshTimeout = () => {
   if (refreshTimeout !== null) {
-    window.clearTimeout(refreshTimeout)
-    refreshTimeout = null
+    window.clearTimeout(refreshTimeout);
+    refreshTimeout = null;
   }
-}
+};
 
 const resetOneTimeToken = async () => {
-  const token = await authService.getOneTimeToken()
+  const token = await authService.getOneTimeToken();
 
   if (isUnmounted) {
-    return
+    return;
   }
 
-  oneTimeToken.value = token
-  paused.value = false
-  cycleCount = 0
-  clearRefreshTimeout()
-  scheduleNextRefresh()
-}
+  oneTimeToken.value = token;
+  paused.value = false;
+  cycleCount = 0;
+  clearRefreshTimeout();
+  scheduleNextRefresh();
+};
 
 const scheduleNextRefresh = () => {
-  clearRefreshTimeout()
+  clearRefreshTimeout();
   refreshTimeout = window.setTimeout(async () => {
-    cycleCount++
+    cycleCount++;
 
     if (cycleCount >= MAX_CYCLES) {
-      paused.value = true
+      paused.value = true;
 
-      return
+      return;
     }
 
-    const token = await authService.getOneTimeToken()
+    const token = await authService.getOneTimeToken();
 
     if (isUnmounted) {
-      return
+      return;
     }
 
-    oneTimeToken.value = token
-    scheduleNextRefresh()
-  }, REFRESH_INTERVAL_MS)
-}
+    oneTimeToken.value = token;
+    scheduleNextRefresh();
+  }, REFRESH_INTERVAL_MS);
+};
 
-onMounted(() => resetOneTimeToken())
+onMounted(() => resetOneTimeToken());
 onBeforeUnmount(() => {
-  isUnmounted = true
-  clearRefreshTimeout()
-})
+  isUnmounted = true;
+  clearRefreshTimeout();
+});
 </script>

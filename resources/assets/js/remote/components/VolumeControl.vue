@@ -10,48 +10,48 @@
 </template>
 
 <script lang="ts" setup>
-import { faVolumeHigh, faVolumeMute } from '@fortawesome/free-solid-svg-icons'
-import noUISlider from 'nouislider'
-import { OnClickOutside } from '@vueuse/components'
-import { inject, onMounted, ref, watch } from 'vue'
-import { socketService } from '@/services/socketService'
-import type { RemoteState } from '@/remote/types'
+import { faVolumeHigh, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
+import noUISlider from "nouislider";
+import { OnClickOutside } from "@vueuse/components";
+import { inject, onMounted, ref, watch } from "vue";
+import { socketService } from "@/services/socketService";
+import type { RemoteState } from "@/remote/types";
 
-const DEFAULT_VOLUME = 7
+const DEFAULT_VOLUME = 7;
 
-const volumeSlider = ref<EqualizerBandElement>()
-const muted = ref(false)
-const showingVolumeSlider = ref(false)
+const volumeSlider = ref<EqualizerBandElement>();
+const muted = ref(false);
+const showingVolumeSlider = ref(false);
 
-const toggleVolumeSlider = () => (showingVolumeSlider.value = !showingVolumeSlider.value)
-const closeVolumeSlider = () => (showingVolumeSlider.value = false)
+const toggleVolumeSlider = () => (showingVolumeSlider.value = !showingVolumeSlider.value);
+const closeVolumeSlider = () => (showingVolumeSlider.value = false);
 
-const state = inject<RemoteState>('state')
+const state = inject<RemoteState>("state");
 
 watch(
   () => state?.volume,
-  volume => volumeSlider.value?.noUiSlider?.set(volume || DEFAULT_VOLUME),
-)
+  (volume) => volumeSlider.value?.noUiSlider?.set(volume || DEFAULT_VOLUME),
+);
 
 onMounted(() => {
   noUISlider.create(volumeSlider.value!, {
-    orientation: 'vertical',
+    orientation: "vertical",
     connect: [true, false],
     start: state?.volume || DEFAULT_VOLUME,
     range: { min: 0, max: 10 },
-    direction: 'rtl',
-  })
+    direction: "rtl",
+  });
 
   if (!volumeSlider.value?.noUiSlider) {
-    throw new Error('Failed to initialize noUISlider on element #volumeSlider')
+    throw new Error("Failed to initialize noUISlider on element #volumeSlider");
   }
 
-  volumeSlider.value!.noUiSlider.on('change', (values: string[], handle: number) => {
-    const volume = values[handle]
-    muted.value = !volume
-    socketService.broadcast('SOCKET_SET_VOLUME', volume)
-  })
-})
+  volumeSlider.value!.noUiSlider.on("change", (values: string[], handle: number) => {
+    const volume = values[handle];
+    muted.value = !volume;
+    socketService.broadcast("SOCKET_SET_VOLUME", volume);
+  });
+});
 </script>
 
 <style lang="postcss">

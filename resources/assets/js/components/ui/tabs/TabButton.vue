@@ -11,10 +11,10 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { toRefs } from "vue";
 
-const props = defineProps<{ selected: boolean }>()
-const emit = defineEmits<{ (e: 'click'): void }>()
+const props = defineProps<{ selected: boolean }>();
+const emit = defineEmits<{ (e: "click"): void }>();
 
-const { selected } = toRefs(props)
+const { selected } = toRefs(props);
 </script>

@@ -5,12 +5,16 @@
         :model-value="selectedId"
         class="bg-black/30! text-white!"
         title="Select equalizer"
-        @update:model-value="id => emit('select', id)"
+        @update:model-value="(id) => emit('select', id)"
       >
         <option :value="null" disabled>Preset</option>
         <template v-if="customPresets.length">
           <optgroup label="Built-in">
-            <option v-for="preset in builtInPresets" :key="preset.id ?? ''" :value="preset.id ?? ''">
+            <option
+              v-for="preset in builtInPresets"
+              :key="preset.id ?? ''"
+              :value="preset.id ?? ''"
+            >
               {{ preset.name }}
             </option>
           </optgroup>
@@ -20,7 +24,12 @@
             </option>
           </optgroup>
         </template>
-        <option v-for="preset in builtInPresets" v-else :key="preset.id ?? ''" :value="preset.id ?? ''">
+        <option
+          v-for="preset in builtInPresets"
+          v-else
+          :key="preset.id ?? ''"
+          :value="preset.id ?? ''"
+        >
           {{ preset.name }}
         </option>
       </SelectBox>
@@ -34,31 +43,31 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRef } from 'vue'
-import { equalizerPresets as builtInPresets } from '@/config/audio'
-import { equalizerStore } from '@/stores/equalizerStore'
+import { ref, toRef } from "vue";
+import { equalizerPresets as builtInPresets } from "@/config/audio";
+import { equalizerStore } from "@/stores/equalizerStore";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import SelectBox from '@/components/ui/form/SelectBox.vue'
-import EqualizerSavePresetForm from '@/components/ui/equalizer/EqualizerSavePresetForm.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import SelectBox from "@/components/ui/form/SelectBox.vue";
+import EqualizerSavePresetForm from "@/components/ui/equalizer/EqualizerSavePresetForm.vue";
 
 defineProps<{
-  selectedId: string | null
-  isModified: boolean
-  customSelected: boolean
-}>()
+  selectedId: string | null;
+  isModified: boolean;
+  customSelected: boolean;
+}>();
 
 const emit = defineEmits<{
-  (e: 'select', id: string | null): void
-  (e: 'save', name: string): void
-  (e: 'delete'): void
-}>()
+  (e: "select", id: string | null): void;
+  (e: "save", name: string): void;
+  (e: "delete"): void;
+}>();
 
-const customPresets = toRef(equalizerStore.state, 'customPresets')
-const saveDialogOpen = ref(false)
+const customPresets = toRef(equalizerStore.state, "customPresets");
+const saveDialogOpen = ref(false);
 
 const commitSave = (name: string) => {
-  emit('save', name)
-  saveDialogOpen.value = false
-}
+  emit("save", name);
+  saveDialogOpen.value = false;
+};
 </script>

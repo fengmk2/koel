@@ -19,29 +19,31 @@
       <span v-else class="contributor">Contributor</span>
     </span>
     <span v-if="manageable" class="actions flex-[0_0_72px] text-right">
-      <Btn size="small" variant="destructive" v-if="removable" @click.prevent="emit('remove')">Remove</Btn>
+      <Btn size="small" variant="destructive" v-if="removable" @click.prevent="emit('remove')"
+        >Remove</Btn
+      >
     </span>
   </li>
 </template>
 
 <script lang="ts" setup>
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
-import { toRefs } from 'vue'
-import { useAuthorization } from '@/composables/useAuthorization'
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { toRefs } from "vue";
+import { useAuthorization } from "@/composables/useAuthorization";
 
-import Btn from '@/components/ui/form/Btn.vue'
-import UserAvatar from '@/components/user/UserAvatar.vue'
+import Btn from "@/components/ui/form/Btn.vue";
+import UserAvatar from "@/components/user/UserAvatar.vue";
 
 const props = defineProps<{
-  collaborator: PlaylistCollaborator
-  removable: boolean
-  manageable: boolean
-  role: 'owner' | 'contributor'
-}>()
+  collaborator: PlaylistCollaborator;
+  removable: boolean;
+  manageable: boolean;
+  role: "owner" | "contributor";
+}>();
 
-const emit = defineEmits<{ (e: 'remove'): void }>()
-const { collaborator, removable, role } = toRefs(props)
-const { currentUser } = useAuthorization()
+const emit = defineEmits<{ (e: "remove"): void }>();
+const { collaborator, removable, role } = toRefs(props);
+const { currentUser } = useAuthorization();
 </script>
 
 <style lang="postcss" scoped>

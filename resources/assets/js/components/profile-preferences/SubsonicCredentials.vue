@@ -3,9 +3,11 @@
     <h3 class="text-2xl mb-2">Subsonic API Key</h3>
 
     <p>
-      Use this key to connect Subsonic-compatible clients (Symfonium, Feishin, substreamer, etc.) to your
+      Use this key to connect Subsonic-compatible clients (Symfonium, Feishin, substreamer, etc.) to
+      your
       {{ appName }} library. <br />
-      Configure the client with your email as the username and this key in the API-key or password field.
+      Configure the client with your email as the username and this key in the API-key or password
+      field.
     </p>
 
     <div
@@ -49,74 +51,74 @@
 </template>
 
 <script lang="ts" setup>
-import { CopyIcon, EyeIcon, EyeOffIcon } from 'lucide-vue-next'
-import { computed, defineAsyncComponent, onBeforeUnmount, ref } from 'vue'
-import { userStore } from '@/stores/userStore'
-import { useAuthorization } from '@/composables/useAuthorization'
-import { useBranding } from '@/composables/useBranding'
-import { useDialogBox } from '@/composables/useDialogBox'
-import { useMessageToaster } from '@/composables/useMessageToaster'
-import { copyText } from '@/utils/helpers'
-import { logger } from '@/utils/logger'
+import { CopyIcon, EyeIcon, EyeOffIcon } from "lucide-vue-next";
+import { computed, defineAsyncComponent, onBeforeUnmount, ref } from "vue";
+import { userStore } from "@/stores/userStore";
+import { useAuthorization } from "@/composables/useAuthorization";
+import { useBranding } from "@/composables/useBranding";
+import { useDialogBox } from "@/composables/useDialogBox";
+import { useMessageToaster } from "@/composables/useMessageToaster";
+import { copyText } from "@/utils/helpers";
+import { logger } from "@/utils/logger";
 
-const Btn = defineAsyncComponent(() => import('@/components/ui/form/Btn.vue'))
-const TextInput = defineAsyncComponent(() => import('@/components/ui/form/TextInput.vue'))
+const Btn = defineAsyncComponent(() => import("@/components/ui/form/Btn.vue"));
+const TextInput = defineAsyncComponent(() => import("@/components/ui/form/TextInput.vue"));
 
-const { currentUser } = useAuthorization()
-const { name: appName } = useBranding()
-const { showConfirmDialog } = useDialogBox()
-const { toastSuccess, toastWarning } = useMessageToaster()
+const { currentUser } = useAuthorization();
+const { name: appName } = useBranding();
+const { showConfirmDialog } = useDialogBox();
+const { toastSuccess, toastWarning } = useMessageToaster();
 
-const copied = ref(false)
-const regenerating = ref(false)
-const revealed = ref(false)
+const copied = ref(false);
+const regenerating = ref(false);
+const revealed = ref(false);
 
-const key = computed(() => currentUser.value.subsonic_api_key)
+const key = computed(() => currentUser.value.subsonic_api_key);
 
-let copiedResetTimer: ReturnType<typeof window.setTimeout> | null = null
+let copiedResetTimer: ReturnType<typeof window.setTimeout> | null = null;
 
 const clearCopiedResetTimer = () => {
   if (copiedResetTimer !== null) {
-    window.clearTimeout(copiedResetTimer)
-    copiedResetTimer = null
+    window.clearTimeout(copiedResetTimer);
+    copiedResetTimer = null;
   }
-}
+};
 
-const onFocus = (event: FocusEvent) => (event.target as HTMLInputElement).select()
+const onFocus = (event: FocusEvent) => (event.target as HTMLInputElement).select();
 
 const copyKey = async () => {
-  await copyText(key.value)
-  copied.value = true
-  toastSuccess('Subsonic API key copied to clipboard.')
+  await copyText(key.value);
+  copied.value = true;
+  toastSuccess("Subsonic API key copied to clipboard.");
 
-  clearCopiedResetTimer()
+  clearCopiedResetTimer();
   copiedResetTimer = window.setTimeout(() => {
-    copied.value = false
-    copiedResetTimer = null
-  }, 2000)
-}
+    copied.value = false;
+    copiedResetTimer = null;
+  }, 2000);
+};
 
 const regenerate = async () => {
   const confirmed = await showConfirmDialog(
-    'Regenerate Subsonic API key? Any client using the old key will stop working until reconfigured.',
-  )
+    "Regenerate Subsonic API key? Any client using the old key will stop working until reconfigured.",
+  );
 
   if (!confirmed) {
-    return
+    return;
   }
 
-  regenerating.value = true
+  regenerating.value = true;
 
   try {
-    await userStore.regenerateSubsonicApiKey()
-    toastSuccess('Subsonic API key regenerated.')
+    await userStore.regenerateSubsonicApiKey();
+    toastSuccess("Subsonic API key regenerated.");
   } catch (error: unknown) {
-    logger.error(error)
-    toastWarning('Failed to regenerate Subsonic API key.')
+    logger.error(error);
+    toastWarning("Failed to regenerate Subsonic API key.");
   } finally {
-    regenerating.value = false
+    regenerating.value = false;
   }
-}
+};
 
-onBeforeUnmount(clearCopiedResetTimer)
+onBeforeUnmount(clearCopiedResetTimer);
 </script>

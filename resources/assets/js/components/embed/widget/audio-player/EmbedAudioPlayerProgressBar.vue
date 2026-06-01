@@ -19,36 +19,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRefs } from 'vue'
+import { computed, ref, toRefs } from "vue";
 
 const props = withDefaults(defineProps<{ playable?: Playable; progress?: number }>(), {
   progress: 0,
-})
+});
 
-const emit = defineEmits<{ (e: 'seek', percentage: number): void }>()
+const emit = defineEmits<{ (e: "seek", percentage: number): void }>();
 
-const { playable, progress } = toRefs(props)
+const { playable, progress } = toRefs(props);
 
-const progressBar = ref<HTMLDivElement>()
-const trackHoverWidth = ref('0')
+const progressBar = ref<HTMLDivElement>();
+const trackHoverWidth = ref("0");
 
-const progressPercentage = computed(() => `${progress.value}%`)
+const progressPercentage = computed(() => `${progress.value}%`);
 
-const onMouseOut = () => (trackHoverWidth.value = '0')
+const onMouseOut = () => (trackHoverWidth.value = "0");
 
 const onMouseMove = (e: MouseEvent) => {
-  const rect = progressBar.value!.getBoundingClientRect()
-  trackHoverWidth.value = `${((e.clientX - rect.left) / rect.width) * 100}%`
-}
+  const rect = progressBar.value!.getBoundingClientRect();
+  trackHoverWidth.value = `${((e.clientX - rect.left) / rect.width) * 100}%`;
+};
 
 const onClick = (e: MouseEvent) => {
-  if (!playable.value || playable.value.playback_state === 'Stopped') {
-    return
+  if (!playable.value || playable.value.playback_state === "Stopped") {
+    return;
   }
 
-  const rect = progressBar.value!.getBoundingClientRect()
-  emit('seek', ((e.clientX - rect.left) * 100) / rect.width)
-}
+  const rect = progressBar.value!.getBoundingClientRect();
+  emit("seek", ((e.clientX - rect.left) * 100) / rect.width);
+};
 </script>
 
 <style scoped lang="postcss">
