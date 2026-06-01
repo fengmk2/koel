@@ -1,5 +1,4 @@
-export const blobFrag
-  = `
+export const blobFrag = `
 
 varying float v_noise;
 
@@ -297,4 +296,4 @@ void main(){
 #endif
 
 }
-`
+`;

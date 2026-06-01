@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { toRefs } from "vue";
 
-const props = withDefaults(defineProps<{ mode?: EncyclopediaDisplayMode }>(), { mode: 'aside' })
-const { mode } = toRefs(props)
+const props = withDefaults(defineProps<{ mode?: EncyclopediaDisplayMode }>(), { mode: "aside" });
+const { mode } = toRefs(props);
 </script>

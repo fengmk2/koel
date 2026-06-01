@@ -17,19 +17,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue'
-import { Cropper } from 'vue-advanced-cropper'
-import 'vue-advanced-cropper/dist/style.css'
+import { ref, toRefs } from "vue";
+import { Cropper } from "vue-advanced-cropper";
+import "vue-advanced-cropper/dist/style.css";
 
-import Btn from '@/components/ui/form/Btn.vue'
+import Btn from "@/components/ui/form/Btn.vue";
 
 const props = withDefaults(
   defineProps<{
-    source?: string | null
+    source?: string | null;
     config?: {
-      minWidth: number
-      maxWidth?: number
-    }
+      minWidth: number;
+      maxWidth?: number;
+    };
   }>(),
   {
     source: null,
@@ -37,14 +37,14 @@ const props = withDefaults(
       minWidth: 192,
     }),
   },
-)
+);
 
 const emits = defineEmits<{
-  (e: 'crop', result: string): void
-  (e: 'cancel'): void
-}>()
-const { source, config } = toRefs(props)
-const cropper = ref<typeof Cropper>()
+  (e: "crop", result: string): void;
+  (e: "cancel"): void;
+}>();
+const { source, config } = toRefs(props);
+const cropper = ref<typeof Cropper>();
 
-const crop = () => emits('crop', cropper.value?.getResult().canvas.toDataURL())
+const crop = () => emits("crop", cropper.value?.getResult().canvas.toDataURL());
 </script>
