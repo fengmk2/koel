@@ -1,5 +1,5 @@
 /// <reference types="vite-plus/test" />
-import { defineConfig } from 'vite-plus'
+import { defineConfig, lazyPlugins } from 'vite-plus'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import laravel from 'laravel-vite-plugin'
@@ -63,7 +63,7 @@ export default defineConfig({
       // typeCheck: true,
     },
   },
-  plugins: [
+  plugins: lazyPlugins(() => [
     vue(),
     tailwindcss(),
     ...(process.env.VITEST
@@ -77,7 +77,7 @@ export default defineConfig({
             filename: 'stats.html',
           }),
         ]),
-  ],
+  ]),
   build: {
     cssMinify: 'esbuild',
     assetsInlineLimit: 0,

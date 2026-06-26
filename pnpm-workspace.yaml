@@ -1,0 +1,18 @@
+overrides:
+  form-data@<2.5.4: '>=2.5.4'
+  '@rolldown/pluginutils': 1.0.0-rc.9
+  vite: 'catalog:'
+  vitest: 'catalog:'
+  vite-plus: https://pkg.pr.new/voidzero-dev/vite-plus@dca39038de6ca46e523bf64dc09bf100b636eea9
+catalog:
+  vite: https://pkg.pr.new/voidzero-dev/vite-plus/@voidzero-dev/vite-plus-core@dca39038de6ca46e523bf64dc09bf100b636eea9
+  vitest: 4.1.9
+  vite-plus: https://pkg.pr.new/voidzero-dev/vite-plus@dca39038de6ca46e523bf64dc09bf100b636eea9
+blockExoticSubdeps: false
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: '*'
+    vitest: '*'
