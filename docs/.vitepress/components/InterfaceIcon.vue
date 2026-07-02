@@ -1,12 +1,12 @@
 <template>
   <span>
-    <img class="inline border-0 rounded-0" v-bind="$attrs">
+    <img class="inline border-0 rounded-0" v-bind="$attrs" />
   </span>
 </template>
 
 <script lang="ts" setup>
 defineOptions({
-  inheritAttrs: false
+  inheritAttrs: false,
 })
 </script>
 

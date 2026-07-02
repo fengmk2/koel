@@ -7,15 +7,13 @@
       "begin": null,
       "attributes": [],
       "ended": false,
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "source-credit": "",
       "target-type": "url",
       "type-id": "08db8098-c0df-4b78-82c3-c8697b4bba7f",
       "end": null,
       "target-credit": "",
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "last.fm",
       "url": {
         "resource": "https://www.last.fm/music/Skid+Row",
@@ -25,15 +23,13 @@
     {
       "target-credit": "",
       "end": null,
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "lyrics",
       "url": {
         "resource": "http://muzikum.eu/en/122-8835/skid-row/lyrics.html",
         "id": "a15e35c6-c4d0-4177-8c37-86289be6dc3b"
       },
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "direction": "forward",
       "attributes": [],
       "begin": null,
@@ -43,8 +39,7 @@
       "source-credit": ""
     },
     {
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "direction": "forward",
       "ended": false,
       "attributes": [],
@@ -54,8 +49,7 @@
       "source-credit": "",
       "target-credit": "",
       "end": null,
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "official homepage",
       "url": {
         "id": "46051885-1e7b-4223-8c2c-87a909e0f375",
@@ -70,10 +64,8 @@
         "resource": "https://www.facebook.com/OfficialSkidRow"
       },
       "type": "social network",
-      "attribute-values": {
-      },
-      "attribute-ids": {
-      },
+      "attribute-values": {},
+      "attribute-ids": {},
       "attributes": [],
       "begin": null,
       "ended": false,
@@ -86,8 +78,7 @@
       "end": null,
       "target-credit": "",
       "type": "social network",
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "url": {
         "resource": "https://www.instagram.com/officialskidrow/",
         "id": "da5bc84c-4114-4733-8539-6dedacb77466"
@@ -96,8 +87,7 @@
       "ended": false,
       "begin": null,
       "attributes": [],
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "source-credit": "",
       "target-type": "url",
       "type-id": "99429741-f3f6-484b-84f8-23af51991770"
@@ -106,8 +96,7 @@
       "type-id": "99429741-f3f6-484b-84f8-23af51991770",
       "target-type": "url",
       "source-credit": "",
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "ended": false,
       "begin": null,
       "attributes": [],
@@ -117,8 +106,7 @@
         "resource": "https://www.reverbnation.com/skidrow"
       },
       "type": "social network",
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "target-credit": "",
       "end": null
     },
@@ -126,8 +114,7 @@
       "type-id": "99429741-f3f6-484b-84f8-23af51991770",
       "target-type": "url",
       "source-credit": "",
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "attributes": [],
       "begin": null,
       "ended": false,
@@ -136,8 +123,7 @@
         "id": "f4de3da0-9b5e-4f91-afb1-4756910b590f",
         "resource": "https://www.tiktok.com/@skidrowofficial"
       },
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "social network",
       "target-credit": "",
       "end": null
@@ -147,8 +133,7 @@
       "attributes": [],
       "begin": null,
       "direction": "forward",
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "source-credit": "",
       "type-id": "aac9c4bc-a5b9-30b8-9839-e3ac314c6e58",
       "target-type": "url",
@@ -159,15 +144,13 @@
         "id": "cbe73b87-9102-441b-a2be-5b315cc7e169"
       },
       "type": "songkick",
-      "attribute-values": {
-      }
+      "attribute-values": {}
     },
     {
       "type-id": "89e4a949-0976-440d-bda1-5f772c1e5710",
       "target-type": "url",
       "source-credit": "",
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "attributes": [],
       "begin": null,
       "ended": false,
@@ -177,14 +160,12 @@
         "resource": "https://soundcloud.com/skidrowofficial"
       },
       "type": "soundcloud",
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "target-credit": "",
       "end": null
     },
     {
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "ended": false,
       "begin": null,
       "attributes": [],
@@ -198,8 +179,7 @@
         "id": "bda34015-2053-4e6c-95aa-501b8713d51d",
         "resource": "https://music.amazon.com/artists/B001Q97JF8"
       },
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "streaming"
     },
     {
@@ -207,8 +187,7 @@
       "attributes": [],
       "ended": false,
       "direction": "forward",
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "source-credit": "",
       "type-id": "63cc5d1f-f096-4c94-a43f-ecb32ea94161",
       "target-type": "url",
@@ -218,14 +197,12 @@
         "resource": "https://music.apple.com/us/artist/163805",
         "id": "d8797ff9-9cec-48e9-9304-ee2fb4d1f743"
       },
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "streaming"
     },
     {
       "type": "streaming",
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "url": {
         "resource": "https://tidal.com/artist/14824",
         "id": "3e3390d4-bcbb-4c06-9621-0213e4297762"
@@ -239,12 +216,10 @@
       "ended": false,
       "attributes": [],
       "begin": null,
-      "attribute-ids": {
-      }
+      "attribute-ids": {}
     },
     {
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "wikidata",
       "url": {
         "id": "f9cd856c-b97c-4f9e-9210-b994832ddd05",
@@ -255,8 +230,7 @@
       "target-type": "url",
       "type-id": "689870a4-a1e4-4912-b17f-7b2664215698",
       "source-credit": "",
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "direction": "forward",
       "attributes": [],
       "begin": null,
@@ -270,15 +244,13 @@
       "attributes": [],
       "begin": null,
       "direction": "forward",
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "url": {
         "id": "0e6c1c94-0209-4f03-a61b-61d306cee640",
         "resource": "https://www.youtube.com/channel/UCBfUBCl_wyCCvATBFrUk9hA"
       },
       "type": "youtube",
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "end": null,
       "target-credit": ""
     },
@@ -290,10 +262,8 @@
       "begin": null,
       "attributes": [],
       "ended": false,
-      "attribute-ids": {
-      },
-      "attribute-values": {
-      },
+      "attribute-ids": {},
+      "attribute-values": {},
       "type": "youtube",
       "url": {
         "id": "050f07a0-4b0d-44a1-9c77-6a9fbf455aac",
@@ -303,8 +273,7 @@
       "target-credit": ""
     },
     {
-      "attribute-ids": {
-      },
+      "attribute-ids": {},
       "direction": "forward",
       "ended": false,
       "begin": null,
@@ -314,8 +283,7 @@
       "source-credit": "",
       "target-credit": "",
       "end": null,
-      "attribute-values": {
-      },
+      "attribute-values": {},
       "type": "youtube music",
       "url": {
         "resource": "https://music.youtube.com/channel/UCncr4k7oPRqXOqMl3vvymqQ",
@@ -333,9 +301,7 @@
   },
   "area": {
     "type-id": null,
-    "iso-3166-1-codes": [
-      "US"
-    ],
+    "iso-3166-1-codes": ["US"],
     "sort-name": "United States",
     "type": null,
     "id": "489ce91b-6658-3307-9877-795b68554c98",
@@ -356,7 +322,5 @@
     "begin": "1986",
     "ended": false
   },
-  "isnis": [
-    "0000000122576076"
-  ]
+  "isnis": ["0000000122576076"]
 }

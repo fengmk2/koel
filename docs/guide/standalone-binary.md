@@ -45,7 +45,7 @@ FrankenPHP then starts serving on the chosen port or domain. You can now
 Everything writable lives under `$HOME/.koel/`:
 
 | Path                                 | What                                                                       |
-|--------------------------------------|----------------------------------------------------------------------------|
+| ------------------------------------ | -------------------------------------------------------------------------- |
 | `$HOME/.koel/.env`                   | Environment file (Koel's config)                                           |
 | `$HOME/.koel/db.sqlite`              | SQLite database                                                            |
 | `$HOME/.koel/storage/`               | Laravel storage path (logs, sessions, cache, uploaded images)              |

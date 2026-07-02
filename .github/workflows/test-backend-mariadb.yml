@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [ 8.3 ]
-        mariadb-version: [ 11.7 ]
+        php-version: [8.3]
+        mariadb-version: [11.7]
       fail-fast: false
     services:
       mariadb:

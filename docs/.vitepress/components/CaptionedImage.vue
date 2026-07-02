@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 defineOptions({
-  inheritAttrs: false
+  inheritAttrs: false,
 })
 </script>
 
@@ -25,8 +25,8 @@ figure {
   figcaption {
     background: rgb(66 141 185 / 5%);
     text-align: center;
-    font-size: .85rem;
-    padding: .5rem;
+    font-size: 0.85rem;
+    padding: 0.5rem;
     font-style: italic;
   }
 }

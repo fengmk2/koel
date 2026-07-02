@@ -22,10 +22,10 @@ Streaming radio stations is not much different from streaming songs: You basical
 Most of the interface elements you are familiar with, such as volume control, equalizer, and visualizer, work the same way.
 However, there are a couple of differences:
 
-* Radio stations do not use a queue, and therefore there are no next or previous buttons. Repeat and shuffle modes are also not available.
-* You cannot rewind, fast-forward, or seek a radio stream.
-* You cannot add radio stations to playlists.
-* Inapplicable interface elements such as the side sheet (artist, albums, lyrics, etc.) will be hidden.
-* If the radio stream supports [ICY metadata](https://liquidsoap.readthedocs.io/en/stable/content/icy_metadata.html), Koel will display the currently playing song name in the footer.
-* As of current, Koel doesn't maintain the "state" of radio stations. This means when you open Koel again, it will revert to the queued songs (or podcast episodes).
+- Radio stations do not use a queue, and therefore there are no next or previous buttons. Repeat and shuffle modes are also not available.
+- You cannot rewind, fast-forward, or seek a radio stream.
+- You cannot add radio stations to playlists.
+- Inapplicable interface elements such as the side sheet (artist, albums, lyrics, etc.) will be hidden.
+- If the radio stream supports [ICY metadata](https://liquidsoap.readthedocs.io/en/stable/content/icy_metadata.html), Koel will display the currently playing song name in the footer.
+- As of current, Koel doesn't maintain the "state" of radio stations. This means when you open Koel again, it will revert to the queued songs (or podcast episodes).
   This limitation applies to both the web interface and the [mobile apps](../mobile-apps.md) (which don't support radio stations yet).
