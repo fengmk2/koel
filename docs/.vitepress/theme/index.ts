@@ -19,5 +19,5 @@ export default {
     app.component('MobileAppScreenshots', MobileAppScreenshots)
     app.component('PlusBadge', PlusBadge)
     app.component('CaptionedImage', CaptionedImage)
-  }
+  },
 } satisfies Theme

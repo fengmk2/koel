@@ -1,6 +1,6 @@
 <template>
   <a :href="sponsor.url" :title="`${sponsor.name} – ${sponsor.slogan}`" target="_blank">
-    <img :alt="`${sponsor.name} logo`" :src="sponsor.logo" v-bind="$attrs">
+    <img :alt="`${sponsor.name} logo`" :src="sponsor.logo" v-bind="$attrs" />
   </a>
 </template>
 
@@ -22,18 +22,18 @@ defineOptions({
 <style scoped lang="postcss">
 a {
   display: block;
-  padding: .5rem .7rem;
-  background: rgba(0, 0, 0, .05);
+  padding: 0.5rem 0.7rem;
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
 
   &:hover {
-    background: rgba(0, 0, 0, .1);
+    background: rgba(0, 0, 0, 0.1);
   }
 }
 
 .dark {
   a {
-    background: rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, 0.2);
 
     img {
       filter: grayscale(1) invert(1);
