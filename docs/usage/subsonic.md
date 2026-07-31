@@ -20,8 +20,8 @@ Your Subsonic API key was generated automatically when your account was created.
 
 In your Subsonic client, point the server URL at your Koel installation — the same URL you use in the browser — and enter:
 
-* **Username** — your Koel email address
-* **Password** (or **API key**, if the client offers it) — your Subsonic API key
+- **Username** — your Koel email address
+- **Password** (or **API key**, if the client offers it) — your Subsonic API key
 
 The Subsonic API key replaces your Koel password here — do **not** enter your actual Koel account password. Your Koel password is never used by Subsonic clients.
 
@@ -31,12 +31,12 @@ Your Koel library will appear in the client right after you save the connection.
 
 Any client that speaks Subsonic or OpenSubsonic will work. A few popular ones:
 
-* [Feishin](https://github.com/jeffvli/feishin) — macOS, Windows, Linux
-* [Amperfy](https://github.com/BLeeEZ/amperfy) — macOS, iOS, iPadOS
-* [Symfonium](https://symfonium.app/) — Android
-* [Tempo](https://github.com/CappielloAntonio/tempo) — Android
-* [substreamer](https://substreamer.org/) — iOS, Android, Web
-* [play:Sub](https://michaelsapps.dk/playsubapp/) — iOS
+- [Feishin](https://github.com/jeffvli/feishin) — macOS, Windows, Linux
+- [Amperfy](https://github.com/BLeeEZ/amperfy) — macOS, iOS, iPadOS
+- [Symfonium](https://symfonium.app/) — Android
+- [Tempo](https://github.com/CappielloAntonio/tempo) — Android
+- [substreamer](https://substreamer.org/) — iOS, Android, Web
+- [play:Sub](https://michaelsapps.dk/playsubapp/) — iOS
 
 ## Regenerate Your Key
 

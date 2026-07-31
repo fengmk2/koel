@@ -125,8 +125,6 @@ export default defineConfig({
       },
     ],
 
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/koel/koel' },
-    ],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/koel/koel' }],
   },
 })

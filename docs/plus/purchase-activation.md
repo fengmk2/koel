@@ -7,8 +7,8 @@ description: Koel Plus pricing, purchasing, license activation via web or CLI, a
 ## Pricing
 
 Koel Plus employs a super simple pricing model: You set your own price starting at {{ config.plus.price }},
-__one time__. You read that right: no subscription, no recurring payments, no hidden fees, no per- or additional-seat
-costs — I hate that bullshit as much as you do. Pay __once__, and you get all current _and_ future updates at no extra
+**one time**. You read that right: no subscription, no recurring payments, no hidden fees, no per- or additional-seat
+costs — I hate that bullshit as much as you do. Pay **once**, and you get all current _and_ future updates at no extra
 fee, forever.
 
 ::: tip
