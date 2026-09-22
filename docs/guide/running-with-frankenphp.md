@@ -69,7 +69,7 @@ fine. Fix it one of two ways:
 
 - Override per-command: `DB_HOST=127.0.0.1 frankenphp php-cli artisan <command>`
 - Or change `.env` to `DB_HOST=127.0.0.1`.
-:::
+  :::
 
 For FrankenPHP CLI options not covered here (worker mode, multi-domain serving, custom PHP flags, etc.), refer to the
 [official FrankenPHP documentation](https://frankenphp.dev/docs/).

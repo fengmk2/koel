@@ -121,9 +121,7 @@ self.addEventListener("message", (event) => {
 		case "DELETE_AUDIO_CACHE":
 			event.waitUntil(deleteAudioCache(data, event.source));
 			break;
-		case "GET_CACHE_STATUS":
-			event.waitUntil(getCacheStatus(data, event.source));
-			break;
+		case "GET_CACHE_STATUS": event.waitUntil(getCacheStatus(data, event.source));
 	}
 });
 var cacheAudio = async (data, client) => {

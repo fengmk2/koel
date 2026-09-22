@@ -22,10 +22,10 @@ Koel Plus is the premium version of Koel. It offers additional features and enha
 New features are constantly planned or in active development.
 
 ## Do you need Koel Plus?
+
 Since Koel Plus's flagship feature is multi-library support, it's most useful in a multi-user environment, such as a family or an organization.
 If you're a single user, you might not need Koel Plus.
 
 However, if you want to host your media files on a cloud storage service like Amazon S3 or Dropbox, or if you want some
 of the more-niche features above, you'll need Koel Plus.
 [Purchasing Koel Plus](./purchase-activation) is also a good way to financially support the active development of Koel.
-

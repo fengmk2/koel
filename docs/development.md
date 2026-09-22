@@ -69,4 +69,3 @@ pnpm docs:dev
 
 The documentation should now be available at `http://localhost:5173`.
 For more information on how to work with VitePress, check out its [official website](https://vitepress.dev/).
-

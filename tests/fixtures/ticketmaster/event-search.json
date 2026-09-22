@@ -167,8 +167,7 @@
           "self": {
             "href": "/discovery/v2/events/1ApZkASGkexQ0qw?locale=en-us"
           },
-          "attractions": [
-          ],
+          "attractions": [],
           "venues": [
             {
               "href": "/discovery/v2/venues/KovZ917AJwU?locale=en-us"
@@ -230,8 +229,7 @@
               }
             }
           ],
-          "attractions": [
-          ]
+          "attractions": []
         }
       },
       {
@@ -264,8 +262,7 @@
             "startTBA": false,
             "endDateTime": "2025-09-21T00:00:00Z"
           },
-          "presales": [
-          ]
+          "presales": []
         },
         "dates": {
           "start": {
@@ -317,8 +314,7 @@
             "id": "vvG1FZbm7f8ngi",
             "url": "https://www.ticketmaster.com/slayer-vip-upgrades-tickets-not-included-hershey-pennsylvania-09-20-2025/event/020062E11442AD6C",
             "type": "VIP",
-            "classifications": [
-            ]
+            "classifications": []
           }
         ],
         "seatmap": {
@@ -345,8 +341,7 @@
           "self": {
             "href": "/discovery/v2/events/vv1kFZbIuZG7BbTP?locale=en-us"
           },
-          "attractions": [
-          ],
+          "attractions": [],
           "venues": [
             {
               "href": "/discovery/v2/venues/KovZpaoU8e?locale=en-us"
@@ -362,11 +357,7 @@
               "test": false,
               "url": "https://www.ticketmaster.com/hersheypark-stadium-tickets-hershey/venue/16394",
               "locale": "en-us",
-              "aliases": [
-                "hershey",
-                "hersheypark",
-                "hershey stadium"
-              ],
+              "aliases": ["hershey", "hersheypark", "hershey stadium"],
               "images": [
                 {
                   "ratio": "16_9",
@@ -413,8 +404,7 @@
                   "id": 416
                 }
               ],
-              "boxOfficeInfo": {
-              },
+              "boxOfficeInfo": {},
               "parkingDetail": "Parking fee is charged.",
               "accessibleSeatingDetail": "Fully Acessible. All special seating needs please contact the box office at 717-534-3911.",
               "generalInfo": {
@@ -434,8 +424,7 @@
               }
             }
           ],
-          "attractions": [
-          ]
+          "attractions": []
         }
       }
     ]

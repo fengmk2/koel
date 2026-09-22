@@ -12,15 +12,15 @@ The requirements for each part are as follows:
 
 ### Server
 
-* [All requirements by Laravel](https://laravel.com/docs/11.x/deployment#server-requirements) – PHP >= 8.2 with required
+- [All requirements by Laravel](https://laravel.com/docs/11.x/deployment#server-requirements) – PHP >= 8.2 with required
   extensions
-* One of the databases supported by Laravel. Koel has been tested with MySQL, MariaDB, PostgreSQL, and SQLite.
-* If you're [building Koel from source](#building-from-source), make sure to have [Composer](https://getcomposer.org/),
+- One of the databases supported by Laravel. Koel has been tested with MySQL, MariaDB, PostgreSQL, and SQLite.
+- If you're [building Koel from source](#building-from-source), make sure to have [Composer](https://getcomposer.org/),
   Git, Node.js >= 20 with [pnpm](https://pnpm.io/), and [Vite+](https://viteplus.dev/) (`pnpm install` will set it up locally).
 
 ### Client
 
-* Koel has been tested on Chrome 47, Firefox 42, Safari 8, Opera 34, and Edge, but having the latest version is always
+- Koel has been tested on Chrome 47, Firefox 42, Safari 8, Opera 34, and Edge, but having the latest version is always
   recommended.
 
 ## Installation

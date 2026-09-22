@@ -118,7 +118,7 @@ In order to start using the feature, follow these steps:
 package manager.
 For example, you can install it on Ubuntu with:
 
-``` bash
+```bash
 sudo apt-get install inotify-tools
 ```
 
@@ -127,7 +127,7 @@ sudo apt-get install inotify-tools
 Now you need to set up a watcher script to run `inotifywait` and send the output to `koel:scan` artisan command. For
 example, you can create a sample `watch` file in Koel’s root directory with this content:
 
-``` bash
+```bash
 #!/bin/bash
 
 MEDIA_PATH=/var/www/media/
@@ -142,7 +142,7 @@ done
 
 Following the above example:
 
-``` bash
+```bash
 chmod +x watch
 ./watch
 [Ctrl+z]
@@ -189,16 +189,16 @@ Only `mp3`, `ogg`, `m4a`, and `flac` files are supported.
 3. Make sure `koel-user` can read `koel-bucket`'s content. You can simply attach the `AmazonS3ReadOnlyAccess` policy to
    `koel-user`.
 4. Allow CORS on `koel-bucket`
-    ```xml
-    <CORSConfiguration>
-        <CORSRule>
-            <AllowedOrigin>*</AllowedOrigin>
-            <AllowedMethod>GET</AllowedMethod>
-            <MaxAgeSeconds>3000</MaxAgeSeconds>
-            <AllowedHeader>Authorization</AllowedHeader>
-        </CORSRule>
-    </CORSConfiguration>
-    ```
+   ```xml
+   <CORSConfiguration>
+       <CORSRule>
+           <AllowedOrigin>*</AllowedOrigin>
+           <AllowedMethod>GET</AllowedMethod>
+           <MaxAgeSeconds>3000</MaxAgeSeconds>
+           <AllowedHeader>Authorization</AllowedHeader>
+       </CORSRule>
+   </CORSConfiguration>
+   ```
 
 #### 2. Configure Lambda for Syncing
 
@@ -207,16 +207,16 @@ Only `mp3`, `ogg`, `m4a`, and `flac` files are supported.
 3. Copy `.env.example` into `.env` and edit the variables there
 4. Zip the whole directory's content into something like `archive.zip`
 5. In AWS Lambda console, create a Lambda function with the following information:
-    ```
-    Name: koel-lambda
-    Runtime: Node.js
-    Code entry type: Upload a .ZIP file (you'll upload the zip file created in step 4 here)
-    Handler: index.handler
-    Role: S3 execution role (a new window will appear, where you can just click next next and next)
-    Memory (MB): 128 should be fine
-    Timeout: 0min 10sec
-    VPC: "No VPC" should be fine
-    ```
+   ```
+   Name: koel-lambda
+   Runtime: Node.js
+   Code entry type: Upload a .ZIP file (you'll upload the zip file created in step 4 here)
+   Handler: index.handler
+   Role: S3 execution role (a new window will appear, where you can just click next next and next)
+   Memory (MB): 128 should be fine
+   Timeout: 0min 10sec
+   VPC: "No VPC" should be fine
+   ```
    :::info AWS region
    Make sure you're creating the function in the same region with `koel-bucket`.
    :::

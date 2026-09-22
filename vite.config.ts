@@ -6,7 +6,7 @@ import laravel from 'laravel-vite-plugin'
 import { resolve } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 
-const __dirname = import.meta.dirname
+const projectDirectory = import.meta.dirname
 
 export default defineConfig({
   staged: {
@@ -19,7 +19,7 @@ export default defineConfig({
     arrowParens: 'avoid',
     printWidth: 120,
     objectWrap: 'preserve',
-    ignorePatterns: ['resources/assets/css/vendor/**', 'resources/assets/js/visualizers/**'],
+    ignorePatterns: ['public/sw.js', 'resources/assets/css/vendor/**', 'resources/assets/js/visualizers/**'],
   },
   lint: {
     plugins: ['typescript', 'vue', 'import'],
@@ -84,17 +84,17 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './resources/assets/js'),
-      '@modules': resolve(__dirname, './node_modules'),
+      '@': resolve(projectDirectory, './resources/assets/js'),
+      '@modules': resolve(projectDirectory, './node_modules'),
       lodash: 'lodash-es',
     },
   },
   test: {
     environment: 'jsdom',
-    setupFiles: resolve(__dirname, './resources/assets/js/__tests__/setup.ts'),
+    setupFiles: resolve(projectDirectory, './resources/assets/js/__tests__/setup.ts'),
     server: {
       deps: {
-        cacheDir: resolve(__dirname, 'node_modules/.vitest'),
+        cacheDir: resolve(projectDirectory, 'node_modules/.vitest'),
       },
     },
   },
