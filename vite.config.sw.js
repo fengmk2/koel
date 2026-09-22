@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite-plus'
 import { resolve } from 'path'
 
-const __dirname = import.meta.dirname
+const projectDirectory = import.meta.dirname
 
 /**
  * Separate Vite config for building the service worker.
@@ -11,7 +11,7 @@ export default defineConfig({
   publicDir: false,
   build: {
     lib: {
-      entry: resolve(__dirname, 'resources/assets/js/service-worker.ts'),
+      entry: resolve(projectDirectory, 'resources/assets/js/service-worker.ts'),
       formats: ['es'],
       fileName: () => 'sw.js',
     },

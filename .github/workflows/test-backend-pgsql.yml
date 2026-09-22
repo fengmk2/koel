@@ -23,8 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [ 8.3 ]
-        postgres-version: [ 15 ]
+        php-version: [8.3]
+        postgres-version: [15]
       fail-fast: false
     services:
       postgres:

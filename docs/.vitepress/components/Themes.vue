@@ -1,12 +1,6 @@
 <template>
   <div class="flex relative">
-    <img
-      v-for="theme in themes"
-      :key="theme.name"
-      :alt="`Theme - ${theme.name}`"
-      :src="theme.src"
-      class="theme"
-    />
+    <img v-for="theme in themes" :key="theme.name" :alt="`Theme - ${theme.name}`" :src="theme.src" class="theme" />
   </div>
 </template>
 
@@ -29,14 +23,13 @@ const themes: Theme[] = [
 ]
 </script>
 
-
 <style lang="postcss" scoped>
 div .theme + .theme {
   margin-left: -100%;
 }
 
 .theme {
-  transition: clip-path .3s ease-in;
+  transition: clip-path 0.3s ease-in;
   will-change: clip-path;
 
   &:hover {

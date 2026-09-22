@@ -149,9 +149,7 @@
     {
       "area": {
         "type-id": null,
-        "iso-3166-1-codes": [
-          "US"
-        ],
+        "iso-3166-1-codes": ["US"],
         "sort-name": "United States",
         "type": null,
         "id": "489ce91b-6658-3307-9877-795b68554c98",

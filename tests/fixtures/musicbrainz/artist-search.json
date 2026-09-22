@@ -32,9 +32,7 @@
         }
       },
       "disambiguation": "US hard rock / heavy metal band",
-      "isnis": [
-        "0000000122576076"
-      ],
+      "isnis": ["0000000122576076"],
       "life-span": {
         "begin": "1986",
         "ended": null

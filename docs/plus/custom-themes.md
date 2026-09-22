@@ -13,12 +13,12 @@ Clicking on the "New Theme" button will open the "New Theme" form:
 
 A theme in Koel consists of these simple properties, each customizable via the form:
 
-* Foreground color
-* Background color
-* Highlight color
-* Background image (optional)
-* Font family
-* Font size
+- Foreground color
+- Background color
+- Highlight color
+- Background image (optional)
+- Font family
+- Font size
 
 :::tip `local-fonts` Permission
 On a [supported browser](https://caniuse.com/wf-local-fonts), Koel will ask for permission to use your local fonts.

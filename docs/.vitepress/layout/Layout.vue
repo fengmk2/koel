@@ -2,7 +2,7 @@
   <BaseLayout>
     <template #aside-outline-after>
       <nav class="aside-outline-after">
-      <Sponsors />
+        <Sponsors />
       </nav>
     </template>
   </BaseLayout>

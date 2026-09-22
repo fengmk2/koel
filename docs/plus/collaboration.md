@@ -11,8 +11,8 @@ This page will talk you through the process of setting song visibility and playl
 
 With Koel Plus, there are two different visibility settings for songs: public and private.
 
-* _Private_ songs are only visible to the uploader (the "owner")
-* _Public_ songs are visible to all users (**not** the whole internet!) However, only the owner can edit or delete them.
+- _Private_ songs are only visible to the uploader (the "owner")
+- _Public_ songs are visible to all users (**not** the whole internet!) However, only the owner can edit or delete them.
 
 The default visibility for uploaded songs is Private. For other users to be able to see and listen to your music, you need to explicitly mark them as public. This can be done in two ways:
 
@@ -61,4 +61,3 @@ The "Playlist Collaboration" modal should appear.
 To invite more collaborators, click the "Invite" button. A link will be generated and copied to your clipboard. Share this link with the users you want to collaborate with. They can then paste the link in their browser to join the playlist.
 
 To remove a collaborator, click the "Remove" button next to their name.
-

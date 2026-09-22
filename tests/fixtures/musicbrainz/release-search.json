@@ -44,9 +44,7 @@
             "id": "2db42837-c832-3c27-b4a3-08198f75693c",
             "name": "Japan",
             "sort-name": "Japan",
-            "iso-3166-1-codes": [
-              "JP"
-            ]
+            "iso-3166-1-codes": ["JP"]
           }
         }
       ],

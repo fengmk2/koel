@@ -8,15 +8,15 @@ Koel supports creating an unlimited number of playlists and organizing them into
 Start by clicking the <InterfaceIcon :src="plusIcon" alt="Add" /> button next to the "Playlists" header in the
 navigation bar. You'll be provided with three options:
 
-* "New Playlist…" brings up a dialog to create a standard playlist
-* "New Smart Playlist…" brings up a dialog to create a smart playlist
-* "New Folder…" brings up a dialog to create a playlist folder
+- "New Playlist…" brings up a dialog to create a standard playlist
+- "New Smart Playlist…" brings up a dialog to create a smart playlist
+- "New Folder…" brings up a dialog to create a playlist folder
 
 To create a **standard playlist** or **playlist folder**, enter a name and save it.
 Once a playlist or playlist folder is created, you can:
 
-* Drag and drop songs into a standard playlist to add them
-* Drag and drop playlists into or out of playlist folders
+- Drag and drop songs into a standard playlist to add them
+- Drag and drop playlists into or out of playlist folders
 
 ## Organizing Playlist Folders
 
@@ -43,8 +43,8 @@ For example, with the criteria shown in the following screenshot:
 
 Koel will include in the playlist:
 
-* all songs by Pink Floyd, and
-* songs by Iron Maiden that have been played more than 99 times by the current user
+- all songs by Pink Floyd, and
+- songs by Iron Maiden that have been played more than 99 times by the current user
 
 There are a great variety of criteria to choose from, and you can combine them in any way you like, providing a powerful
 tool for creating dynamic playlists.
